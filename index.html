@@ -102,6 +102,20 @@ body {
 .screen { display: none; min-height: 100vh; flex-direction: column; }
 .screen.active { display: flex; }
 
+/* App screen overrides to row for desktop sidebar layout */
+#screen-app {
+  flex-direction: row;
+  align-items: stretch;
+}
+
+/* On mobile: back to block layout — no flex-row nonsense */
+@media (max-width: 768px) {
+  #screen-app {
+    display: block !important;
+    position: relative;
+  }
+}
+
 /* ===== WELCOME / AUTH ===== */
 #screen-welcome {
   background: var(--bg);
@@ -297,13 +311,6 @@ body {
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ===== APP SHELL ===== */
-#screen-app {
-  flex-direction: row;
-  min-height: 100vh;
-  width: 100%;
-  overflow: hidden;
-}
-
 /* SIDEBAR */
 .sidebar {
   width: 220px;
@@ -419,6 +426,7 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   background: var(--bg);
+  min-height: 100vh;
 }
 
 .page {
@@ -1589,32 +1597,31 @@ body {
   /* Layout */
   .mobile-topbar { display: flex; }
 
-  /* Sidebar: totalmente fora do fluxo no mobile */
+  /* Sidebar: purely position:fixed, out of flow completely */
   .sidebar {
-    display: none;           /* remove do flex — sem ambiguidade */
+    display: none;
     position: fixed;
     left: 0; top: 0; bottom: 0;
     width: 260px;
     z-index: 200;
     overflow-y: auto;
   }
-  /* Só aparece quando aberta */
   .sidebar.open {
     display: flex !important;
     flex-direction: column;
     animation: slideInSidebar 0.26s cubic-bezier(0.22,1,0.36,1) both;
   }
   @keyframes slideInSidebar {
-    from { transform: translateX(-100%); opacity: 0.8; }
-    to   { transform: translateX(0);    opacity: 1; }
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(0); }
   }
 
-  /* Main content ocupa 100% sem nenhuma interferência */
+  /* Main content fills 100% — screen-app is display:block so this is natural */
   .main-content {
-    width: 100% !important;
+    width: 100%;
     min-width: 0;
+    min-height: 0;
     padding-bottom: 70px;
-    flex: 1 1 auto !important;
   }
 
   .page { padding: 14px 16px 24px; }
@@ -2638,7 +2645,27 @@ select, textarea {
 
     <!-- Logo -->
     <div class="logo">
-      <div class="logo-icon">🚗</div>
+      <div class="logo-icon" style="background:transparent;padding:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="52" height="52" style="display:inline-block;vertical-align:middle;">
+  <!-- Anel externo com abertura -->
+  <path d="M50 8
+    A42 42 0 1 1 11.5 65
+    L19 61
+    A34 34 0 1 0 50 16 Z" fill="#7B80C1"/>
+  <!-- Ponto de abertura superior direito -->
+  <circle cx="72" cy="16" r="4.5" fill="#7B80C1"/>
+  <!-- Ponto de abertura direito -->
+  <circle cx="89" cy="50" r="4.5" fill="#7B80C1"/>
+  <!-- Disco central -->
+  <circle cx="50" cy="50" r="22" fill="#7B80C1"/>
+  <!-- Raios da roda — 4 raios com espaço entre eles -->
+  <rect x="47" y="28" width="6" height="16" rx="3" fill="white"/>
+  <rect x="47" y="56" width="6" height="16" rx="3" fill="white"/>
+  <rect x="28" y="47" width="16" height="6" rx="3" fill="white"/>
+  <rect x="56" y="47" width="16" height="6" rx="3" fill="white"/>
+  <!-- Hub central -->
+  <circle cx="50" cy="50" r="8" fill="white"/>
+  <circle cx="50" cy="50" r="4.5" fill="#7B80C1"/>
+</svg></div>
       <div>
         <div class="logo-text">MANY<span>CARS</span></div>
         <div style="font-size:11px;color:var(--text3);margin-top:2px;letter-spacing:1px;">SEU CARRO, SEU CONTROLE</div>
@@ -2779,9 +2806,29 @@ select, textarea {
 
   <!-- MOBILE TOPBAR -->
   <div class="mobile-topbar">
-    <div class="mobile-logo">🚗 MANY<span>CARS</span></div>
+    <div class="mobile-logo" style="display:flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="28" height="28" style="display:inline-block;vertical-align:middle;margin-right:6px;">
+  <!-- Anel externo com abertura -->
+  <path d="M50 8
+    A42 42 0 1 1 11.5 65
+    L19 61
+    A34 34 0 1 0 50 16 Z" fill="#7B80C1"/>
+  <!-- Ponto de abertura superior direito -->
+  <circle cx="72" cy="16" r="4.5" fill="#7B80C1"/>
+  <!-- Ponto de abertura direito -->
+  <circle cx="89" cy="50" r="4.5" fill="#7B80C1"/>
+  <!-- Disco central -->
+  <circle cx="50" cy="50" r="22" fill="#7B80C1"/>
+  <!-- Raios da roda — 4 raios com espaço entre eles -->
+  <rect x="47" y="28" width="6" height="16" rx="3" fill="white"/>
+  <rect x="47" y="56" width="6" height="16" rx="3" fill="white"/>
+  <rect x="28" y="47" width="16" height="6" rx="3" fill="white"/>
+  <rect x="56" y="47" width="16" height="6" rx="3" fill="white"/>
+  <!-- Hub central -->
+  <circle cx="50" cy="50" r="8" fill="white"/>
+  <circle cx="50" cy="50" r="4.5" fill="#7B80C1"/>
+</svg>MANY<span>CARS</span></div>
     <div style="display:flex;align-items:center;gap:10px;">
-      <button onclick="toggleTheme()" style="background:none;border:none;cursor:pointer;font-size:20px;padding:4px;line-height:1;" id="theme-btn-mobile" title="Alternar tema">🌙</button>
+      <!-- theme toggle removido — modo claro padrão -->
       <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
         <span></span><span></span><span></span>
       </button>
@@ -2794,7 +2841,27 @@ select, textarea {
   <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:32px;">
-      <div class="sidebar-logo" style="margin-bottom:0;">🚗 MANY<span>CARS</span></div>
+      <div class="sidebar-logo" style="margin-bottom:0;display:flex;align-items:center;gap:8px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32" style="display:inline-block;vertical-align:middle;margin-right:0;">
+  <!-- Anel externo com abertura -->
+  <path d="M50 8
+    A42 42 0 1 1 11.5 65
+    L19 61
+    A34 34 0 1 0 50 16 Z" fill="#7B80C1"/>
+  <!-- Ponto de abertura superior direito -->
+  <circle cx="72" cy="16" r="4.5" fill="#7B80C1"/>
+  <!-- Ponto de abertura direito -->
+  <circle cx="89" cy="50" r="4.5" fill="#7B80C1"/>
+  <!-- Disco central -->
+  <circle cx="50" cy="50" r="22" fill="#7B80C1"/>
+  <!-- Raios da roda — 4 raios com espaço entre eles -->
+  <rect x="47" y="28" width="6" height="16" rx="3" fill="white"/>
+  <rect x="47" y="56" width="6" height="16" rx="3" fill="white"/>
+  <rect x="28" y="47" width="16" height="6" rx="3" fill="white"/>
+  <rect x="56" y="47" width="16" height="6" rx="3" fill="white"/>
+  <!-- Hub central -->
+  <circle cx="50" cy="50" r="8" fill="white"/>
+  <circle cx="50" cy="50" r="4.5" fill="#7B80C1"/>
+</svg>MANY<span>CARS</span></div>
       <button onclick="closeSidebar()" style="display:none; background:none; border:none; color:var(--text3); font-size:18px; cursor:pointer; padding:4px;" id="sidebar-close">✕</button>
     </div>
     <div id="nav-admin" class="nav-item" onclick="_pedirSenhaMenu('admin')" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);margin-bottom:2px;">
@@ -3318,11 +3385,9 @@ select, textarea {
         <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;">
           <div>
             <div style="font-size:13px;font-weight:600;color:var(--text);">Tema do aplicativo</div>
-            <div style="font-size:11px;color:var(--text3);margin-top:2px;">Alterna entre modo escuro e claro</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px;">ManyCars usa modo claro como padrão</div>
           </div>
-          <button onclick="toggleTheme()" style="background:var(--surface2);border:1px solid var(--border2);border-radius:8px;padding:8px 16px;color:var(--text);font-family:'Sora',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;">
-            <span id="cfg-theme-icon">🌙</span> <span id="cfg-theme-label">Escuro</span>
-          </button>
+          <span style="font-size:11px;padding:6px 14px;background:rgba(123,128,193,0.1);border:1px solid rgba(123,128,193,0.3);border-radius:8px;color:var(--accent);font-weight:600;">☀️ Modo Claro</span>
         </div>
       </div>
 
@@ -5650,6 +5715,9 @@ function updateThemeUI(isLight) {
 }
 
 function loadTheme() {
+  // ManyCars sempre inicia em modo claro
+  document.body.classList.add('light-mode');
+  localStorage.setItem('manycars_theme', 'light');
   var saved = localStorage.getItem('manycars_theme');
   var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   var isLight = saved === 'light' || (saved === null && !prefersDark);
@@ -5755,6 +5823,7 @@ function clearState() {
 
 // Auto-restore ao carregar a página
 window.addEventListener('DOMContentLoaded', function() {
+  document.body.classList.add('light-mode');
   loadTheme();
   updateWishlistBadge();
   window.addEventListener('resize', function() {
