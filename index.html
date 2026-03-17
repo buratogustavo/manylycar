@@ -1624,9 +1624,9 @@ body {
     padding-bottom: 70px;
   }
 
-  .page { padding: 14px 16px 24px; }
-  .page-header { margin-bottom: 18px; }
-  .page-title { font-size: 26px; }
+  .page { padding: 12px 16px 24px; }
+  .page-header { margin-bottom: 12px; }
+  .page-title { font-size: 24px; }
 
   /* Cards */
   .card { padding: 14px 16px; margin-bottom: 12px; }
@@ -3299,32 +3299,32 @@ select, textarea {
 
           <!-- Loading -->
           <div id="placa-loading" style="display:none; margin-top:16px; display:none; align-items:center; gap:10px; color:var(--text2); font-size:13px;">
-            <div class="spinner"></div> Consultando dados do veículo...
+            <div class="spinner"></div> Verificando passaporte do veículo...
           </div>
 
           <!-- Error -->
           <div id="placa-error" style="display:none; margin-top:14px; padding:12px 16px; background:rgba(229,62,62,0.08); border:1px solid rgba(229,62,62,0.2); border-radius:8px; font-size:13px; color:#fc8181;"></div>
         </div>
 
-        <!-- STEP 2: dados preenchidos automaticamente -->
+        <!-- STEP 2: dados do veículo -->
         <div id="step-dados" style="display:none; margin-top:20px; padding-top:20px; border-top:1px solid var(--border);">
           <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
             <div style="width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0;"></div>
-            <span style="font-size:13px; color:var(--green); font-weight:600;">Veículo encontrado!</span>
+            <span style="font-size:13px; color:var(--text2); font-weight:600;">Confirme ou edite os dados do veículo</span>
             <span id="placa-badge" style="font-family:'JetBrains Mono'; font-size:12px; color:var(--accent); background:rgba(123,128,193,0.1); padding:3px 10px; border-radius:4px; margin-left:auto;"></span>
           </div>
           <div class="form-grid">
             <div class="form-group">
               <div class="field-label">Marca</div>
-              <input class="field-input" id="v-marca" readonly style="background:rgba(123,128,193,0.05); border-color:rgba(123,128,193,0.2); cursor:default;">
+              <input class="field-input" id="v-marca" placeholder="Ex: Chevrolet, Fiat...">
             </div>
             <div class="form-group">
               <div class="field-label">Modelo</div>
-              <input class="field-input" id="v-modelo" readonly style="background:rgba(123,128,193,0.05); border-color:rgba(123,128,193,0.2); cursor:default;">
+              <input class="field-input" id="v-modelo" placeholder="Ex: Onix, HB20...">
             </div>
             <div class="form-group">
               <div class="field-label">Ano</div>
-              <input class="field-input" id="v-ano" readonly style="background:rgba(123,128,193,0.05); border-color:rgba(123,128,193,0.2); cursor:default;">
+              <input class="field-input" id="v-ano" type="number" min="1990" max="2030" placeholder="Ex: 2022">
             </div>
             <div class="form-group">
               <div class="field-label">Cor</div>
@@ -4908,12 +4908,48 @@ select, textarea {
       <!-- Cards -->
       <div id="opiniao-list" style="display:flex;flex-direction:column;gap:12px;margin-top:4px;"></div>
 
-      <!-- CTA Adicionar -->
-      <div class="card" style="text-align:center;padding:24px;background:linear-gradient(135deg,rgba(123,128,193,0.04),rgba(96,165,250,0.04));border-style:dashed;">
-        <div style="font-size:28px;margin-bottom:8px;">✍️</div>
-        <div style="font-weight:700;color:var(--text);margin-bottom:4px;">Compartilhe sua experiência</div>
-        <div style="font-size:12px;color:var(--text3);margin-bottom:14px;">Em breve você poderá registrar sua própria opinião sobre seu carro</div>
-        <button class="btn-primary" style="width:auto;padding:10px 24px;" onclick="showToast('Em breve! Recurso em desenvolvimento 🚀','success')">+ Adicionar minha opinião</button>
+      <!-- Formulário de nova opinião -->
+      <div class="card" id="opiniao-form-card" style="margin-top:4px;">
+        <div class="card-title">✍️ Compartilhe sua experiência</div>
+        <div class="form-grid" style="margin-bottom:12px;">
+          <div class="form-group">
+            <div class="field-label">Marca</div>
+            <select class="field-select" id="op-marca">
+              <option value="">Selecione...</option>
+              <option>Chevrolet</option><option>Fiat</option><option>Volkswagen</option>
+              <option>Hyundai</option><option>Toyota</option><option>Honda</option>
+              <option>Jeep</option><option>Renault</option><option>Nissan</option>
+              <option>Ford</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <div class="field-label">Modelo</div>
+            <input class="field-input" id="op-modelo" type="text" placeholder="Ex: Onix, HB20...">
+          </div>
+          <div class="form-group">
+            <div class="field-label">Ano</div>
+            <input class="field-input" id="op-ano" type="text" placeholder="Ex: 2022">
+          </div>
+          <div class="form-group">
+            <div class="field-label">Nota</div>
+            <select class="field-select" id="op-nota">
+              <option value="5">⭐⭐⭐⭐⭐ Excelente</option>
+              <option value="4">⭐⭐⭐⭐ Bom</option>
+              <option value="3" selected>⭐⭐⭐ Regular</option>
+              <option value="2">⭐⭐ Ruim</option>
+              <option value="1">⭐ Péssimo</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom:10px;">
+          <div class="field-label">Título da opinião</div>
+          <input class="field-input" id="op-titulo" type="text" placeholder="Ex: Ótimo custo-benefício, mas...">
+        </div>
+        <div class="form-group" style="margin-bottom:14px;">
+          <div class="field-label">Sua opinião detalhada</div>
+          <textarea class="field-input" id="op-texto" rows="3" placeholder="Conte sua experiência: consumo, conforto, manutenção, pontos fortes e fracos..." style="resize:vertical;"></textarea>
+        </div>
+        <button class="btn-primary" onclick="publicarOpiniao()" style="width:auto;padding:10px 24px;">📤 Publicar opinião</button>
       </div>
     </div>
 
@@ -5497,8 +5533,8 @@ select, textarea {
   </div>
 
     <!-- ===== PERFIL ===== -->
-    <div id="page-perfil" class="page">
-      <div class="page-header">
+    <div id="page-perfil" class="page" style="padding-top:14px;">
+      <div class="page-header" style="margin-bottom:14px;">
         <div class="page-title">👤 MEU PERFIL</div>
         <div class="page-sub">Sua jornada automobilística em números</div>
       </div>
@@ -5773,13 +5809,14 @@ var state = {
 // PERSISTÊNCIA — localStorage
 // ============================================================
 var LS_KEY = 'manycars_v1';
+var _syncFailCount = 0;  // rastreia falhas consecutivas de sync
 
 var _saveTimer = null;
 function saveState() {
-  // Debounce: evita salvar múltiplas vezes em sequência rápida
   if (_saveTimer) clearTimeout(_saveTimer);
   _saveTimer = setTimeout(_doSaveState, 300);
 }
+
 function _doSaveState() {
   try {
     var now = new Date();
@@ -5793,10 +5830,290 @@ function _doSaveState() {
       wishlist: wishlist,
       savedAt:  now.toISOString()
     };
+    // 1. Salva local SEMPRE (offline-first, imediato)
     localStorage.setItem(LS_KEY, JSON.stringify(data));
     var el = document.getElementById('saved-at');
     if (el) el.textContent = 'Salvo às ' + now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    // 2. Sincroniza com nuvem em background (não bloqueia UI)
+    _syncToCloud(data);
   } catch(e) { console.warn('Erro ao salvar:', e); }
+}
+
+// ── Sync para o Supabase ────────────────────────────────────
+var _cloudSyncTimer = null;
+function _syncToCloud(data) {
+  if (!_supabaseReady || !_sb || !state.user || !state.user.id) return;
+  // Debounce extra para não sobrecarregar a API
+  if (_cloudSyncTimer) clearTimeout(_cloudSyncTimer);
+  _cloudSyncTimer = setTimeout(function() {
+    _doSyncToCloud(data);
+  }, 2000);
+}
+
+async function _doSyncToCloud(data) {
+  if (!_supabaseReady || !_sb || !state.user || !state.user.id) return;
+  try {
+    var userId = state.user.id;
+
+    // Sync veículos
+    var vehicles = (data.vehicles || []).map(function(v) {
+      return {
+        id:          v.supabaseId || undefined,
+        user_id:     userId,
+        marca:       v.marca,
+        modelo:      v.modelo,
+        ano:         parseInt(v.ano) || null,
+        placa:       v.placa || null,
+        cor:         v.cor || null,
+        km:          v.km || 0,
+        combustivel: v.combustivel || 'Flex',
+        archived:    v.archived || false,
+        updated_at:  new Date().toISOString()
+      };
+    });
+    if (vehicles.length) {
+      var { data: vRes } = await _sb.from('vehicles').upsert(vehicles, { onConflict: 'id' }).select('id, marca, modelo');
+      // Mapeia IDs de volta ao state local
+      if (vRes) {
+        vRes.forEach(function(sv) {
+          var local = state.vehicles.find(function(v) {
+            return v.marca === sv.marca && v.modelo === sv.modelo && !v.supabaseId;
+          });
+          if (local) local.supabaseId = sv.id;
+        });
+      }
+    }
+
+    // Sync histórico de manutenção
+    var history = (data.history || []).filter(function(h){ return !h.supabaseId; }).map(function(h) {
+      var veh = state.vehicles.find(function(v){ return v.id === h.veiculoId; });
+      return {
+        user_id:    userId,
+        vehicle_id: veh && veh.supabaseId ? veh.supabaseId : null,
+        tipo:       h.tipo,
+        data:       h.data,
+        km:         h.km || 0,
+        custo:      h.custo || 0,
+        local:      h.local || null
+      };
+    }).filter(function(h){ return h.vehicle_id; });
+    if (history.length) {
+      await _sb.from('history').insert(history);
+    }
+
+    // Sync abastecimentos
+    var fuel = (data.fuel || []).filter(function(f){ return !f.supabaseId; }).map(function(f) {
+      var veh = state.vehicles.find(function(v){ return v.id === f.veiculoId; });
+      return {
+        user_id:    userId,
+        vehicle_id: veh && veh.supabaseId ? veh.supabaseId : null,
+        tipo:       f.tipo || 'Gasolina',
+        data:       f.data,
+        km:         f.km || 0,
+        litros:     f.litros || 0,
+        preco:      f.preco || 0,
+        custo:      f.custo || 0
+      };
+    }).filter(function(f){ return f.vehicle_id; });
+    if (fuel.length) {
+      await _sb.from('fuel').insert(fuel);
+    }
+
+    // Sync perfil
+    if (data.user) {
+      await _sb.from('profiles').upsert({
+        id:         userId,
+        name:       data.user.name || '',
+        email:      data.user.email || '',
+        cidade:     data.user.cidade || null,
+        perf_icon:  data.user.perfilIcon || null,
+        perf_color: data.user.perfilColor || '#7B80C1',
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'id' });
+    }
+
+    _syncFailCount = 0;
+    // Atualiza indicador
+    var el = document.getElementById('saved-at');
+    if (el) {
+      var t = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      el.textContent = '☁️ Sincronizado às ' + t;
+    }
+  } catch(e) {
+    _syncFailCount++;
+    console.warn('Sync nuvem falhou (' + _syncFailCount + 'x):', e.message);
+    var el = document.getElementById('saved-at');
+    if (el) el.textContent = '💾 Local (sem sync)';
+  }
+}
+
+// ── Carrega dados da nuvem após login ───────────────────────
+async function _loadFromCloud(userId) {
+  if (!_supabaseReady || !_sb || !userId) return false;
+  try {
+    // Carrega veículos
+    var { data: vData } = await _sb.from('vehicles').select('*').eq('user_id', userId);
+    if (vData && vData.length) {
+      state.vehicles = vData.map(function(v) {
+        return {
+          id:          v.id,
+          supabaseId:  v.id,
+          marca:       v.marca,
+          modelo:      v.modelo,
+          ano:         v.ano,
+          placa:       v.placa || '',
+          cor:         v.cor || '',
+          km:          v.km || 0,
+          combustivel: v.combustivel || 'Flex',
+          archived:    v.archived || false
+        };
+      });
+    }
+
+    // Carrega histórico
+    var { data: hData } = await _sb.from('history').select('*').eq('user_id', userId).order('data', { ascending: false });
+    if (hData && hData.length) {
+      state.history = hData.map(function(h) {
+        var localV = state.vehicles.find(function(v){ return v.supabaseId === h.vehicle_id; });
+        return {
+          id:         h.id,
+          supabaseId: h.id,
+          veiculoId:  localV ? localV.id : h.vehicle_id,
+          veiculo:    localV ? localV.marca + ' ' + localV.modelo : '',
+          tipo:       h.tipo,
+          data:       h.data,
+          km:         h.km || 0,
+          custo:      h.custo || 0,
+          local:      h.local || ''
+        };
+      });
+    }
+
+    // Carrega abastecimentos
+    var { data: fData } = await _sb.from('fuel').select('*').eq('user_id', userId).order('data', { ascending: false });
+    if (fData && fData.length) {
+      state.fuel = fData.map(function(f) {
+        var localV = state.vehicles.find(function(v){ return v.supabaseId === f.vehicle_id; });
+        return {
+          id:         f.id,
+          supabaseId: f.id,
+          veiculoId:  localV ? localV.id : f.vehicle_id,
+          tipo:       f.tipo || 'Gasolina',
+          data:       f.data,
+          km:         f.km || 0,
+          litros:     parseFloat(f.litros) || 0,
+          preco:      parseFloat(f.preco) || 0,
+          custo:      parseFloat(f.custo) || 0
+        };
+      });
+    }
+
+    // Carrega perfil (cidade, ícone)
+    var { data: pData } = await _sb.from('profiles').select('*').eq('id', userId).single();
+    if (pData && state.user) {
+      state.user.cidade     = pData.cidade     || state.user.cidade || '';
+      state.user.perfilIcon = pData.perf_icon  || state.user.perfilIcon || '';
+      state.user.perfilColor= pData.perf_color || state.user.perfilColor || '#7B80C1';
+    }
+
+    // Salva cache local atualizado
+    _doSaveState();
+    return true;
+  } catch(e) {
+    console.warn('Erro ao carregar da nuvem:', e.message);
+    return false;
+  }
+}
+
+// ── Busca manual técnico do modelo na nuvem ─────────────────
+var _manualCache = {};
+async function _buscarManualModelo(marca, modelo) {
+  var cacheKey = (marca + '_' + modelo).toLowerCase();
+  if (_manualCache[cacheKey]) return _manualCache[cacheKey];
+  if (!_supabaseReady || !_sb) return null;
+  try {
+    var { data: mData } = await _sb
+      .from('modelos_veiculos')
+      .select('*, manual_manutencao(*), manual_problemas(*), manual_especificacoes(*), manual_arquivos(*)')
+      .ilike('marca', marca)
+      .ilike('modelo', '%' + modelo.split(' ')[0] + '%')
+      .limit(1)
+      .single();
+    if (mData) {
+      _manualCache[cacheKey] = mData;
+      return mData;
+    }
+  } catch(e) { /* sem resultado — usa dados locais */ }
+  return null;
+}
+
+// ── Salva passaporte na nuvem ao vender ─────────────────────
+async function _salvarPassaporteNuvem(vehicleId) {
+  if (!_supabaseReady || !_sb || !state.user) return;
+  var v = state.vehicles.find(function(x){ return x.id === vehicleId; });
+  if (!v || !v.placa) return;
+  try {
+    var histV = state.history.filter(function(h){ return h.veiculoId === vehicleId; });
+    var fuelV = state.fuel.filter(function(f){ return f.veiculoId === vehicleId; });
+    await _sb.from('passaportes').insert({
+      placa:         v.placa.toUpperCase().replace(/\s/g,''),
+      vendedor_id:   state.user.id,
+      vendedor_nome: state.user.name,
+      data_venda:    new Date().toISOString().slice(0,10),
+      km_venda:      v.km,
+      history_snap:  histV,
+      fuel_snap:     fuelV,
+      checklist_snap: v.checklist || {}
+    });
+    console.log('Passaporte salvo na nuvem ✅');
+  } catch(e) { console.warn('Erro ao salvar passaporte:', e.message); }
+}
+
+// ── Busca passaporte por placa ───────────────────────────────
+async function _buscarPassaportePorPlaca(placa) {
+  if (!_supabaseReady || !_sb) return null;
+  try {
+    var placaLimpa = placa.toUpperCase().replace(/\s|-/g,'');
+    var { data } = await _sb
+      .from('passaportes')
+      .select('*')
+      .eq('placa', placaLimpa)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+    return data;
+  } catch(e) { return null; }
+}
+
+// ── Carrega opiniões do Supabase ─────────────────────────────
+async function _carregarOpinioes(marca, modeloFiltro) {
+  if (!_supabaseReady || !_sb) return null;
+  try {
+    var q = _sb.from('opinioes').select('*').eq('aprovada', true).order('created_at', { ascending: false }).limit(50);
+    if (marca)        q = q.ilike('marca',  marca);
+    if (modeloFiltro) q = q.ilike('modelo', '%' + modeloFiltro + '%');
+    var { data } = await q;
+    return data;
+  } catch(e) { return null; }
+}
+
+// ── Salva opinião no Supabase ────────────────────────────────
+async function _salvarOpiniaoNuvem(opiniao) {
+  if (!_supabaseReady || !_sb || !state.user) return false;
+  try {
+    await _sb.from('opinioes').insert({
+      user_id:    state.user.id,
+      autor_nome: opiniao.primeiroNome || state.user.name.split(' ')[0],
+      marca:      opiniao.marca,
+      modelo:     opiniao.modelo,
+      ano:        opiniao.ano,
+      nota:       opiniao.nota,
+      titulo:     opiniao.titulo,
+      texto:      opiniao.texto,
+      tags:       opiniao.tags || []
+    });
+    return true;
+  } catch(e) { console.warn('Erro ao salvar opinião:', e.message); return false; }
 }
 
 function loadState() {
@@ -6462,10 +6779,13 @@ async function doLogin() {
     // onAuthStateChange cuida do resto
   } catch(err) {
     _setAuthBtnLoading('btn-login','btn-login-txt','btn-login-spin',false);
-    var msg = (err && err.message) ? err.message : String(err);
+    // Extrai mensagem limpa (evita "Error: Error: ...")
+    var rawMsg = (err && err.message) ? err.message : String(err);
+    var msg = rawMsg.replace(/^Error:\s*/i, '').replace(/^Error:\s*/i, '');
     // Erros de rede — fallback automático para modo local
     if (msg.toLowerCase().includes('failed to fetch') ||
-        msg.toLowerCase().includes('network') ||
+        msg.toLowerCase().includes('networkerror') ||
+        msg.toLowerCase().includes('network request') ||
         msg.toLowerCase().includes('fetch')) {
       showToast('Sem conexão com o servidor. Entrando no modo local…', 'error');
       setTimeout(function() {
@@ -6626,10 +6946,26 @@ function _loginUser(user) {
   document.getElementById('screen-app').classList.add('active');
   var firstName = (user.name || user.email || 'Usuário').split(' ')[0];
   _syncSidebarAvatar();
-  document.getElementById('dash-name').textContent        = firstName.toUpperCase();
+  document.getElementById('dash-name').textContent = firstName.toUpperCase();
   renderAlerts();
   updateDashboard();
-  showToast('Bem-vindo, ' + firstName + '! 🚗', 'success');
+  // Carrega dados da nuvem em background (não bloqueia a UI)
+  if (_supabaseReady && user.id && !user.id.startsWith('local_')) {
+    _loadFromCloud(user.id).then(function(loaded) {
+      if (loaded) {
+        renderVehiclesList();
+        renderAlerts();
+        updateDashboard();
+        _syncSidebarAvatar();
+        var cnt = state.vehicles.length;
+        showToast('☁️ ' + (cnt > 0 ? cnt + ' veículo' + (cnt > 1 ? 's' : '') + ' carregado' + (cnt > 1 ? 's' : '') + ' da nuvem' : 'Dados sincronizados'), 'success');
+      } else {
+        showToast('Bem-vindo, ' + firstName + '! 🚗', 'success');
+      }
+    });
+  } else {
+    showToast('Bem-vindo, ' + firstName + '! 🚗', 'success');
+  }
   try {
     if (!localStorage.getItem('mc_onboarded')) setTimeout(showOnboarding, 600);
   } catch(e) {}
@@ -6669,16 +7005,20 @@ if (_supabaseReady && _sb) {
   _sb.auth.getSession().then(function(res) {
     clearTimeout(_authTimeout);
     _authLoading(false);
-    if (res.data && res.data.session && res.data.session.user) {
+    if (res && res.data && res.data.session && res.data.session.user) {
       var u = res.data.session.user;
       var name = (u.user_metadata && u.user_metadata.full_name)
         ? u.user_metadata.full_name
         : capitalize((u.email || '').split('@')[0].replace(/[._-]/g,' '));
       _loginUser({ name: name, email: u.email, id: u.id });
+    } else {
+      // Sem sessão ativa — DOMContentLoaded cuida do fallback local
     }
-  }).catch(function() {
+  }).catch(function(err) {
     clearTimeout(_authTimeout);
     _authLoading(false);
+    // Failed to fetch ou erro de rede — silencioso, DOMContentLoaded já restaura sessão local
+    console.warn('Supabase getSession error:', err && err.message);
   });
 }
 
@@ -6722,7 +7062,7 @@ function showPage(page) {
   if (page === 'viagens')      renderViagemPage();
   if (page === 'manutencao')   renderManutencaoPage();
   if (page === 'saude')        renderSaudePage();
-  if (page === 'opinioes')     { renderOpinioes(); renderOpiniaoStats(); }
+  if (page === 'opinioes')     { renderOpinioesCloud(); renderOpiniaoStats(); }
   if (page === 'perfil')       renderPerfilPage();
   if (page === 'ranking')      renderRankingPage();
   if (page === 'modo-teste')   renderModoTestePage();
@@ -6770,7 +7110,7 @@ function validarPlaca(placa) {
 }
 
 async function buscarPlaca() {
-  var raw = document.getElementById('v-placa').value.trim();
+  var raw   = document.getElementById('v-placa').value.trim();
   var placa = validarPlaca(raw);
   var errEl = document.getElementById('placa-error');
   errEl.style.display = 'none';
@@ -6787,54 +7127,154 @@ async function buscarPlaca() {
   btnEl.disabled = true;
   btnEl.textContent = 'Buscando...';
 
-  var dados = null;
+  var dados   = null;
+  var origem  = '';
 
-  try {
-    var res = await fetch('https://brasilapi.com.br/api/fipe/preco/v1/' + placa, { signal: AbortSignal.timeout(5000) });
-    if (res.ok) {
-      var json = await res.json();
-      if (Array.isArray(json) && json.length > 0) {
-        var item = json[0];
-        dados = {
-          marca: item.marca || '',
-          modelo: item.modelo || item.referencia || '',
-          ano: String(item.anoModelo || item.ano || ''),
-          cor: 'Não informada',
-          combustivel: item.combustivel || 'Flex',
-          fallback: false
-        };
+  // ── 1. Verifica se já existe no Supabase (passaporte de venda anterior) ──
+  if (_supabaseReady && _sb) {
+    try {
+      var passaporte = await _buscarPassaportePorPlaca(placa);
+      if (passaporte && passaporte.history_snap) {
+        // Tenta extrair dados do veículo do histórico
+        var snap = passaporte.history_snap;
+        if (Array.isArray(snap) && snap.length > 0 && snap[0].veiculo) {
+          var partes = snap[0].veiculo.split(' ');
+          dados = {
+            marca:       partes[0] || '',
+            modelo:      partes.slice(1).join(' ') || '',
+            ano:         String(passaporte.km_venda ? '' : ''),
+            cor:         'Não informada',
+            combustivel: 'Flex',
+            passaporte:  passaporte,
+            origem:      'passaporte'
+          };
+          origem = 'passaporte';
+        }
       }
-    }
-  } catch(e) { /* fall through */ }
+    } catch(e) { /* sem passaporte — continua */ }
+  }
 
+  // ── 2. Verifica se o veículo já está cadastrado pelo próprio usuário ──
   if (!dados) {
-    await new Promise(function(r) { setTimeout(r, 800); });
-    var idx = placa.split('').reduce(function(a,c) { return a + c.charCodeAt(0); }, 0) % PLATE_DB.length;
-    dados = Object.assign({}, PLATE_DB[idx], { fallback: true });
+    var jaExiste = state.vehicles.find(function(v) {
+      return v.placa && v.placa.replace(/\W/g,'').toUpperCase() === placa.replace(/\W/g,'').toUpperCase();
+    });
+    if (jaExiste && !jaExiste.archived) {
+      loadEl.style.display = 'none';
+      btnEl.disabled = false;
+      btnEl.textContent = 'Buscar →';
+      errEl.textContent = '⚠ Este veículo já está cadastrado: ' + jaExiste.marca + ' ' + jaExiste.modelo;
+      errEl.style.display = 'block';
+      return;
+    }
   }
 
   loadEl.style.display = 'none';
   btnEl.disabled = false;
   btnEl.textContent = 'Buscar →';
 
-  document.getElementById('v-marca').value      = dados.marca;
-  document.getElementById('v-modelo').value     = dados.modelo;
-  document.getElementById('v-ano').value        = dados.ano;
-  document.getElementById('v-cor').value        = dados.cor;
-  document.getElementById('v-combustivel').value= dados.combustivel;
+  // ── 3. Preenche formulário ──
+  if (dados && dados.marca) {
+    document.getElementById('v-marca').value      = dados.marca;
+    document.getElementById('v-modelo').value     = dados.modelo;
+    document.getElementById('v-ano').value        = dados.ano || '';
+    document.getElementById('v-cor').value        = dados.cor || '';
+    document.getElementById('v-combustivel').value= dados.combustivel || 'Flex';
+
+    if (origem === 'passaporte') {
+      errEl.innerHTML = '✅ <strong>Passaporte encontrado!</strong> Este carro tem histórico de ' +
+        (dados.passaporte.history_snap ? dados.passaporte.history_snap.length : 0) +
+        ' manutenções do dono anterior. Confirme ou edite os dados.';
+      errEl.style.cssText = 'display:block;margin-top:14px;padding:12px 16px;background:rgba(56,161,105,0.07);border:1px solid rgba(56,161,105,0.25);border-radius:8px;font-size:13px;color:#38a169;';
+    }
+  } else {
+    // Sem dados externos — formulário em branco para preenchimento manual
+    document.getElementById('v-marca').value       = '';
+    document.getElementById('v-modelo').value      = '';
+    document.getElementById('v-ano').value         = '';
+    document.getElementById('v-cor').value         = '';
+    document.getElementById('v-combustivel').value = 'Flex';
+
+    errEl.innerHTML = 'ℹ️ Não encontramos dados desta placa na nossa base. Preencha os dados do veículo abaixo — eles ficam salvos para consultas futuras.';
+    errEl.style.cssText = 'display:block;margin-top:14px;padding:12px 16px;background:rgba(123,128,193,0.07);border:1px solid rgba(123,128,193,0.2);border-radius:8px;font-size:13px;color:var(--accent);';
+
+    // Habilita autocomplete de marcas no campo
+    _ativarAutocompleteMarca();
+  }
+
   document.getElementById('placa-badge').textContent = placa;
   state._pendingPlaca = placa;
   document.getElementById('step-dados').style.display = 'block';
 
-  if (dados.fallback) {
-    errEl.textContent = 'ℹ️ Modo demonstração — dados preenchidos via banco local. Confirme ou edite antes de salvar.';
-    errEl.style.cssText = 'display:block; margin-top:14px; padding:12px 16px; background:rgba(123,128,193,0.07); border:1px solid rgba(123,128,193,0.2); border-radius:8px; font-size:13px; color:var(--accent);';
-    ['v-marca','v-modelo','v-ano','v-cor','v-combustivel'].forEach(function(id) {
-      var el = document.getElementById(id);
-      el.removeAttribute('readonly');
-      el.style.cssText = '';
-    });
+  // Garante que todos os campos estejam editáveis
+  ['v-marca','v-modelo','v-ano','v-cor','v-combustivel'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) { el.removeAttribute('readonly'); el.style.cssText = ''; }
+  });
+  setTimeout(function() {
+    var km = document.getElementById('v-km');
+    if (km) km.focus();
+  }, 100);
+}
+
+// Autocomplete de marcas populares no campo v-marca
+function _ativarAutocompleteMarca() {
+  var marcaEl = document.getElementById('v-marca');
+  if (!marcaEl || marcaEl._autocompleteAtivo) return;
+  marcaEl._autocompleteAtivo = true;
+
+  var marcas = ['Chevrolet','Fiat','Volkswagen','Hyundai','Toyota','Honda',
+                'Jeep','Renault','Nissan','Ford','Mitsubishi','Kia',
+                'Mercedes-Benz','BMW','Audi','Peugeot','Citroën','Caoa Chery'];
+
+  marcaEl.addEventListener('input', function() {
+    var v = this.value.toLowerCase();
+    var lista = document.getElementById('_marca-datalist');
+    if (!lista) {
+      lista = document.createElement('datalist');
+      lista.id = '_marca-datalist';
+      this.setAttribute('list', '_marca-datalist');
+      document.body.appendChild(lista);
+    }
+    lista.innerHTML = marcas
+      .filter(function(m){ return m.toLowerCase().includes(v); })
+      .map(function(m){ return '<option value="' + m + '">'; })
+      .join('');
+  });
+
+  // Ao escolher marca, sugere modelos
+  marcaEl.addEventListener('change', function() {
+    _sugerirModelos(this.value);
+  });
+}
+
+function _sugerirModelos(marca) {
+  var modeloEl = document.getElementById('v-modelo');
+  if (!modeloEl) return;
+
+  var modelos = {
+    'Chevrolet': ['Onix','Onix Plus','Tracker','Cruze','S10','Montana','Spin','Cobalt'],
+    'Fiat':      ['Strada','Argo','Pulse','Cronos','Toro','Uno','Mobi','Doblo'],
+    'Volkswagen':['Polo','Virtus','T-Cross','Taos','Saveiro','Gol','Fox','Tiguan'],
+    'Hyundai':   ['HB20','HB20S','Creta','Tucson','Santa Fe','i30'],
+    'Toyota':    ['Corolla','Corolla Cross','Hilux','SW4','Yaris','RAV4'],
+    'Honda':     ['Civic','HR-V','CR-V','Fit','City','WR-V'],
+    'Jeep':      ['Compass','Renegade','Commander','Gladiator'],
+    'Renault':   ['Kwid','Duster','Captur','Logan','Sandero','Oroch'],
+    'Nissan':    ['Kicks','Frontier','Versa','Sentra'],
+    'Ford':      ['Ranger','Bronco Sport','Territory','Maverick'],
+  };
+
+  var lista = document.getElementById('_modelo-datalist');
+  if (!lista) {
+    lista = document.createElement('datalist');
+    lista.id = '_modelo-datalist';
+    modeloEl.setAttribute('list', '_modelo-datalist');
+    document.body.appendChild(lista);
   }
+  var opts = modelos[marca] || [];
+  lista.innerHTML = opts.map(function(m){ return '<option value="' + m + '">'; }).join('');
+  if (opts.length) modeloEl.focus();
 }
 
 function resetBusca() {
@@ -7096,9 +7536,11 @@ function marcarVendido(vehicleId) {
   if (!confirm('Marcar "' + v.marca + ' ' + v.modelo + '" como vendido?\n\nO histórico será preservado e vinculado à placa para o próximo dono.')) return;
   v.archived = true;
   v.archivedAt = new Date().toISOString();
-  // Auto-salva histórico vinculado à placa
+  // Auto-salva histórico vinculado à placa (local)
   salvarHistoricoNaPlaca(vehicleId);
   saveState();
+  // Salva passaporte na nuvem (background)
+  _salvarPassaporteNuvem(vehicleId);
   renderVehiclesList();
   updateDashboard();
   renderAlerts();
@@ -11154,23 +11596,23 @@ function renderPerfilPage() {
   var heroEl = document.getElementById('perfil-hero');
   if (heroEl) {
     heroEl.innerHTML =
-      '<div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">' +
-        '<div id="perfil-avatar-btn" onclick="abrirPerfilIconPicker()" style="width:72px;height:72px;border-radius:50%;background:rgba(0,0,0,0.2);border:2px solid ' + perfilColor + ';box-shadow:0 4px 20px ' + perfilColor + '44;display:flex;align-items:center;justify-content:center;font-size:34px;cursor:pointer;flex-shrink:0;transition:transform 0.15s;" title="Trocar ícone">' + perfilIcon + '</div>' +
-        '<div style="flex:1;min-width:0;">' +
-          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;letter-spacing:1px;color:var(--text);">' + nome + '</div>' +
-          (email ? '<div style="font-size:12px;color:var(--text3);margin-top:2px;">' + email + '</div>' : '') +
-          (diasUsando > 0 ? '<div style="font-size:11px;color:var(--text3);margin-top:6px;">⏱ Usando o app há <strong style="color:var(--accent);">' + diasUsando + ' dias</strong></div>' : '') +
+      '<div style="display:flex;align-items:center;gap:14px;">' +
+        '<div id="perfil-avatar-btn" onclick="abrirPerfilIconPicker()" style="width:68px;height:68px;border-radius:50%;background:rgba(0,0,0,0.2);border:2px solid ' + perfilColor + ';box-shadow:0 4px 16px ' + perfilColor + '33;display:flex;align-items:center;justify-content:center;font-size:32px;cursor:pointer;flex-shrink:0;transition:transform 0.15s;" title="Trocar ícone">' + perfilIcon + '</div>' +
+        '<div style="flex:1;min-width:0;overflow:hidden;">' +
+          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;letter-spacing:1px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + nome + '</div>' +
+          (email ? '<div style="font-size:11px;color:var(--text3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + email + '</div>' : '') +
+          (diasUsando > 0 ? '<div style="font-size:11px;color:var(--text3);margin-top:5px;">⏱ Usando o app há <strong style="color:var(--accent);">' + diasUsando + ' dias</strong></div>' : '') +
         '</div>' +
-        '<div style="text-align:center;padding:10px 18px;background:rgba(123,128,193,0.07);border:1px solid rgba(123,128,193,0.2);border-radius:10px;">' +
-          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:28px;color:var(--accent);">' + conquistadas + '/' + conquistas.length + '</div>' +
-          '<div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;">Conquistas</div>' +
+        '<div style="flex-shrink:0;text-align:center;padding:8px 14px;background:rgba(123,128,193,0.07);border:1px solid rgba(123,128,193,0.2);border-radius:10px;">' +
+          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:26px;color:var(--accent);line-height:1;">' + conquistadas + '/' + conquistas.length + '</div>' +
+          '<div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:2px;">Conquistas</div>' +
         '</div>' +
       '</div>' +
-      '<div style="margin-top:8px;"><span style="font-size:10px;color:var(--text3);">Toque no ícone para personalizar ☝️</span></div>' +
-      '<div style="margin-top:12px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:8px;flex-wrap:wrap;">' +
-        '<button class="btn-secondary" style="padding:8px 16px;font-size:12px;" onclick="perfilEditarNome()">✏️ Editar nome</button>' +
-        '<button class="btn-secondary" style="padding:8px 16px;font-size:12px;" onclick="showPage(\'viagens\')">🗺️ Ver viagens</button>' +
-        '<button class="btn-secondary" style="padding:8px 16px;font-size:12px;" onclick="showPage(\'analytics\')">📊 Ver financeiro</button>' +
+      '<div style="margin-top:6px;"><span style="font-size:10px;color:var(--text3);">Toque no ícone para personalizar ☝️</span></div>' +
+      '<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;">' +
+        '<button class="btn-secondary" style="padding:8px 14px;font-size:12px;" onclick="perfilEditarNome()">✏️ Editar nome</button>' +
+        '<button class="btn-secondary" style="padding:8px 14px;font-size:12px;" onclick="showPage(\'viagens\')">🗺️ Ver viagens</button>' +
+        '<button class="btn-secondary" style="padding:8px 14px;font-size:12px;" onclick="showPage(\'analytics\')">📊 Ver financeiro</button>' +
       '</div>';
   }
 
@@ -11963,6 +12405,16 @@ function updateWishlistBadge() {
 }
 
 
+function _compBar(label, pct, val, color) {
+  return '<div style="display:flex;align-items:center;gap:8px;">' +
+    '<div style="font-size:10px;color:var(--text3);width:72px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + label + '</div>' +
+    '<div style="flex:1;height:7px;background:var(--surface2);border-radius:3px;overflow:hidden;">' +
+      '<div style="height:100%;width:' + pct + '%;background:' + color + ';border-radius:3px;transition:width 0.8s ease;"></div>' +
+    '</div>' +
+    '<div style="font-size:10px;font-family:\'JetBrains Mono\',monospace;color:var(--text2);min-width:54px;text-align:right;flex-shrink:0;white-space:nowrap;">' + val + '</div>' +
+  '</div>';
+}
+
 function renderComparativo() {
   var selected = wishlist.filter(function(w){ return compareSelection.indexOf(w.id) >= 0; });
   if (selected.length < 2) { showToast('Selecione pelo menos 2 carros', 'error'); return; }
@@ -11991,78 +12443,83 @@ function renderComparativo() {
 
   var cols = selected.length;
   var gridEl = document.getElementById('compare-grid');
-  gridEl.style.gridTemplateColumns = 'repeat(' + Math.min(cols, 3) + ', 1fr)';
+  // Mobile: always 1 column stacked. Desktop: side by side
+  var isMobile = window.innerWidth <= 768;
+  gridEl.style.gridTemplateColumns = isMobile ? '1fr' : 'repeat(' + Math.min(cols, 3) + ', 1fr)';
   gridEl.className = 'compare-grid';
 
   gridEl.innerHTML = selected.map(function(w, i) {
     var medal = medals[i] || medals[2];
     var consumoLabel = w.consumo > 0 ? w.consumo.toFixed(1) + ' km/L' : '⚡ Elétrico';
-    var fipePct  = Math.round((w.fipe / maxFipe) * 100);
-    var custoPct = Math.round((w.custoMensal / maxCusto) * 100);
-    var manutPct = Math.round((w.manutAnual / maxManut) * 100);
+    var fipePct    = Math.round((w.fipe / maxFipe) * 100);
+    var custoPct   = Math.round((w.custoMensal / maxCusto) * 100);
+    var manutPct   = Math.round((w.manutAnual / maxManut) * 100);
     var consumoPct = Math.round(((w.consumo||20) / maxConsumo) * 100);
 
-    // Color: green=good(low), red=bad(high)
-    var custoColor = custoPct <= 50 ? '#38a169' : custoPct <= 75 ? 'var(--accent)' : 'var(--red)';
-    var manutColor = manutPct <= 50 ? '#38a169' : manutPct <= 75 ? 'var(--accent)' : 'var(--red)';
+    var custoColor   = custoPct   <= 50 ? '#38a169' : custoPct   <= 75 ? 'var(--accent)' : 'var(--red)';
+    var manutColor   = manutPct   <= 50 ? '#38a169' : manutPct   <= 75 ? 'var(--accent)' : 'var(--red)';
     var consumoColor = consumoPct >= 60 ? '#38a169' : consumoPct >= 35 ? 'var(--accent)' : 'var(--red)';
 
-    // Reason for rank
     var reason = i === 0
       ? '✅ Melhor custo-benefício geral'
       : i === 1
       ? '⚖️ Boa opção com trade-offs'
       : '⚠️ Custo de manutenção elevado';
 
-    return '<div class="compare-card ' + medal.cls + '">' +
-      '<div class="compare-medal ' + medal.cls + '">' + medal.label + '</div>' +
-      '<div class="compare-name">' + w.label + '</div>' +
-      '<div class="compare-year">' + w.ano + ' · ' + consumoLabel + '</div>' +
+    // Medal colors
+    var medalBg = i === 0 ? 'linear-gradient(135deg,#7B80C1,#5860A8)' :
+                  i === 1 ? 'linear-gradient(135deg,#bdbdbd,#757575)' :
+                            'linear-gradient(135deg,#cd7f32,#8d5524)';
+    var medalTxt = i === 2 ? '#fff' : '#000';
 
-      '<div class="compare-stats">' +
-        '<div class="compare-stat">' +
-          '<div class="compare-stat-val" style="color:var(--accent);">' + fmt(w.fipe) + '</div>' +
-          '<div class="compare-stat-lbl">Preço FIPE</div>' +
-        '</div>' +
-        '<div class="compare-stat">' +
-          '<div class="compare-stat-val" style="color:' + custoColor + ';">' + fmt(w.custoMensal) + '</div>' +
-          '<div class="compare-stat-lbl">Custo/mês</div>' +
-        '</div>' +
-        '<div class="compare-stat">' +
-          '<div class="compare-stat-val" style="color:' + manutColor + ';">' + fmt(w.manutAnual) + '</div>' +
-          '<div class="compare-stat-lbl">Manutenção/ano</div>' +
+    return '<div class="compare-card ' + medal.cls + '" style="padding:16px;">' +
+
+      // Header: badge + nome + ano (sem padding-right que causa truncamento)
+      '<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;">' +
+        '<div style="background:' + medalBg + ';color:' + medalTxt + ';font-size:10px;font-weight:800;letter-spacing:0.5px;padding:6px 10px;border-radius:8px;white-space:nowrap;flex-shrink:0;">' + medal.label + '</div>' +
+        '<div style="flex:1;min-width:0;">' +
+          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;letter-spacing:0.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + w.label + '</div>' +
+          '<div style="font-size:11px;color:var(--text3);">' + w.ano + ' · ' + consumoLabel + '</div>' +
         '</div>' +
       '</div>' +
 
-      '<div class="compare-bars">' +
-        '<div class="compare-bar-row">' +
-          '<div class="compare-bar-lbl">Preço</div>' +
-          '<div class="compare-bar-track"><div class="compare-bar-fill" style="width:' + fipePct + '%;background:var(--accent);"></div></div>' +
-          '<div class="compare-bar-val">' + fmt(w.fipe) + '</div>' +
+      // Stats: 3 colunas dentro do card (sempre cabe pois o card agora tem a largura toda)
+      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;">' +
+        '<div style="text-align:center;background:var(--surface2);border-radius:8px;padding:8px 4px;">' +
+          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:16px;color:var(--accent);line-height:1;">' + fmt(w.fipe) + '</div>' +
+          '<div style="font-size:9px;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:0.3px;">FIPE</div>' +
         '</div>' +
-        '<div class="compare-bar-row">' +
-          '<div class="compare-bar-lbl">Custo mensal</div>' +
-          '<div class="compare-bar-track"><div class="compare-bar-fill" style="width:' + custoPct + '%;background:' + custoColor + ';"></div></div>' +
-          '<div class="compare-bar-val">' + fmt(w.custoMensal) + '</div>' +
+        '<div style="text-align:center;background:var(--surface2);border-radius:8px;padding:8px 4px;">' +
+          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:16px;color:' + custoColor + ';line-height:1;">' + fmt(w.custoMensal) + '</div>' +
+          '<div style="font-size:9px;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:0.3px;">Mês</div>' +
         '</div>' +
-        '<div class="compare-bar-row">' +
-          '<div class="compare-bar-lbl">Manutenção</div>' +
-          '<div class="compare-bar-track"><div class="compare-bar-fill" style="width:' + manutPct + '%;background:' + manutColor + ';"></div></div>' +
-          '<div class="compare-bar-val">' + fmt(w.manutAnual) + '</div>' +
-        '</div>' +
-        '<div class="compare-bar-row">' +
-          '<div class="compare-bar-lbl">Consumo</div>' +
-          '<div class="compare-bar-track"><div class="compare-bar-fill" style="width:' + consumoPct + '%;background:' + consumoColor + ';"></div></div>' +
-          '<div class="compare-bar-val">' + (w.consumo > 0 ? w.consumo.toFixed(1) + ' km/L' : '⚡') + '</div>' +
+        '<div style="text-align:center;background:var(--surface2);border-radius:8px;padding:8px 4px;">' +
+          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:16px;color:' + manutColor + ';line-height:1;">' + fmt(w.manutAnual) + '</div>' +
+          '<div style="font-size:9px;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:0.3px;">Manut./ano</div>' +
         '</div>' +
       '</div>' +
 
-      '<div class="compare-score-badge ' + medal.badgeCls + '">' + reason + '</div>' +
+      // Barras comparativas
+      '<div style="display:flex;flex-direction:column;gap:7px;margin-bottom:12px;">' +
+        _compBar('Preço FIPE',   fipePct,   fmt(w.fipe),                          'var(--accent)') +
+        _compBar('Custo/mês',    custoPct,  fmt(w.custoMensal),                   custoColor) +
+        _compBar('Manutenção',   manutPct,  fmt(w.manutAnual),                    manutColor) +
+        _compBar('Consumo',      consumoPct, (w.consumo > 0 ? w.consumo.toFixed(1)+' km/L' : '⚡'), consumoColor) +
+      '</div>' +
 
-      '<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-size:11px;color:var(--text3);">' +
-        '<span>3 anos de posse: <strong style="color:var(--text);">' + fmt(w.totalPosse3anos) + '</strong></span>' +
+      // Badge de resultado
+      '<div style="padding:8px 12px;border-radius:8px;font-size:12px;font-weight:700;' +
+        (i === 0 ? 'background:rgba(123,128,193,0.1);color:var(--accent);border:1px solid rgba(123,128,193,0.25);' :
+         i === 1 ? 'background:rgba(158,158,158,0.1);color:#9e9e9e;border:1px solid rgba(158,158,158,0.2);' :
+                   'background:rgba(205,127,50,0.08);color:#cd7f32;border:1px solid rgba(205,127,50,0.2);') +
+      '">' + reason + '</div>' +
+
+      // Rodapé
+      '<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px;font-size:11px;color:var(--text3);">' +
+        '<span>3 anos: <strong style="color:var(--text);">' + fmt(w.totalPosse3anos) + '</strong></span>' +
         '<span>Seguro: <strong style="color:var(--text);">' + w.seguro + '% FIPE</strong></span>' +
       '</div>' +
+
     '</div>';
   }).join('');
 
@@ -12249,6 +12706,167 @@ var MODELO_INFO_DB = {
 
 var _modeloInfoTab = 'manut';
 
+// ============================================================
+// OPINIÕES — publicação e carregamento da nuvem
+// ============================================================
+async function publicarOpiniao() {
+  var marca  = (document.getElementById('op-marca')  ||{}).value || '';
+  var modelo = (document.getElementById('op-modelo') ||{}).value || '';
+  var ano    = (document.getElementById('op-ano')    ||{}).value || '';
+  var nota   = parseInt((document.getElementById('op-nota') ||{}).value || 3);
+  var titulo = (document.getElementById('op-titulo') ||{}).value || '';
+  var texto  = (document.getElementById('op-texto')  ||{}).value || '';
+
+  if (!marca || !modelo) { showToast('Informe a marca e o modelo', 'error'); return; }
+  if (!texto.trim())     { showToast('Escreva sua opinião antes de publicar', 'error'); return; }
+  if (!state.user)       { showToast('Você precisa estar logado', 'error'); return; }
+
+  var firstName = (state.user.name || 'Anônimo').split(' ')[0];
+  var opiniao = {
+    id:          Date.now(),
+    marca:       marca,
+    modelo:      modelo,
+    ano:         ano,
+    nota:        nota,
+    titulo:      titulo,
+    texto:       texto,
+    autor:       firstName,
+    primeiroNome:firstName,
+    data:        new Date().toLocaleDateString('pt-BR'),
+    tags:        []
+  };
+
+  // Salva local primeiro
+  OPINIAO_DATA.unshift(opiniao);
+
+  // Envia para nuvem em background
+  var ok = await _salvarOpiniaoNuvem(opiniao);
+  showToast(ok ? '✅ Opinião publicada na comunidade!' : '💾 Opinião salva localmente', 'success');
+
+  // Limpa form
+  ['op-marca','op-modelo','op-ano','op-titulo','op-texto'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.value = id === 'op-nota' ? '3' : '';
+  });
+
+  // Atualiza lista
+  renderOpinioesCloud();
+  renderOpiniaoStats();
+}
+
+async function renderOpinioesCloud() {
+  // Tenta carregar da nuvem primeiro
+  var selEl  = document.getElementById('opiniao-filter-sel');
+  var filtro = selEl ? selEl.value : '';
+  var partes = filtro ? filtro.split('|') : [];
+  var marca  = partes[0] || '';
+  var modelo = partes[1] || '';
+
+  var cloudData = await _carregarOpinioes(marca || null, modelo || null);
+  if (cloudData && cloudData.length) {
+    // Converte formato Supabase → formato local
+    var converted = cloudData.map(function(o) {
+      return {
+        id:          o.id,
+        marca:       o.marca,
+        modelo:      o.modelo,
+        ano:         o.ano,
+        nota:        o.nota,
+        titulo:      o.titulo,
+        texto:       o.texto,
+        autor:       o.autor_nome,
+        primeiroNome:o.autor_nome,
+        data:        o.created_at ? new Date(o.created_at).toLocaleDateString('pt-BR') : '',
+        tags:        o.tags || [],
+        curtidas:    o.curtidas || 0
+      };
+    });
+    // Mescla com OPINIAO_DATA local (remove duplicatas)
+    var cloudIds = new Set(converted.map(function(o){ return String(o.id); }));
+    var localOnly = OPINIAO_DATA.filter(function(o){ return !cloudIds.has(String(o.id)); });
+    var merged = converted.concat(localOnly);
+    // Atualiza OPINIAO_DATA com dados da nuvem
+    OPINIAO_DATA.length = 0;
+    merged.forEach(function(o){ OPINIAO_DATA.push(o); });
+  }
+  // Renderiza com dados atualizados
+  renderOpinioes();
+}
+
+// ============================================================
+// INFO DO MODELO — busca manual técnico da nuvem
+// ============================================================
+async function renderModeloInfoVehicleCloud(vehicleId, tabEl) {
+  // Renderiza primeiro com dados locais (imediato)
+  renderModeloInfoVehicle(vehicleId, tabEl);
+
+  // Busca dados da nuvem em background
+  var v = state.vehicles.find(function(x){ return x.id === vehicleId; });
+  if (!v) return;
+  var manualNuvem = await _buscarManualModelo(v.marca, v.modelo);
+  if (!manualNuvem) return;
+
+  // Se encontrou dados melhores na nuvem, renderiza novamente
+  var container = document.getElementById('modelo-info-vehicle-content');
+  if (!container) return;
+
+  // Adiciona seção de especificações da nuvem
+  var specs = manualNuvem.manual_especificacoes && manualNuvem.manual_especificacoes[0];
+  var arquivos = manualNuvem.manual_arquivos || [];
+  var manutNuvem = manualNuvem.manual_manutencao || [];
+
+  if (specs || arquivos.length || manutNuvem.length) {
+    var extra = '';
+
+    // Especificações técnicas
+    if (specs) {
+      extra += '<div class="card" style="margin-top:0;">' +
+        '<div class="card-title">📋 Especificações técnicas — ' + v.marca + ' ' + v.modelo + '</div>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">' +
+        [
+          ['🛢️ Óleo', (specs.oleo_tipo||'—') + ' · ' + (specs.oleo_capacidade||'')],
+          ['⛽ Combustível', specs.combustivel_ok||'—'],
+          ['🔵 Pneus', specs.pneu_dianteiro||'—'],
+          ['💨 Pressão', (specs.pressao_d||'—') + ' / ' + (specs.pressao_t||'—')],
+          ['🔋 Bateria', specs.bateria||'—'],
+          ['⛽ Tanque', specs.capacidade_tank ? specs.capacidade_tank + 'L' : '—'],
+          ['🏙️ Consumo cidade', specs.consumo_cidade ? specs.consumo_cidade + ' km/L' : '—'],
+          ['🛣️ Consumo estrada', specs.consumo_estrada ? specs.consumo_estrada + ' km/L' : '—'],
+        ].map(function(r){
+          return '<div style="background:var(--surface2);border-radius:8px;padding:8px 10px;">' +
+            '<div style="font-size:10px;color:var(--text3);margin-bottom:2px;">' + r[0] + '</div>' +
+            '<div style="font-size:12px;font-weight:600;color:var(--text);">' + r[1] + '</div>' +
+          '</div>';
+        }).join('') +
+        '</div></div>';
+    }
+
+    // PDFs disponíveis
+    if (arquivos.length) {
+      extra += '<div class="card" style="margin-top:0;">' +
+        '<div class="card-title">📄 Manuais disponíveis</div>' +
+        arquivos.map(function(a){
+          var url = 'https://owxlowvptbuomusaxfoi.supabase.co/storage/v1/object/public/manuais/' + a.storage_path;
+          return '<a href="' + url + '" target="_blank" ' +
+            'style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface2);border-radius:8px;margin-bottom:6px;text-decoration:none;">' +
+            '<span style="font-size:20px;">📄</span>' +
+            '<div style="flex:1;">' +
+              '<div style="font-size:12px;font-weight:600;color:var(--text);">' + a.nome + '</div>' +
+              '<div style="font-size:10px;color:var(--text3);">' + (a.ano_manual||'') + ' · ' + (a.tamanho_kb ? Math.round(a.tamanho_kb/1024*10)/10 + 'MB' : '') + '</div>' +
+            '</div>' +
+            '<span style="font-size:11px;color:var(--accent);font-weight:600;">Abrir PDF →</span>' +
+          '</a>';
+        }).join('') +
+      '</div>';
+    }
+
+    if (extra) {
+      container.innerHTML += extra;
+    }
+  }
+}
+
+
 function renderModeloInfo() {
   var content = document.getElementById('modelo-info-content');
   if (!content) return;
@@ -12263,11 +12881,11 @@ function renderModeloInfo() {
   // Vehicle selector tabs
   var tabsHtml = '<div class="model-info-tabs">';
   active.forEach(function(v, i) {
-    tabsHtml += '<div class="model-info-tab'+(i===0?' active':'')+'" onclick="renderModeloInfoVehicle('+v.id+', this)">'+v.marca+' '+v.modelo.split(' ')[0]+'</div>';
+    tabsHtml += '<div class="model-info-tab'+(i===0?' active':'')+'" onclick="renderModeloInfoVehicleCloud('+v.id+', this)">'+v.marca+' '+v.modelo.split(' ')[0]+'</div>';
   });
   tabsHtml += '</div><div id="modelo-info-vehicle-content"></div>';
   content.innerHTML = tabsHtml;
-  renderModeloInfoVehicle(active[0].id, null);
+  renderModeloInfoVehicleCloud(active[0].id, null);
 }
 
 function renderModeloInfoVehicle(vehicleId, tabEl) {
@@ -13219,7 +13837,9 @@ function importarBackupCompleto() {
 // ── Variáveis de modo ──────────────────────────────────────
 var _appMode = localStorage.getItem('manycars_mode') || 'normal'; // 'normal'|'teste'|'empresa'|'admin'
 var _stateTeste = JSON.parse(localStorage.getItem('manycars_teste') || '{"vehicles":[],"history":[],"fuel":[],"docs":{}}');
-var _empresaData = JSON.parse(localStorage.getItem('manycars_empresa') || 'null');function _syncModoUI() {
+var _empresaData = JSON.parse(localStorage.getItem('manycars_empresa') || 'null');
+
+function _syncModoUI() {
   var badge = document.getElementById('modo-badge');
   var banner = document.getElementById('teste-floating-banner');
   var navTeste = document.getElementById('nav-teste');
@@ -13599,6 +14219,26 @@ var _BI = {
   ]
 };
 
+// Lê estado real do localStorage para o painel admin
+function _admGetDados() {
+  try {
+    var raw = localStorage.getItem('manycars_v1');
+    var s = raw ? JSON.parse(raw) : {};
+    return {
+      user:     s.user     || {},
+      vehicles: s.vehicles || [],
+      history:  s.history  || [],
+      fuel:     s.fuel     || [],
+      docs:     s.docs     || {},
+      viagens:  s.viagens  || [],
+      wishlist: s.wishlist || []
+    };
+  } catch(e) {
+    return { user:{}, vehicles:[], history:[], fuel:[], docs:{}, viagens:[], wishlist:[] };
+  }
+}
+
+
 // Mescla dados reais do usuário atual com os dados da plataforma
 function _admMergeReal() {
   var real = _admGetDados();
@@ -13627,6 +14267,9 @@ function _admMergeReal() {
 }
 
 function renderModoAdminPage() {
+  // Guard: só roda se a página admin estiver ativa/visível
+  var adminPage = document.getElementById('page-modo-admin');
+  if (!adminPage || !adminPage.classList.contains('active')) return;
   var el = document.getElementById('adm-last-refresh');
   if (el) el.textContent = 'Atualizado às ' + new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}) + ' · Plataforma completa + dados locais';
   var d = _admMergeReal();
