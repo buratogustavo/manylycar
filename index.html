@@ -301,7 +301,7 @@ body {
   flex-direction: row;
   min-height: 100vh;
   width: 100%;
-  overflow: hidden;     /* evita scroll horizontal no desktop */
+  overflow: hidden;
 }
 
 /* SIDEBAR */
@@ -414,12 +414,11 @@ body {
 
 /* MAIN CONTENT */
 .main-content {
-  flex: 1 1 0;          /* cresce e encolhe corretamente */
-  min-width: 0;         /* evita overflow em flex */
+  flex: 1 1 auto;
+  min-width: 0;
   overflow-y: auto;
   overflow-x: hidden;
   background: var(--bg);
-  width: 0;             /* força flex a calcular a largura pelo flex-grow */
 }
 
 .page {
@@ -1590,23 +1589,32 @@ body {
   /* Layout */
   .mobile-topbar { display: flex; }
 
-  /* Sidebar: sai do fluxo flex e fica fora da tela */
+  /* Sidebar: totalmente fora do fluxo no mobile */
   .sidebar {
+    display: none;           /* remove do flex — sem ambiguidade */
     position: fixed;
-    left: -280px;        /* completamente fora */
-    top: 0; bottom: 0;
+    left: 0; top: 0; bottom: 0;
     width: 260px;
     z-index: 200;
-    transition: left 0.28s cubic-bezier(0.22,1,0.36,1);
     overflow-y: auto;
   }
-  .sidebar.open { left: 0; }
+  /* Só aparece quando aberta */
+  .sidebar.open {
+    display: flex !important;
+    flex-direction: column;
+    animation: slideInSidebar 0.26s cubic-bezier(0.22,1,0.36,1) both;
+  }
+  @keyframes slideInSidebar {
+    from { transform: translateX(-100%); opacity: 0.8; }
+    to   { transform: translateX(0);    opacity: 1; }
+  }
 
-  /* Main content ocupa 100% da largura */
+  /* Main content ocupa 100% sem nenhuma interferência */
   .main-content {
-    width: 100%;
+    width: 100% !important;
     min-width: 0;
     padding-bottom: 70px;
+    flex: 1 1 auto !important;
   }
 
   .page { padding: 14px 16px 24px; }
