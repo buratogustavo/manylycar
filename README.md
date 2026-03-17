@@ -1,2 +1,0 @@
-# manylycar
-Assistente automotivo brasileiro
