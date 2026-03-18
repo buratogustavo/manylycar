@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0c0d0f">
+<meta name="theme-color" content="#7B80C1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ManyCars">
@@ -5865,8 +5865,68 @@ function _doSaveState() {
   } catch(e) { console.warn('Erro ao salvar:', e); }
 }
 
-// ── Sync para o Supabase ────────────────────────────────────
-var _cloudSyncTimer = null;
+// ── Verifica plano ativo no Supabase ao fazer login ────────────
+async function _verificarPlanoAtivo(userId) {
+  if (!_supabaseReady || !_sb) return;
+  try {
+    var { data } = await _sb
+      .from('profiles')
+      .select('plano, plano_ativo, plano_expira')
+      .eq('id', userId)
+      .single();
+    if (!data) return;
+
+    var expirou = data.plano_expira && new Date(data.plano_expira) < new Date();
+
+    if (data.plano_ativo && !expirou && data.plano !== 'free') {
+      // Sincroniza plano do Supabase para o state local
+      if (state.user && state.user.plano !== data.plano) {
+        state.user.plano      = data.plano;
+        state.user.planoAtivo = true;
+        saveState();
+      }
+    } else if (expirou && state.user && state.user.plano !== 'free') {
+      // Plano expirou — rebaixa para free
+      state.user.plano      = 'free';
+      state.user.planoAtivo = false;
+      saveState();
+      await _sb.from('profiles').update({ plano: 'free', plano_ativo: false })
+        .eq('id', userId).catch(function(){});
+    }
+  } catch(e) { /* sem conexão — ignora */ }
+}
+
+// ── Verifica pagamento pendente para o e-mail do usuário ────────
+async function _verificarPagamentoPendente(email, userId) {
+  if (!_supabaseReady || !_sb || !email) return;
+  try {
+    var { data } = await _sb
+      .from('pagamentos_pendentes')
+      .select('*')
+      .eq('email', email)
+      .eq('processado', false)
+      .limit(1)
+      .single();
+
+    if (!data) return;
+
+    // Ativa o plano e marca como processado
+    await _sb.from('profiles').update({
+      plano:         data.plano,
+      plano_ativo:   true,
+      plano_data:    data.created_at,
+      updated_at:    new Date().toISOString()
+    }).eq('id', userId);
+
+    await _sb.from('pagamentos_pendentes').update({ processado: true })
+      .eq('id', data.id);
+
+    _ativarPlanoPremium(data.plano);
+    showToast('🎉 Pagamento detectado! Plano ' + data.plano.toUpperCase() + ' ativado.', 'success');
+  } catch(e) { /* sem pagamento pendente — normal */ }
+}
+
+
 function _syncToCloud(data) {
   if (!_supabaseReady || !_sb || !state.user || !state.user.id) return;
   // Debounce extra para não sobrecarregar a API
@@ -6041,6 +6101,9 @@ async function _loadFromCloud(userId) {
       state.user.perfilIcon = pData.perf_icon  || state.user.perfilIcon || '';
       state.user.perfilColor= pData.perf_color || state.user.perfilColor || '#7B80C1';
     }
+
+    // Carrega documentos (IPVA, seguro, licenciamento)
+    await _loadDocumentosNuvem(userId);
 
     // Salva cache local atualizado
     _doSaveState();
@@ -6999,6 +7062,9 @@ function _loginUser(user) {
         showToast('Bem-vindo, ' + firstName + '! 🚗', 'success');
       }
     });
+    // Verifica plano ativo no Supabase e pagamentos pendentes
+    _verificarPlanoAtivo(user.id);
+    _verificarPagamentoPendente(user.email, user.id);
   } else {
     showToast('Bem-vindo, ' + firstName + '! 🚗', 'success');
   }
@@ -8014,23 +8080,42 @@ function excluirHistorico(id) {
 }
 // ============================================================
 // ============================================================
-// PWA MANIFEST (inline, sem servidor)
+// PWA MANIFEST (inline Blob para preview + arquivo externo para GitHub Pages)
 // ============================================================
 (function() {
+  var iconUri = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20512%20512%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%22115%22%20fill%3D%22%237B80C1%22%2F%3E%3Cg%20transform%3D%22translate%28256%2C256%29%22%3E%3Cpath%20d%3D%22M0%2C-185%20A185%2C185%2C0%2C1%2C1%2C-184.9%2C-4%20L-150%2C-3.3%20A150%2C150%2C0%2C1%2C0%2C0%2C-150%20Z%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%22-155%22%20r%3D%2220%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22185%22%20cy%3D%220%22%20r%3D%2220%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2296%22%20fill%3D%22white%22%2F%3E%3Crect%20x%3D%22-14%22%20y%3D%22-96%22%20width%3D%2228%22%20height%3D%2268%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%22-14%22%20y%3D%2228%22%20width%3D%2228%22%20height%3D%2268%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%22-96%22%20y%3D%22-14%22%20width%3D%2268%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%2228%22%20y%3D%22-14%22%20width%3D%2268%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2236%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2220%22%20fill%3D%22%237B80C1%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E";
   var manifest = {
-    name: 'ManyCars',
+    name: 'ManyCars — Seu carro, seu controle',
     short_name: 'ManyCars',
-    description: 'Gerencie seu veículo e manutenções',
-    start_url: '.',
+    description: 'Gerencie seus veículos, histórico de manutenções e documentos.',
+    start_url: '/',
+    scope: '/',
     display: 'standalone',
-    background_color: '#0c0d0f',
-    theme_color: '#0c0d0f',
-    icons: [{ src: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="20" fill="%23f0b429"/><text y="70" font-size="60" text-anchor="middle" x="50">🚗</text></svg>', sizes: '192x192', type: 'image/svg+xml' }]
+    orientation: 'portrait-primary',
+    background_color: '#f2f1f8',
+    theme_color: '#7B80C1',
+    lang: 'pt-BR',
+    icons: [
+      { src: iconUri, sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
+      { src: iconUri, sizes: 'any', type: 'image/svg+xml', purpose: 'maskable' },
+      { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { src: '/icon-72.png',  sizes: '72x72',   type: 'image/png' }
+    ],
+    shortcuts: [
+      { name: 'Registrar manutenção', url: '/?action=manutencao',  icons: [{ src: iconUri, sizes: 'any' }] },
+      { name: 'Abastecer',              url: '/?action=combustivel', icons: [{ src: iconUri, sizes: 'any' }] },
+      { name: 'Meus veículos',       url: '/?page=veiculos',     icons: [{ src: iconUri, sizes: 'any' }] }
+    ]
   };
-  var blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-  var url  = URL.createObjectURL(blob);
-  var el   = document.getElementById('pwa-manifest');
-  if (el) el.href = url;
+  // Blob para preview (quando não há /manifest.json no servidor)
+  if (typeof URL !== 'undefined' && URL.createObjectURL) {
+    try {
+      var blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+      var url  = URL.createObjectURL(blob);
+      var el   = document.getElementById('pwa-manifest');
+      if (el && !el.href.includes('manifest.json')) el.href = url;
+    } catch(e) {}
+  }
 })();
 
 // ============================================================
@@ -8950,6 +9035,7 @@ function salvarDocumento(vehicleId, key, value) {
   // Ao salvar nova data, limpa status de "pago"
   delete state.docs[vehicleId][key + '_pago'];
   saveState();
+  _syncDocumentoNuvem(vehicleId);
   updateDocBadge();
   renderDocumentos();
   renderDashDocs();
@@ -8960,10 +9046,67 @@ function marcarDocPago(vehicleId, key) {
   if (!state.docs[vehicleId]) state.docs[vehicleId] = {};
   state.docs[vehicleId][key + '_pago'] = new Date().toISOString().slice(0, 10);
   saveState();
+  _syncDocumentoNuvem(vehicleId);
   updateDocBadge();
   renderDocumentos();
   renderDashDocs();
   showToast('Marcado como pago ✅ — lembrete voltará 30 dias antes do vencimento', 'success');
+}
+
+// ── Sync documentos para Supabase ──────────────────────────────
+async function _syncDocumentoNuvem(vehicleId) {
+  if (!_supabaseReady || !_sb || !state.user) return;
+  var vDoc = state.docs[vehicleId] || {};
+  var veh  = state.vehicles.find(function(v){ return v.id === vehicleId; });
+  if (!veh || !veh.supabaseId) return;
+
+  try {
+    // Upsert um registro por tipo de documento (ipva, seguro, licenciamento)
+    var rows = DOC_TYPES.map(function(dt) {
+      return {
+        user_id:      state.user.id,
+        vehicle_id:   veh.supabaseId,
+        tipo:         dt.key,
+        vencimento:   vDoc[dt.key]         || null,
+        pago_em:      vDoc[dt.key + '_pago'] || null,
+        updated_at:   new Date().toISOString()
+      };
+    }).filter(function(r){ return r.vencimento; }); // só envia se tiver data
+
+    if (rows.length) {
+      await _sb.from('documents')
+        .upsert(rows, { onConflict: 'user_id,vehicle_id,tipo' });
+    }
+  } catch(e) {
+    console.warn('Sync docs falhou:', e.message);
+  }
+}
+
+// ── Carrega documentos da nuvem ────────────────────────────────
+async function _loadDocumentosNuvem(userId) {
+  if (!_supabaseReady || !_sb) return;
+  try {
+    var { data } = await _sb
+      .from('documents')
+      .select('vehicle_id, tipo, vencimento, pago_em')
+      .eq('user_id', userId);
+
+    if (!data || !data.length) return;
+
+    data.forEach(function(d) {
+      // Encontra o veículo local pelo supabaseId
+      var v = state.vehicles.find(function(v){ return v.supabaseId === d.vehicle_id; });
+      if (!v) return;
+      if (!state.docs[v.id]) state.docs[v.id] = {};
+      if (d.vencimento) state.docs[v.id][d.tipo]          = d.vencimento;
+      if (d.pago_em)    state.docs[v.id][d.tipo + '_pago'] = d.pago_em;
+    });
+
+    // Atualiza cache local
+    saveState();
+  } catch(e) {
+    console.warn('Load docs falhou:', e.message);
+  }
 }
 
 function updateDocBadge() {
@@ -14100,11 +14243,11 @@ function _irParaPerfil() {
 // 2. Crie um "link de pagamento" para cada plano
 // 3. Substitua as URLs abaixo pelos links gerados
 var _MP_LINKS = {
-  plus_mensal:  'COLE_LINK_MP_PLUS_MENSAL',   // ex: https://mpago.la/xxxx
-  plus_anual:   'COLE_LINK_MP_PLUS_ANUAL',
-  pro_mensal:   'COLE_LINK_MP_PRO_MENSAL',
-  pro_anual:    'COLE_LINK_MP_PRO_ANUAL',
-  passaporte:   'COLE_LINK_MP_PASSAPORTE',     // consulta avulsa R$29,90
+  plus_mensal:  'https://mpago.la/2QB8Mem',
+  plus_anual:   'https://mpago.la/2qG5WFD',
+  pro_mensal:   'https://mpago.la/2KF1XLb',
+  pro_anual:    'https://mpago.la/1r6VZgE',
+  passaporte:   'https://mpago.la/2ZUF7D5',
 };
 
 function _abrirCheckout(plano, periodo) {
@@ -14113,7 +14256,6 @@ function _abrirCheckout(plano, periodo) {
   var url = _MP_LINKS[chave];
 
   if (!url || url.startsWith('COLE_')) {
-    // Modal de configuração pendente
     _showPagamentoConfig(plano, periodo);
     return;
   }
@@ -14121,11 +14263,31 @@ function _abrirCheckout(plano, periodo) {
   // Abre checkout do Mercado Pago
   window.open(url, '_blank', 'noopener');
 
-  // Após retorno, pergunta se concluiu
-  setTimeout(function() {
-    var msg = 'Você concluiu o pagamento?\n\nClique OK para ativar o plano.';
-    if (confirm(msg)) { _ativarPlanoPremium(plano); }
-  }, 3000);
+  // Webhook ativa automaticamente — mostra aviso ao usuário
+  showToast('Você será redirecionado para o pagamento. O plano ativa automaticamente após a confirmação. 💳', 'success');
+
+  // Polling: verifica a cada 10s por até 5 minutos se o plano foi ativado via webhook
+  _aguardarAtivacaoPlano(plano, 30);
+}
+
+function _aguardarAtivacaoPlano(planoEsperado, tentativas) {
+  if (tentativas <= 0 || !_supabaseReady || !_sb || !state.user) return;
+  setTimeout(async function() {
+    try {
+      var { data } = await _sb
+        .from('profiles')
+        .select('plano, plano_ativo')
+        .eq('id', state.user.id)
+        .single();
+      if (data && data.plano_ativo && data.plano === planoEsperado) {
+        _ativarPlanoPremium(planoEsperado);
+      } else {
+        _aguardarAtivacaoPlano(planoEsperado, tentativas - 1);
+      }
+    } catch(e) {
+      _aguardarAtivacaoPlano(planoEsperado, tentativas - 1);
+    }
+  }, 10000); // verifica a cada 10 segundos
 }
 
 function _ativarPlanoPremium(plano) {
@@ -14183,19 +14345,16 @@ function _comprarPassaporte(placa) {
 }
 
 
+
 // ============================================================
 // SENHAS DE ACESSO — Admin e Monetização
+// Validação via Supabase — senha NUNCA fica no código
 // ============================================================
-var _SENHA_ADMIN = 'troxgroup123!';
 
-function _resetSenhasAcesso() {
-  // Chamada no logout — força nova autenticação na próxima sessão
-  // (sem cache de sessão — senha pedida sempre)
-}
+function _resetSenhasAcesso() { /* chamada no logout */ }
 
 function _pedirSenhaMenu(destino) {
   var label = destino === 'admin' ? '🛡️ Administrador' : '💰 Monetização';
-
   var overlay = document.createElement('div');
   overlay.id = '_senha-overlay';
   overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:24px;';
@@ -14214,14 +14373,10 @@ function _pedirSenhaMenu(destino) {
           'style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--text3);">👁</button>' +
       '</div>' +
       '<div id="_senha-erro" style="font-size:11px;color:#e53e3e;text-align:center;margin-bottom:10px;min-height:16px;"></div>' +
-      '<button id="_senha-btn-confirmar" ' +
-        'style="width:100%;padding:12px;background:var(--accent);color:var(--bg);border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:\'Sora\',sans-serif;">Entrar</button>' +
-      '<button onclick="document.getElementById(\'_senha-overlay\').remove()" ' +
-        'style="width:100%;padding:10px;background:none;border:1px solid var(--border);border-radius:8px;font-size:13px;cursor:pointer;font-family:\'Sora\',sans-serif;color:var(--text3);margin-top:8px;">Cancelar</button>' +
+      '<button id="_senha-btn-confirmar" style="width:100%;padding:12px;background:var(--accent);color:var(--bg);border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:\'Sora\',sans-serif;">Entrar</button>' +
+      '<button onclick="document.getElementById(\'_senha-overlay\').remove()" style="width:100%;padding:10px;background:none;border:1px solid var(--border);border-radius:8px;font-size:13px;cursor:pointer;font-family:\'Sora\',sans-serif;color:var(--text3);margin-top:8px;">Cancelar</button>' +
     '</div>';
   document.body.appendChild(overlay);
-
-  // Wire up confirm button and Enter key
   setTimeout(function() {
     var inp = document.getElementById('_senha-input');
     var btn = document.getElementById('_senha-btn-confirmar');
@@ -14232,12 +14387,28 @@ function _pedirSenhaMenu(destino) {
   }, 60);
 }
 
-function _confirmarSenha(destino) {
+async function _confirmarSenha(destino) {
   var inp  = document.getElementById('_senha-input');
   var erro = document.getElementById('_senha-erro');
   var ov   = document.getElementById('_senha-overlay');
   var senha = inp ? inp.value : '';
-  if (senha === _SENHA_ADMIN) {
+  if (!senha) return;
+
+  // Converte senha em hash SHA-256 e compara com o Supabase
+  var ok = false;
+  try {
+    var hashInput = await _sha256(senha);
+    if (_supabaseReady && _sb && state.user) {
+      var { data } = await _sb
+        .from('profiles')
+        .select('is_admin, admin_hash')
+        .eq('id', state.user.id)
+        .single();
+      ok = data && data.is_admin && data.admin_hash === hashInput;
+    }
+  } catch(e) { ok = false; }
+
+  if (ok) {
     if (ov) ov.remove();
     if (destino === 'admin') showPage('modo-admin');
     else                     showPage('monetizacao');
@@ -14248,6 +14419,13 @@ function _confirmarSenha(destino) {
     setTimeout(function(){ if(inp) inp.style.borderColor = ''; }, 1500);
   }
 }
+
+// SHA-256 via Web Crypto API nativa do browser
+async function _sha256(str) {
+  var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+}
+
 
 // ============================================================
 // ADMIN — dados reais do localStorage
