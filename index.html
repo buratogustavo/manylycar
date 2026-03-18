@@ -9,7 +9,22 @@
 <meta name="apple-mobile-web-app-title" content="ManyCars">
 <meta name="description" content="Gerencie seu veículo, compare peças e acompanhe manutenções">
 <link rel="manifest" id="pwa-manifest">
-<title>ManyCars — Seu carro, seu controle</title>
+<!-- OneSignal Push Notifications -->
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: "85e4a912-f795-41f7-a276-1ab695e8c066",
+        safari_web_id: "web.onesignal.auto.12f40fc9-13d7-4ca9-8e4a-0a7d50f473bf",
+        notifyButton: { enable: true },
+        allowLocalhostAsSecureOrigin: true,
+      });
+    });
+  </script>
+  <title>ManyCars — Seu carro, seu controle</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#7B80C1">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ===== RESET & BASE ===== */
@@ -3384,7 +3399,18 @@ select, textarea {
         <div class="card-title">🎨 Aparência</div>
         <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;">
           <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text);">Tema do aplicativo</div>
+            <div style="font-size:13px;font-weight:600;color:var(--text);">Notificações push</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px;">Receba alertas de manutenção no celular</div>
+        </div>
+        <button id="btn-ativar-push" onclick="_solicitarPush()" style="background:rgba(123,128,193,0.08);border:1px solid rgba(123,128,193,0.3);border-radius:8px;padding:8px 14px;color:var(--accent);font-family:'Sora',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">🔔 Ativar notificações</button>
+      </div>
+    </div>
+    <!-- Aparência -->
+    <div class="card">
+      <div class="card-title">🎨 Aparência</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;">
+        <div>
+        <div style="font-size:13px;font-weight:600;color:var(--text);">Tema do aplicativo</div>
             <div style="font-size:11px;color:var(--text3);margin-top:2px;">ManyCars usa modo claro como padrão</div>
           </div>
           <span style="font-size:11px;padding:6px 14px;background:rgba(123,128,193,0.1);border:1px solid rgba(123,128,193,0.3);border-radius:8px;color:var(--accent);font-weight:600;">☀️ Modo Claro</span>
@@ -4986,7 +5012,7 @@ select, textarea {
           <div style="font-size:32px;font-weight:800;color:var(--text);margin-bottom:4px;">R$14<span style="font-size:16px;font-weight:400;color:var(--text2);">,90/mês</span></div>
           <div style="font-size:11px;color:var(--text3);margin-bottom:20px;">ou R$129/ano — 28% off</div>
           <div id="premium-plus-features" style="margin-bottom:20px;"></div>
-          <button class="btn-primary" style="width:100%;padding:12px;" onclick="showToast('Em breve! 🚀','success')">Assinar Plus →</button>
+          <button class="btn-primary" style="width:100%;padding:12px;" onclick="_abrirCheckout('plus')">💳 Assinar Plus — R$14,90/mês</button>
         </div>
 
         <!-- Pro -->
@@ -4995,7 +5021,7 @@ select, textarea {
           <div style="font-size:32px;font-weight:800;color:var(--text);margin-bottom:4px;">R$29<span style="font-size:16px;font-weight:400;color:var(--text2);">,90/mês</span></div>
           <div style="font-size:11px;color:var(--text3);margin-bottom:20px;">ou R$249/ano — 31% off</div>
           <div id="premium-pro-features" style="margin-bottom:20px;"></div>
-          <button class="btn-primary" style="width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),#a78bfa);border:none;" onclick="showToast('Em breve! 🚀','success')">Assinar Pro →</button>
+          <button class="btn-primary" style="width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),#a78bfa);border:none;" onclick="_abrirCheckout('pro')">💳 Assinar Pro — R$29,90/mês</button>
         </div>
       </div>
 
@@ -6142,6 +6168,16 @@ function clearState() {
 window.addEventListener('DOMContentLoaded', function() {
   document.body.classList.add('light-mode');
   loadTheme();
+  _initPush(); // Push notifications
+
+  // Registra Service Worker (PWA + Push) — apenas no domínio real
+  if ('serviceWorker' in navigator && location.hostname !== 'localhost' && !location.hostname.includes('claudeusercontent')) {
+    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      console.log('SW registrado:', reg.scope);
+    }).catch(function(err) {
+      console.warn('SW falhou:', err);
+    });
+  }
   updateWishlistBadge();
   window.addEventListener('resize', function() {
     var page = document.querySelector('.page.active');
@@ -6966,6 +7002,8 @@ function _loginUser(user) {
   } else {
     showToast('Bem-vindo, ' + firstName + '! 🚗', 'success');
   }
+  // Verifica alertas e sugere push após login
+  setTimeout(_verificarEEnviarAlertas, 2500);
   try {
     if (!localStorage.getItem('mc_onboarded')) setTimeout(showOnboarding, 600);
   } catch(e) {}
@@ -14055,6 +14093,97 @@ function _irParaPerfil() {
 }
 
 // ============================================================
+// MERCADO PAGO — Checkout
+// ============================================================
+// CONFIGURAÇÃO:
+// 1. Crie conta em https://mercadopago.com.br/developers
+// 2. Crie um "link de pagamento" para cada plano
+// 3. Substitua as URLs abaixo pelos links gerados
+var _MP_LINKS = {
+  plus_mensal:  'COLE_LINK_MP_PLUS_MENSAL',   // ex: https://mpago.la/xxxx
+  plus_anual:   'COLE_LINK_MP_PLUS_ANUAL',
+  pro_mensal:   'COLE_LINK_MP_PRO_MENSAL',
+  pro_anual:    'COLE_LINK_MP_PRO_ANUAL',
+  passaporte:   'COLE_LINK_MP_PASSAPORTE',     // consulta avulsa R$29,90
+};
+
+function _abrirCheckout(plano, periodo) {
+  periodo = periodo || 'mensal';
+  var chave = plano + '_' + periodo;
+  var url = _MP_LINKS[chave];
+
+  if (!url || url.startsWith('COLE_')) {
+    // Modal de configuração pendente
+    _showPagamentoConfig(plano, periodo);
+    return;
+  }
+
+  // Abre checkout do Mercado Pago
+  window.open(url, '_blank', 'noopener');
+
+  // Após retorno, pergunta se concluiu
+  setTimeout(function() {
+    var msg = 'Você concluiu o pagamento?\n\nClique OK para ativar o plano.';
+    if (confirm(msg)) { _ativarPlanoPremium(plano); }
+  }, 3000);
+}
+
+function _ativarPlanoPremium(plano) {
+  if (!state.user) return;
+  state.user.plano      = plano;
+  state.user.planoAtivo = true;
+  state.user.planoData  = new Date().toISOString();
+  saveState();
+  // Sync para Supabase
+  if (_supabaseReady && _sb) {
+    _sb.from('profiles').upsert({
+      id:         state.user.id,
+      plano:      plano,
+      plano_data: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'id' }).catch(function(){});
+  }
+  showToast('🎉 Plano ' + plano.toUpperCase() + ' ativado! Bem-vindo ao Premium!', 'success');
+  renderPerfilPage();
+  setTimeout(function(){ showPage('perfil'); }, 800);
+}
+
+function _showPagamentoConfig(plano, periodo) {
+  // Modal informativo sobre como configurar o Mercado Pago
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:20px;';
+  var planoLabel = plano === 'plus' ? 'Plus — R$14,90/mês' : 'Pro — R$29,90/mês';
+  overlay.innerHTML =
+    '<div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px 24px;width:100%;max-width:380px;">' +
+      '<div style="font-size:28px;text-align:center;margin-bottom:12px;">🔧</div>' +
+      '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:18px;letter-spacing:1px;text-align:center;margin-bottom:8px;color:var(--text);">CONFIGURAR PAGAMENTO</div>' +
+      '<div style="font-size:13px;color:var(--text2);text-align:center;margin-bottom:20px;line-height:1.6;">Para cobrar pelo plano <strong style="color:var(--accent);">' + planoLabel + '</strong>, configure seu Mercado Pago:</div>' +
+      '<div style="background:var(--surface2);border-radius:10px;padding:14px;margin-bottom:16px;">' +
+        '<div style="font-size:12px;color:var(--text2);line-height:1.8;">' +
+          '<div>1️⃣ Acesse <strong>mercadopago.com.br/developers</strong></div>' +
+          '<div>2️⃣ Crie um <strong>Link de Pagamento</strong> de R$' + (plano==='plus'?'14,90':'29,90') + '/mês</div>' +
+          '<div>3️⃣ Copie o link gerado (ex: mpago.la/xxx)</div>' +
+          '<div>4️⃣ Cole em <code style="background:rgba(123,128,193,0.1);padding:1px 5px;border-radius:3px;">_MP_LINKS.' + plano + '_mensal</code></div>' +
+        '</div>' +
+      '</div>' +
+      '<button onclick="window.open(\'https://www.mercadopago.com.br/cobrar/link-pagamento/link\',\'_blank\')" style="width:100%;padding:11px;background:var(--accent);color:var(--bg);border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:\'Sora\',sans-serif;margin-bottom:8px;">Criar link no Mercado Pago →</button>' +
+      '<button onclick="this.closest(\'div\').parentElement.remove()" style="width:100%;padding:10px;background:none;border:1px solid var(--border);border-radius:8px;font-size:13px;cursor:pointer;font-family:\'Sora\',sans-serif;color:var(--text3);">Fechar</button>' +
+    '</div>';
+  document.body.appendChild(overlay);
+}
+
+// Também usado para venda de passaporte avulso
+function _comprarPassaporte(placa) {
+  var url = _MP_LINKS['passaporte'];
+  if (!url || url.startsWith('COLE_')) {
+    showToast('Configure o link de pagamento do passaporte nas configurações.', 'error');
+    return;
+  }
+  window.open(url + '?external_reference=passaporte_' + placa, '_blank', 'noopener');
+}
+
+
+// ============================================================
 // SENHAS DE ACESSO — Admin e Monetização
 // ============================================================
 var _SENHA_ADMIN = 'troxgroup123!';
@@ -14123,6 +14252,187 @@ function _confirmarSenha(destino) {
 // ============================================================
 // ADMIN — dados reais do localStorage
 // ============================================================
+// ============================================================
+// PUSH NOTIFICATIONS — OneSignal
+// ============================================================
+// OneSignal configurado — App ID e Safari Web ID definidos.
+var _ONESIGNAL_APP_ID = '85e4a912-f795-41f7-a276-1ab695e8c066';
+var _pushEnabled = false;
+
+async function _initPush() {
+  try {
+    await window.OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: _ONESIGNAL_APP_ID,
+        safari_web_id: 'web.onesignal.auto.12f40fc9-13d7-4ca9-8e4a-0a7d50f473bf',
+        notifyButton: { enable: false },   // não mostra o botão padrão — usamos o nosso
+        allowLocalhostAsSecureOrigin: true,
+      });
+      _pushEnabled = await OneSignal.Notifications.permission;
+    });
+  } catch(e) { console.warn('OneSignal init:', e.message); }
+}
+
+async function _solicitarPush() {
+
+  try {
+    await window.OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.Notifications.requestPermission();
+      _pushEnabled = await OneSignal.Notifications.permission;
+      if (_pushEnabled) {
+        // Salva userId do OneSignal no perfil do Supabase
+        var userId = await OneSignal.User.PushSubscription.id;
+        if (userId && _supabaseReady && _sb && state.user) {
+          await _sb.from('profiles').upsert({
+            id:            state.user.id,
+            onesignal_id:  userId,
+            push_enabled:  true,
+            updated_at:    new Date().toISOString()
+          }, { onConflict: 'id' });
+        }
+        showToast('✅ Notificações ativadas! Você será avisado sobre manutenções.', 'success');
+        _atualizarBtnPush();
+      }
+    });
+  } catch(e) { showToast('Não foi possível ativar notificações.', 'error'); }
+}
+
+function _atualizarBtnPush() {
+  var btn = document.getElementById('btn-ativar-push');
+  if (!btn) return;
+  if (_pushEnabled) {
+    btn.textContent = '🔔 Notificações ativas';
+    btn.style.background = 'rgba(56,161,105,0.1)';
+    btn.style.borderColor = 'rgba(56,161,105,0.3)';
+    btn.style.color = '#38a169';
+    btn.onclick = null;
+  } else {
+    btn.textContent = '🔔 Ativar notificações';
+    btn.onclick = _solicitarPush;
+  }
+}
+
+// Chama _initPush no DOMContentLoaded (adicionado abaixo)
+
+
+// ============================================================
+// PUSH PERSONALIZADO — envia alertas reais do veículo
+// ============================================================
+
+// Chamado após login — verifica alertas urgentes e pede push se necessário
+async function _verificarEEnviarAlertas() {
+  if (!state.user || !state.vehicles.length) return;
+
+  // Coleta alertas urgentes de todos os veículos
+  var urgentes = [];
+  state.vehicles.filter(function(v){ return !v.archived; }).forEach(function(v) {
+    var alertas = getVehicleAlerts(v);
+    alertas.forEach(function(a) {
+      if (a.urgency === 'high' || a.urgency === 'med') {
+        urgentes.push({ veiculo: v.marca + ' ' + v.modelo, alerta: a });
+      }
+    });
+  });
+
+  if (!urgentes.length) return;
+
+  // Se o usuário ainda não habilitou push, mostra banner sugerindo
+  try {
+    var permission = ('Notification' in window) ? Notification.permission : 'denied';
+    if (permission === 'default' && urgentes.length > 0) {
+      _mostrarBannerPush(urgentes.length);
+    }
+    // Se já habilitou, dispara push local para alertas VENCIDOS
+    if (permission === 'granted') {
+      _dispararPushLocal(urgentes);
+    }
+  } catch(e) {}
+
+  // Registra alertas no Supabase para o job noturno enviar push server-side
+  _registrarAlertasNuvem(urgentes);
+}
+
+// Banner não-intrusivo sugerindo ativar push
+function _mostrarBannerPush(qtd) {
+  if (document.getElementById('push-banner')) return; // já existe
+  if (localStorage.getItem('mc_push_recusado')) return; // usuário recusou antes
+
+  var banner = document.createElement('div');
+  banner.id = 'push-banner';
+  banner.style.cssText = [
+    'position:fixed;bottom:80px;left:12px;right:12px;z-index:9000',
+    'background:var(--surface);border:1px solid var(--border2);border-radius:12px',
+    'padding:14px 16px;box-shadow:0 4px 20px rgba(0,0,0,0.15)',
+    'display:flex;align-items:center;gap:12px;animation:fadeUp 0.3s ease both'
+  ].join(';');
+  banner.innerHTML =
+    '<div style="font-size:24px;flex-shrink:0;">🔔</div>' +
+    '<div style="flex:1;min-width:0;">' +
+      '<div style="font-size:13px;font-weight:700;color:var(--text);">Você tem ' + qtd + ' alerta' + (qtd>1?'s':'') + ' pendente' + (qtd>1?'s':'') + '</div>' +
+      '<div style="font-size:11px;color:var(--text3);margin-top:2px;">Ative as notificações para ser avisado antes que vença</div>' +
+    '</div>' +
+    '<button onclick="_solicitarPush();var b=document.getElementById(\'push-banner\');if(b)b.remove();" ' +
+      'style="background:var(--accent);color:white;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:\'Sora\',sans-serif;white-space:nowrap;flex-shrink:0;">Ativar</button>' +
+    '<button onclick="localStorage.setItem(\'mc_push_recusado\',\'1\');this.parentElement.remove();" ' +
+      'style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--text3);padding:4px;flex-shrink:0;">✕</button>';
+  document.body.appendChild(banner);
+  setTimeout(function(){ if(banner.parentElement) banner.remove(); }, 12000);
+}
+
+// Dispara notificação local (browser Notification API) para itens VENCIDOS
+function _dispararPushLocal(urgentes) {
+  if (!('Notification' in window) || Notification.permission !== 'granted') return;
+  // Só notifica uma vez por sessão
+  if (window._pushLocalEnviado) return;
+  window._pushLocalEnviado = true;
+
+  var vencidos = urgentes.filter(function(u){ return u.alerta.urgency === 'high'; });
+  if (!vencidos.length) return;
+
+  var primeiro = vencidos[0];
+  var titulo   = '🔧 ' + primeiro.alerta.icon + ' ' + primeiro.alerta.title;
+  var kmText   = primeiro.alerta.kmLeft < 0
+    ? 'Vencido há ' + Math.abs(primeiro.alerta.kmLeft).toLocaleString('pt-BR') + ' km'
+    : 'Vence em ' + primeiro.alerta.kmLeft.toLocaleString('pt-BR') + ' km';
+  var corpo    = primeiro.veiculo + ' — ' + kmText;
+  if (vencidos.length > 1) corpo += ' (+' + (vencidos.length - 1) + ' outros)';
+
+  try {
+    var n = new Notification(titulo, {
+      body:  corpo,
+      icon:  '/icon-192.png',
+      badge: '/icon-72.png',
+      tag:   'manycars-manut-' + Date.now(),
+      requireInteraction: false
+    });
+    n.onclick = function() { window.focus(); showPage('alertas'); n.close(); };
+  } catch(e) {}
+}
+
+// Registra alertas pendentes no Supabase para o job noturno
+async function _registrarAlertasNuvem(urgentes) {
+  if (!_supabaseReady || !_sb || !state.user || !urgentes.length) return;
+  try {
+    var registros = urgentes.map(function(u) {
+      return {
+        user_id:     state.user.id,
+        veiculo:     u.veiculo,
+        tipo:        u.alerta.title,
+        urgencia:    u.alerta.urgency,
+        km_restante: u.alerta.kmLeft,
+        notificado:  false,
+        created_at:  new Date().toISOString()
+      };
+    });
+    // Upsert — evita duplicatas para o mesmo usuário+tipo no mesmo dia
+    await _sb.from('alertas_push').upsert(registros, {
+      onConflict: 'user_id,tipo',
+      ignoreDuplicates: false
+    });
+  } catch(e) { /* tabela pode não existir ainda — não bloqueia */ }
+}
+
+
 // ============================================================
 // PAINEL ADMINISTRADOR — BI COMPLETO DA PLATAFORMA
 // ============================================================
