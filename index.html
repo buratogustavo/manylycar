@@ -2519,6 +2519,195 @@ select, textarea {
 .wish-empty-icon { font-size: 32px; margin-bottom: 8px; }
 .wish-empty-text { font-size: 13px; }
 
+
+/* ====================================================
+   MARKETPLACE REDESIGN — Estilo Webmotors
+   ==================================================== */
+#page-marketplace { padding: 0 !important; }
+.mkt-layout {
+  display: flex;
+  gap: 0;
+  min-height: calc(100vh - 60px);
+}
+
+/* Sidebar */
+.mkt-sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  padding: 16px;
+  background: var(--surface);
+  overflow-y: auto;
+}
+@media (max-width: 768px) {
+  .mkt-layout { flex-direction: column; }
+  .mkt-sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border); padding: 12px; display: none; }
+  .mkt-sidebar.open { display: block; }
+}
+
+/* Main */
+.mkt-main { flex: 1; min-width: 0; padding: 16px; }
+
+/* Top bar */
+.mkt-topbar {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 14px; flex-wrap: wrap;
+}
+.mkt-topbar-search {
+  flex: 1; min-width: 180px;
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-family: 'Sora', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+}
+.mkt-topbar-search:focus { border-color: var(--accent); }
+
+/* Filter chips row */
+.mkt-chips {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;
+}
+.mkt-chip {
+  padding: 5px 12px; border-radius: 20px; font-size: 12px;
+  font-weight: 600; background: var(--surface2); border: 1.5px solid var(--border);
+  color: var(--text2); cursor: pointer; white-space: nowrap;
+  font-family: 'Sora', sans-serif; transition: all 0.15s;
+}
+.mkt-chip.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+/* Cards grid */
+.mkt-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+@media (max-width: 480px) { .mkt-cards { grid-template-columns: 1fr; } }
+
+/* Card */
+.mkt-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  position: relative;
+}
+.mkt-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  border-color: var(--accent);
+}
+
+/* Photo */
+.mkt-card-photo {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+  background: var(--surface2);
+  position: relative;
+  overflow: hidden;
+}
+.mkt-photo-placeholder {
+  width: 100%; height: 160px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 52px; position: relative;
+}
+.mkt-photo-count {
+  position: absolute; bottom: 8px; left: 8px;
+  background: rgba(0,0,0,0.55);
+  color: white; font-size: 10px; font-weight: 600;
+  padding: 2px 7px; border-radius: 10px;
+  font-family: 'JetBrains Mono', monospace;
+}
+.mkt-fav {
+  position: absolute; top: 8px; right: 8px;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  border: none; cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2;
+}
+.mkt-badge-verified {
+  position: absolute; top: 8px; left: 8px;
+  background: var(--accent); color: white;
+  font-size: 9px; font-weight: 700; padding: 2px 7px;
+  border-radius: 10px; letter-spacing: 0.3px; z-index: 2;
+}
+
+/* Card body */
+.mkt-card-info { padding: 11px 13px 13px; }
+.mkt-card-name {
+  font-family: 'Sora', sans-serif;
+  font-size: 13px; font-weight: 700;
+  color: var(--text); margin-bottom: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.mkt-card-desc {
+  font-size: 11px; color: var(--text3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 8px;
+}
+.mkt-card-meta {
+  display: flex; gap: 8px; font-size: 11px; color: var(--text3);
+  margin-bottom: 8px; flex-wrap: wrap;
+}
+.mkt-card-meta span { display: flex; align-items: center; gap: 3px; }
+.mkt-card-price {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px; color: var(--text); line-height: 1;
+  margin-bottom: 10px;
+}
+.mkt-card-btn {
+  width: 100%; padding: 9px; border-radius: 8px;
+  background: var(--text); color: var(--bg);
+  border: none; font-family: 'Sora', sans-serif;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  transition: opacity 0.15s;
+}
+.mkt-card-btn:hover { opacity: 0.85; }
+
+/* Sidebar filter groups */
+.mkt-filter-group { margin-bottom: 18px; }
+.mkt-filter-title {
+  font-size: 12px; font-weight: 700; color: var(--text);
+  margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.mkt-filter-option {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 0; cursor: pointer;
+  font-size: 12px; color: var(--text2);
+}
+.mkt-filter-option input[type=checkbox] { accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer; }
+.mkt-range-row { display: flex; gap: 8px; margin-top: 8px; }
+.mkt-range-input {
+  flex: 1; background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 10px; font-size: 12px; color: var(--text);
+  font-family: 'Sora', sans-serif; outline: none;
+}
+.mkt-range-input:focus { border-color: var(--accent); }
+.mkt-sidebar-btn {
+  width: 100%; padding: 10px; background: var(--accent); color: var(--bg);
+  border: none; border-radius: 8px; font-family: 'Sora', sans-serif;
+  font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 6px;
+}
+/* Empty state */
+.mkt-empty { text-align: center; padding: 48px 20px; grid-column: 1/-1; }
+.mkt-empty-icon { font-size: 48px; margin-bottom: 14px; }
+.mkt-empty-title { font-family: 'Bebas Neue',sans-serif; font-size: 20px; color: var(--text); margin-bottom: 8px; }
+.mkt-empty-sub { font-size: 13px; color: var(--text3); }
+/* photo gradient backgrounds */
+.mkt-grad-0 { background: linear-gradient(135deg,#e8eaff,#c8cff5); }
+.mkt-grad-1 { background: linear-gradient(135deg,#fff0e8,#f5d0b8); }
+.mkt-grad-2 { background: linear-gradient(135deg,#e8f5e8,#b8d5b8); }
+.mkt-grad-3 { background: linear-gradient(135deg,#f5e8f5,#d5b8d5); }
+.mkt-grad-4 { background: linear-gradient(135deg,#e8f0ff,#b8c8f5); }
+.mkt-grad-5 { background: linear-gradient(135deg,#fff8e8,#f5e0b8); }
+
 /* ===== FAQ PLANOS ===== */
 .faq-item { border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; }
 .faq-item:last-child { border-bottom: none; }
@@ -2838,33 +3027,33 @@ select, textarea {
 
   <!-- MOBILE TOPBAR -->
   <div class="mobile-topbar">
-    <div class="mobile-logo" style="display:flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="28" height="28" style="display:inline-block;vertical-align:middle;margin-right:6px;">
-  <!-- Anel externo com abertura -->
-  <path d="M50 8
-    A42 42 0 1 1 11.5 65
-    L19 61
-    A34 34 0 1 0 50 16 Z" fill="#7B80C1"/>
-  <!-- Ponto de abertura superior direito -->
-  <circle cx="72" cy="16" r="4.5" fill="#7B80C1"/>
-  <!-- Ponto de abertura direito -->
-  <circle cx="89" cy="50" r="4.5" fill="#7B80C1"/>
-  <!-- Disco central -->
-  <circle cx="50" cy="50" r="22" fill="#7B80C1"/>
-  <!-- Raios da roda — 4 raios com espaço entre eles -->
-  <rect x="47" y="28" width="6" height="16" rx="3" fill="white"/>
-  <rect x="47" y="56" width="6" height="16" rx="3" fill="white"/>
-  <rect x="28" y="47" width="16" height="6" rx="3" fill="white"/>
-  <rect x="56" y="47" width="16" height="6" rx="3" fill="white"/>
-  <!-- Hub central -->
-  <circle cx="50" cy="50" r="8" fill="white"/>
-  <circle cx="50" cy="50" r="4.5" fill="#7B80C1"/>
-</svg>MANY<span>CARS</span></div>
-    <div style="display:flex;align-items:center;gap:10px;">
-      <!-- theme toggle removido — modo claro padrão -->
-      <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">
-        <span></span><span></span><span></span>
-      </button>
+    <!-- Hamburger ESQUERDA -->
+    <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu" style="margin-right:4px;">
+      <span></span><span></span><span></span>
+    </button>
+
+    <!-- Logo CENTRO -->
+    <div class="mobile-logo" style="display:flex;align-items:center;gap:6px;flex:1;justify-content:center;">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="28" height="28" style="display:inline-block;vertical-align:middle;">
+        <path d="M50 8 A42 42 0 1 1 11.5 65 L19 61 A34 34 0 1 0 50 16 Z" fill="#7B80C1"/>
+        <circle cx="72" cy="16" r="4.5" fill="#7B80C1"/>
+        <circle cx="89" cy="50" r="4.5" fill="#7B80C1"/>
+        <circle cx="50" cy="50" r="22" fill="#7B80C1"/>
+        <rect x="47" y="28" width="6" height="16" rx="3" fill="white"/>
+        <rect x="47" y="56" width="6" height="16" rx="3" fill="white"/>
+        <rect x="28" y="47" width="16" height="6" rx="3" fill="white"/>
+        <rect x="56" y="47" width="16" height="6" rx="3" fill="white"/>
+        <circle cx="50" cy="50" r="8" fill="white"/>
+        <circle cx="50" cy="50" r="4.5" fill="#7B80C1"/>
+      </svg>
+      MANY<span>CARS</span>
     </div>
+
+    <!-- Theme toggle DIREITA — sempre visível -->
+    <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn-mobile" title="Alternar tema" style="margin-left:4px;flex-shrink:0;">
+      <span class="tt-icon" id="theme-icon-mobile">🌙</span>
+      <span id="theme-label-mobile">Escuro</span>
+    </button>
   </div>
 
   <!-- SIDEBAR OVERLAY (mobile) -->
@@ -2904,46 +3093,30 @@ select, textarea {
       <span style="margin-left:auto;font-size:10px;">🔒</span>
     </div>
 
-    <div class="nav-section">Menu</div>
-    <div class="nav-item" onclick="showPage('perfil')">
-      <span class="nav-icon">👤</span> Meu Perfil
-    </div>
+    <div class="nav-section">Início</div>
     <div class="nav-item active" onclick="showPage('dashboard')">
       <span class="nav-icon">🏠</span> Dashboard
     </div>
-    <div class="nav-item" onclick="showPage('ranking')">
-      <span class="nav-icon">🏆</span> Ranking
+    <div class="nav-item" onclick="showPage('perfil')">
+      <span class="nav-icon">👤</span> Meu Perfil
     </div>
+    <div class="nav-item" onclick="showPage('alertas')">
+      <span class="nav-icon">🔔</span> Alertas
+      <span id="alert-badge" style="margin-left:auto;background:var(--red);color:white;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;display:none;"></span>
+    </div>
+    <div class="nav-item" onclick="showPage('configuracoes')">
+      <span class="nav-icon">⚙️</span> Configurações
+    </div>
+
+    <div class="nav-section">Meus Veículos</div>
     <div class="nav-item" onclick="showPage('veiculos')">
-      <span class="nav-icon">🚗</span> Meus Veículos
+      <span class="nav-icon">🚗</span> Veículos
     </div>
     <div class="nav-item" onclick="showPage('manutencao')">
       <span class="nav-icon">🔩</span> Manutenção
     </div>
-    <div class="nav-item" onclick="showPage('marketplace')">
-      <span class="nav-icon">🏪</span><span>Comprar veículo</span>
-    </div>
-    <div class="nav-item" onclick="showPage('anunciar')">
-      <span class="nav-icon">📢</span><span>Anunciar veículo</span>
-    </div>
-    <div class="nav-item" onclick="showPage('sonhar')">
-      <span class="nav-icon">🌟</span> Quero Sonhar
-      <span id="wishlist-badge" style="margin-left:auto;background:rgba(123,128,193,0.15);color:var(--accent);font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;display:none;"></span>
-    </div>
-    <div class="nav-item" onclick="showPage('pecas')">
-      <span class="nav-icon">🔧</span> Consultar Peças
-    </div>
-
-    <div class="nav-section">Manutenção</div>
     <div class="nav-item" onclick="showPage('historico')">
       <span class="nav-icon">📋</span> Histórico
-    </div>
-    <div class="nav-item" onclick="showPage('alertas')">
-      <span class="nav-icon">🔔</span> Alertas
-      <span id="alert-badge" style="margin-left:auto; background:var(--red); color:white; font-size:10px; font-weight:700; padding:2px 6px; border-radius:10px;">3</span>
-    </div>
-    <div class="nav-item" onclick="showPage('checklist')">
-      <span class="nav-icon">✅</span> Check-list
     </div>
     <div class="nav-item" onclick="showPage('combustivel')">
       <span class="nav-icon">⛽</span> Combustível
@@ -2951,6 +3124,9 @@ select, textarea {
     <div class="nav-item" onclick="showPage('documentos')">
       <span class="nav-icon">📅</span> Documentos
       <span id="doc-badge" style="display:none;margin-left:auto;background:var(--red);color:white;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;"></span>
+    </div>
+    <div class="nav-item" onclick="showPage('checklist')">
+      <span class="nav-icon">✅</span> Check-list
     </div>
 
     <div class="nav-section">Análise</div>
@@ -2963,24 +3139,35 @@ select, textarea {
     <div class="nav-item" onclick="showPage('viagens')">
       <span class="nav-icon">🗺️</span> Viagens
     </div>
+    <div class="nav-item" onclick="showPage('ranking')">
+      <span class="nav-icon">🏆</span> Ranking
+    </div>
 
-    <div class="nav-section">Negócio</div>
+    <div class="nav-section">Mercado</div>
+    <div class="nav-item" onclick="showPage('marketplace')">
+      <span class="nav-icon">🏪</span> Marketplace
+      <span style="margin-left:auto;font-size:9px;font-weight:700;background:rgba(123,128,193,0.12);color:var(--accent);padding:2px 7px;border-radius:10px;">Comprar & Vender</span>
+    </div>
+    <div class="nav-item" onclick="showPage('sonhar')">
+      <span class="nav-icon">🌟</span> Lista de Desejos
+      <span id="wishlist-badge" style="margin-left:auto;background:rgba(123,128,193,0.15);color:var(--accent);font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;display:none;"></span>
+    </div>
     <div class="nav-item" onclick="showPage('vender')">
       <span class="nav-icon">🏷️</span> Vender meu carro
     </div>
-    <div class="nav-item" onclick="showPage('premium')" style="background:linear-gradient(135deg,rgba(123,128,193,0.1),rgba(167,139,250,0.1));border:1px solid rgba(123,128,193,0.25);">
-      <span class="nav-icon">👑</span> <span style="background:linear-gradient(90deg,#7B80C1,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;">Seja Premium</span>
+    <div class="nav-item" onclick="showPage('pecas')">
+      <span class="nav-icon">🔧</span> Consultar Peças
     </div>
 
-    <div class="nav-section">Meu Carro</div>
+    <div class="nav-section">Meu Modelo</div>
     <div class="nav-item" onclick="showPage('modelo-info')">
       <span class="nav-icon">📖</span> Info do Modelo
     </div>
     <div class="nav-item" onclick="showPage('opinioes')">
       <span class="nav-icon">💬</span> Opiniões de Donos
     </div>
-    <div class="nav-item" onclick="showPage('configuracoes')">
-      <span class="nav-icon">⚙️</span> Configurações
+    <div class="nav-item" onclick="showPage('premium')" style="background:linear-gradient(135deg,rgba(123,128,193,0.1),rgba(167,139,250,0.1));border:1px solid rgba(123,128,193,0.25);">
+      <span class="nav-icon">👑</span> <span style="background:linear-gradient(90deg,#7B80C1,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;">Seja Premium</span>
     </div>
 
     <!-- Modos ocultos (acesso via v1.0 MVP × 5) -->
@@ -3092,11 +3279,6 @@ select, textarea {
             <div class="page-sub">Aqui está o resumo dos seus veículos</div>
           </div>
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-            <!-- Theme toggle -->
-            <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn" title="Alternar tema">
-              <span class="tt-icon" id="theme-icon">🌙</span>
-              <span id="theme-label">Escuro</span>
-            </button>
             <!-- Seletor de veículo com setas -->
             <div id="dash-vehicle-selector" style="display:none;align-items:center;gap:6px;">
               <button onclick="dashVehicleNav(-1)" style="width:30px;height:30px;border-radius:50%;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">‹</button>
@@ -4657,54 +4839,111 @@ select, textarea {
 
     <!-- ===== MARKETPLACE ===== -->
     <div id="page-marketplace" class="page">
-      <div class="page-header">
-        <div class="page-title">🏪 COMPRAR VEÍCULO</div>
-        <div class="page-sub">Anúncios verificados com histórico real</div>
-      </div>
 
-      <!-- Barra de busca -->
-      <div class="mkt-search-bar">
-        <input class="mkt-search-input" id="mkt-search" type="text"
-          placeholder="🔍  Buscar marca, modelo..." autocomplete="off"
-          oninput="renderMarketplace()">
-        <button onclick="showPage('anunciar')"
-          style="flex-shrink:0;padding:10px 16px;background:var(--accent);color:var(--bg);border:none;border-radius:10px;font-family:'Sora',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">
-          + Anunciar
-        </button>
-      </div>
-
-      <!-- Chips de filtro rápido -->
-      <div class="mkt-filter-row" id="mkt-filter-row">
-        <div class="mkt-chip active" onclick="mktFiltroAno(this,'')">Todos</div>
-        <div class="mkt-chip" onclick="mktFiltroAno(this,'2024')">2024+</div>
-        <div class="mkt-chip" onclick="mktFiltroAno(this,'2022')">2022+</div>
-        <div class="mkt-chip" onclick="mktFiltroAno(this,'2020')">2020+</div>
-        <div class="mkt-chip" onclick="mktFiltroPreco(this,0,50000)">Até R$50k</div>
-        <div class="mkt-chip" onclick="mktFiltroPreco(this,50000,100000)">R$50-100k</div>
-        <div class="mkt-chip" onclick="mktFiltroPreco(this,100000,999999)">Acima R$100k</div>
-        <div class="mkt-chip" onclick="mktFiltroPassaporte(this)">🛡️ Com Passaporte</div>
-      </div>
-
-      <!-- Ordenação + contagem -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-        <div id="mkt-count" style="font-size:12px;color:var(--text3);">Carregando...</div>
-        <select id="mkt-order" onchange="renderMarketplace()"
-          style="font-size:12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:5px 10px;color:var(--text);font-family:'Sora',sans-serif;">
-          <option value="recente">Mais recentes</option>
-          <option value="preco_asc">Menor preço</option>
-          <option value="preco_desc">Maior preço</option>
-          <option value="km_asc">Menor KM</option>
-          <option value="score">Melhor score</option>
-        </select>
-      </div>
-
-      <!-- Grid de anúncios -->
-      <div class="mkt-grid" id="mkt-grid">
-        <div class="mkt-empty">
-          <div class="mkt-empty-icon">🔄</div>
-          <div class="mkt-empty-title">Carregando anúncios</div>
-          <div class="mkt-empty-sub">Buscando veículos disponíveis...</div>
+      <!-- ── TOP BAR ──────────────────────────────────────────── -->
+      <div style="padding:14px 16px 0;border-bottom:1px solid var(--border);background:var(--surface);">
+        <div class="mkt-topbar">
+          <!-- Filtros mobile toggle -->
+          <button id="btn-mkt-filtros" onclick="document.getElementById('mkt-sidebar').classList.toggle('open')"
+            style="display:none;padding:9px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;font-family:'Sora',sans-serif;flex-shrink:0;">
+            ⚙️ Filtros
+          </button>
+          <input class="mkt-topbar-search" id="mkt-search" type="text"
+            placeholder="🔍  Buscar por marca ou modelo..." autocomplete="off"
+            oninput="renderMarketplace()">
+          <button onclick="showPage('anunciar')"
+            style="flex-shrink:0;padding:10px 18px;background:var(--accent);color:var(--bg);border:none;border-radius:10px;font-family:'Sora',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">
+            + Anunciar
+          </button>
         </div>
+
+        <!-- Chips rápidos -->
+        <div class="mkt-chips">
+          <div class="mkt-chip active" onclick="mktFiltroAno(this,'')">Todos</div>
+          <div class="mkt-chip" onclick="mktFiltroAno(this,'2024')">2024+</div>
+          <div class="mkt-chip" onclick="mktFiltroAno(this,'2022')">2022+</div>
+          <div class="mkt-chip" onclick="mktFiltroAno(this,'2020')">2020+</div>
+          <div class="mkt-chip" onclick="mktFiltroPreco(this,0,50000)">Até R$50k</div>
+          <div class="mkt-chip" onclick="mktFiltroPreco(this,50000,100000)">R$50-100k</div>
+          <div class="mkt-chip" onclick="mktFiltroPreco(this,100000,999999)">Acima R$100k</div>
+          <div class="mkt-chip" onclick="mktFiltroPassaporte(this)">🛡️ Com Passaporte</div>
+        </div>
+      </div>
+
+      <!-- ── LAYOUT PRINCIPAL ──────────────────────────────────── -->
+      <div class="mkt-layout">
+
+        <!-- SIDEBAR FILTROS -->
+        <aside class="mkt-sidebar" id="mkt-sidebar">
+
+          <!-- Ordenação -->
+          <div class="mkt-filter-group">
+            <div class="mkt-filter-title">Ordenar por</div>
+            <select id="mkt-order" onchange="renderMarketplace()"
+              style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 10px;font-size:12px;color:var(--text);font-family:'Sora',sans-serif;outline:none;">
+              <option value="recente">Mais recentes</option>
+              <option value="preco_asc">Menor preço</option>
+              <option value="preco_desc">Maior preço</option>
+              <option value="km_asc">Menor KM</option>
+              <option value="score">Melhor score</option>
+            </select>
+          </div>
+
+          <!-- Faixa de preço -->
+          <div class="mkt-filter-group">
+            <div class="mkt-filter-title">Faixa de preço (R$)</div>
+            <div class="mkt-range-row">
+              <input class="mkt-range-input" id="mkt-preco-min" type="number" placeholder="Mínimo" oninput="renderMarketplace()">
+              <input class="mkt-range-input" id="mkt-preco-max" type="number" placeholder="Máximo" oninput="renderMarketplace()">
+            </div>
+          </div>
+
+          <!-- Ano -->
+          <div class="mkt-filter-group">
+            <div class="mkt-filter-title">Ano</div>
+            <div class="mkt-range-row">
+              <input class="mkt-range-input" id="mkt-ano-min" type="number" placeholder="De" min="1990" max="2025" oninput="renderMarketplace()">
+              <input class="mkt-range-input" id="mkt-ano-max" type="number" placeholder="Até" min="1990" max="2025" oninput="renderMarketplace()">
+            </div>
+          </div>
+
+          <!-- Combustível -->
+          <div class="mkt-filter-group">
+            <div class="mkt-filter-title">Combustível</div>
+            <label class="mkt-filter-option"><input type="checkbox" value="Flex" onchange="renderMarketplace()"> Flex</label>
+            <label class="mkt-filter-option"><input type="checkbox" value="Gasolina" onchange="renderMarketplace()"> Gasolina</label>
+            <label class="mkt-filter-option"><input type="checkbox" value="Diesel" onchange="renderMarketplace()"> Diesel</label>
+            <label class="mkt-filter-option"><input type="checkbox" value="Elétrico" onchange="renderMarketplace()"> Elétrico</label>
+          </div>
+
+          <!-- Com passaporte -->
+          <div class="mkt-filter-group">
+            <div class="mkt-filter-title">Verificação</div>
+            <label class="mkt-filter-option">
+              <input type="checkbox" id="mkt-chk-passaporte" onchange="renderMarketplace()">
+              🛡️ Com Passaporte verificado
+            </label>
+          </div>
+
+          <button class="mkt-sidebar-btn" onclick="mktLimparFiltros()">Limpar filtros</button>
+        </aside>
+
+        <!-- ÁREA PRINCIPAL -->
+        <div class="mkt-main">
+          <!-- Contagem e info -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+            <div id="mkt-count" style="font-size:13px;color:var(--text2);font-weight:600;">Carregando...</div>
+          </div>
+          <!-- Grid de cards -->
+          <div class="mkt-cards" id="mkt-grid">
+            <div class="mkt-empty">
+              <div class="mkt-empty-icon">🔄</div>
+              <div class="mkt-empty-title">Carregando anúncios</div>
+              <div class="mkt-empty-sub">Buscando veículos disponíveis...</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -4783,6 +5022,17 @@ select, textarea {
       <!-- Dados do anúncio (sempre visível) -->
       <div class="card" id="anunciar-dados-card">
         <div class="card-title">💰 Valores e contato</div>
+        <!-- Foto do veículo -->
+        <div class="form-group">
+          <div class="field-label">Foto do veículo</div>
+          <div id="anunciar-foto-preview" style="width:100%;height:160px;border-radius:10px;border:2px dashed var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;background:var(--surface2);" onclick="document.getElementById('anunciar-foto-input').click()">
+            <span style="font-size:32px;">📷</span>
+            <span style="font-size:12px;color:var(--text3);">Toque para adicionar foto</span>
+            <span style="font-size:10px;color:var(--text3);">JPG ou PNG · máx. 5MB</span>
+          </div>
+          <input type="file" id="anunciar-foto-input" accept="image/*" style="display:none" onchange="mktPreviewFoto(this)">
+        </div>
+
         <div class="form-group">
           <div class="field-label">Preço de venda (R$)</div>
           <input class="field-input" id="anunciar-preco" type="number" placeholder="85000"
@@ -5066,7 +5316,16 @@ select, textarea {
     <div id="page-vender" class="page">
       <div class="page-header">
         <div class="page-title">🏷️ VENDER MEU CARRO</div>
-        <div class="page-sub">Seu dossiê completo para vender com mais confiança e melhor preço</div>
+        <div class="page-sub">Dossiê completo + publique no Marketplace com 1 clique</div>
+      </div>
+      <!-- CTA rápido para o marketplace -->
+      <div style="background:rgba(123,128,193,0.07);border:1px solid rgba(123,128,193,0.2);border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px;">
+        <span style="font-size:28px;flex-shrink:0;">🏪</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;">Já quer anunciar?</div>
+          <div style="font-size:11px;color:var(--text3);">Publique no Marketplace ManyCars com passaporte verificado incluso.</div>
+        </div>
+        <button onclick="showPage('marketplace')" style="flex-shrink:0;padding:8px 14px;background:var(--accent);color:var(--bg);border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;white-space:nowrap;">Anunciar →</button>
       </div>
       <div id="vender-content">
         <div class="empty-state">
@@ -6073,17 +6332,23 @@ function toggleTheme() {
 }
 
 function updateThemeUI(isLight) {
+  // Desktop sidebar button (se existir)
   var icon  = document.getElementById('theme-icon');
   var label = document.getElementById('theme-label');
-  var mobileBtn = document.getElementById('theme-btn-mobile');
+  // Mobile topbar button
+  var mIcon  = document.getElementById('theme-icon-mobile');
+  var mLabel = document.getElementById('theme-label-mobile');
+
   if (isLight) {
-    if (icon)  icon.textContent  = '☀️';
-    if (label) label.textContent = 'Claro';
-    if (mobileBtn) mobileBtn.textContent = '☀️';
+    if (icon)   icon.textContent  = '☀️';
+    if (label)  label.textContent = 'Claro';
+    if (mIcon)  mIcon.textContent  = '☀️';
+    if (mLabel) mLabel.textContent = 'Claro';
   } else {
-    if (icon)  icon.textContent  = '🌙';
-    if (label) label.textContent = 'Escuro';
-    if (mobileBtn) mobileBtn.textContent = '🌙';
+    if (icon)   icon.textContent  = '🌙';
+    if (label)  label.textContent = 'Escuro';
+    if (mIcon)  mIcon.textContent  = '🌙';
+    if (mLabel) mLabel.textContent = 'Escuro';
   }
 }
 
@@ -14715,13 +14980,20 @@ function _mktDemoData() {
   ];
 }
 
-// ── Filtros ──────────────────────────────────────────────────
+// ── Filtros (chip rápidos) ───────────────────────────────────
 function mktFiltroAno(el, ano) {
   _mktFiltroAno = ano;
   document.querySelectorAll('.mkt-chip').forEach(function(c){ c.classList.remove('active'); });
   el.classList.add('active');
   _mktFiltroPreco = null;
   _mktPassaporte  = false;
+  // Clear sidebar fields
+  ['mkt-preco-min','mkt-preco-max','mkt-ano-min','mkt-ano-max'].forEach(function(id){
+    var el2 = document.getElementById(id);
+    if (el2) el2.value = '';
+  });
+  var chk = document.getElementById('mkt-chk-passaporte');
+  if (chk) chk.checked = false;
   renderMarketplace();
 }
 function mktFiltroPreco(el, min, max) {
@@ -14733,16 +15005,32 @@ function mktFiltroPreco(el, min, max) {
   renderMarketplace();
 }
 function mktFiltroPassaporte(el) {
-  _mktPassaporte  = !_mktPassaporte;
+  _mktPassaporte = !_mktPassaporte;
+  _mktFiltroAno  = '';
+  _mktFiltroPreco = null;
+  document.querySelectorAll('.mkt-chip').forEach(function(c){ c.classList.remove('active'); });
+  if (_mktPassaporte) el.classList.add('active');
+  else document.querySelector('.mkt-chip').classList.add('active');
+  var chk = document.getElementById('mkt-chk-passaporte');
+  if (chk) chk.checked = _mktPassaporte;
+  renderMarketplace();
+}
+function mktLimparFiltros() {
   _mktFiltroAno   = '';
   _mktFiltroPreco = null;
-  if (!_mktPassaporte) {
-    document.querySelectorAll('.mkt-chip').forEach(function(c){ c.classList.remove('active'); });
-    document.querySelector('.mkt-chip').classList.add('active');
-  } else {
-    document.querySelectorAll('.mkt-chip').forEach(function(c){ c.classList.remove('active'); });
-    el.classList.add('active');
-  }
+  _mktPassaporte  = false;
+  ['mkt-preco-min','mkt-preco-max','mkt-ano-min','mkt-ano-max'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  var chk = document.getElementById('mkt-chk-passaporte');
+  if (chk) chk.checked = false;
+  document.querySelectorAll('.mkt-filter-option input[type=checkbox]').forEach(function(c){ c.checked = false; });
+  var search = document.getElementById('mkt-search');
+  if (search) search.value = '';
+  document.querySelectorAll('.mkt-chip').forEach(function(c){ c.classList.remove('active'); });
+  var first = document.querySelector('.mkt-chip');
+  if (first) first.classList.add('active');
   renderMarketplace();
 }
 
@@ -14753,19 +15041,32 @@ function renderMarketplace() {
   if (!grid) return;
   if (!_mktAnuncios.length) { _loadAnuncios(); return; }
 
-  var busca = (document.getElementById('mkt-search') ? document.getElementById('mkt-search').value : '').toLowerCase().trim();
-  var ordem = document.getElementById('mkt-order') ? document.getElementById('mkt-order').value : 'recente';
+  var busca  = (document.getElementById('mkt-search') ? document.getElementById('mkt-search').value : '').toLowerCase().trim();
+  var ordem  = document.getElementById('mkt-order') ? document.getElementById('mkt-order').value : 'recente';
 
-  // Filtra
+  // Sidebar filters
+  var precoMin = parseInt(document.getElementById('mkt-preco-min') ? document.getElementById('mkt-preco-min').value : '') || 0;
+  var precoMax = parseInt(document.getElementById('mkt-preco-max') ? document.getElementById('mkt-preco-max').value : '') || 999999999;
+  var anoMin   = parseInt(document.getElementById('mkt-ano-min')   ? document.getElementById('mkt-ano-min').value   : '') || 0;
+  var anoMax   = parseInt(document.getElementById('mkt-ano-max')   ? document.getElementById('mkt-ano-max').value   : '') || 9999;
+  var passp    = document.getElementById('mkt-chk-passaporte') ? document.getElementById('mkt-chk-passaporte').checked : false;
+
+  // Combustível checkboxes
+  var combChecked = Array.from(document.querySelectorAll('.mkt-filter-option input[type=checkbox]:not(#mkt-chk-passaporte):checked')).map(function(c){ return c.value; });
+
   var lista = _mktAnuncios.filter(function(a) {
     if (busca && !(a.marca+' '+a.modelo).toLowerCase().includes(busca)) return false;
     if (_mktFiltroAno && a.ano < parseInt(_mktFiltroAno)) return false;
     if (_mktFiltroPreco && (a.preco < _mktFiltroPreco.min || a.preco > _mktFiltroPreco.max)) return false;
-    if (_mktPassaporte && !a.tem_passaporte) return false;
+    if (precoMin > 0 && a.preco < precoMin) return false;
+    if (precoMax < 999999999 && a.preco > precoMax) return false;
+    if (anoMin > 0 && a.ano < anoMin) return false;
+    if (anoMax < 9999 && a.ano > anoMax) return false;
+    if ((passp || _mktPassaporte) && !a.tem_passaporte) return false;
+    if (combChecked.length && combChecked.indexOf(a.combustivel) < 0) return false;
     return true;
   });
 
-  // Ordena
   lista.sort(function(a, b) {
     if (ordem === 'preco_asc')  return a.preco - b.preco;
     if (ordem === 'preco_desc') return b.preco - a.preco;
@@ -14774,9 +15075,10 @@ function renderMarketplace() {
     return new Date(b.created_at) - new Date(a.created_at);
   });
 
-  if (count) count.textContent = lista.length + ' veículo' + (lista.length !== 1 ? 's' : '') + ' encontrado' + (lista.length !== 1 ? 's' : '');
+  var n = lista.length;
+  if (count) count.textContent = n.toLocaleString('pt-BR') + ' anúncio' + (n !== 1 ? 's' : '') + ' encontrado' + (n !== 1 ? 's' : '');
 
-  if (!lista.length) {
+  if (!n) {
     grid.innerHTML = '<div class="mkt-empty">' +
       '<div class="mkt-empty-icon">🔍</div>' +
       '<div class="mkt-empty-title">Nenhum resultado</div>' +
@@ -14787,29 +15089,70 @@ function renderMarketplace() {
   }
 
   var fmt = function(v){ return 'R$' + Math.round(v).toLocaleString('pt-BR'); };
+  var grads = ['mkt-grad-0','mkt-grad-1','mkt-grad-2','mkt-grad-3','mkt-grad-4','mkt-grad-5'];
+  var emojis = { Toyota:'🚗', Volkswagen:'🚙', Fiat:'🚘', Hyundai:'🚗', Jeep:'🚙', Honda:'🚗', Ford:'🚘', Chevrolet:'🚗', Renault:'🚘', Nissan:'🚗' };
 
-  grid.innerHTML = lista.map(function(a) {
-    var scoreColor = a.score >= 80 ? '#276749' : a.score >= 55 ? '#b87800' : '#c53030';
-    var emojis = { Toyota:'🚗', Volkswagen:'🚙', Fiat:'🚘', Hyundai:'🚗', Jeep:'🚙', Honda:'🚗', Ford:'🚘', Chevrolet:'🚗', Renault:'🚘', Nissan:'🚗' };
-    var emoji  = emojis[a.marca] || '🚗';
+  grid.innerHTML = lista.map(function(a, i) {
+    var grad  = grads[i % grads.length];
+    var emoji = emojis[a.marca] || '🚗';
+    var sc    = a.score || 0;
+    var scColor = sc >= 80 ? '#276749' : sc >= 55 ? '#b87800' : '#c53030';
 
-    return '<div class="mkt-card" onclick="verAnuncio(\''  + a.id + '\')">' +
-      '<div class="mkt-card-img">' +
-        '<span style="opacity:0.4;">' + emoji + '</span>' +
-        '<div class="mkt-card-badge">' + a.ano + ' · ' + (a.km/1000).toFixed(0) + 'k km</div>' +
-        (a.tem_passaporte ? '<div class="mkt-passport-badge">🛡️ Passaporte</div>' : '') +
-      '</div>' +
-      '<div class="mkt-card-body">' +
-        '<div class="mkt-card-title">' + a.marca + ' ' + a.modelo + '</div>' +
-        '<div class="mkt-card-sub">' + a.cor + ' · ' + a.combustivel + ' · ' + (a.cidade || '—') + '</div>' +
-        '<div class="mkt-card-price">' + fmt(a.preco) + '</div>' +
-        '<div class="mkt-card-footer">' +
-          '<span class="mkt-card-loc">📍 ' + (a.cidade ? a.cidade.split(',')[0] : '—') + '</span>' +
-          (a.score ? '<span class="mkt-score-pill" style="background:rgba('+( a.score>=80?'39,103,73':'183,120,0')+',0.1);color:'+scoreColor+'">⭐ Score ' + a.score + '</span>' : '') +
-        '</div>' +
-      '</div>' +
+    // Photo: use stored URL if available, else gradient placeholder
+    var photoHtml = a.foto_url
+      ? '<img src="' + a.foto_url + '" class="mkt-card-photo" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'">' +
+        '<div class="mkt-photo-placeholder ' + grad + '" style="display:none;"><span style="opacity:0.35;">' + emoji + '</span></div>'
+      : '<div class="mkt-photo-placeholder ' + grad + '"><span style="opacity:0.35;font-size:56px;">' + emoji + '</span></div>';
+
+    return '<div class="mkt-card" onclick="verAnuncio(\'" + a.id + "\')">'+
+      '<div style="position:relative;">'+
+        photoHtml +
+        (a.tem_passaporte ? '<div class="mkt-badge-verified">🛡️ Verificado</div>' : '')+
+        '<button class="mkt-fav" onclick="event.stopPropagation();mktFavoritar(\'" + a.id + "\',this)" title="Favoritar">♡</button>'+
+        '<div class="mkt-photo-count">📷 ' + (a.fotos ? a.fotos.length : 1) + '</div>'+
+      '</div>'+
+      '<div class="mkt-card-info">'+
+        '<div class="mkt-card-name">' + a.marca + ' ' + a.modelo + '</div>'+
+        '<div class="mkt-card-desc">' + (a.descricao ? a.descricao.substring(0,60) + (a.descricao.length>60?'...':'') : a.cor+' · '+a.combustivel) + '</div>'+
+        '<div class="mkt-card-meta">'+
+          '<span>📅 ' + a.ano + '</span>'+
+          '<span>🛣️ ' + (a.km/1000).toFixed(0) + 'k km</span>'+
+          '<span>📍 ' + (a.cidade ? a.cidade.split(',')[0] : '—') + '</span>'+
+        '</div>'+
+        (sc ? '<div style="font-size:10px;font-weight:700;color:'+scColor+';margin-bottom:6px;">⭐ Score de saúde: '+sc+'/100</div>' : '')+
+        '<div class="mkt-card-price">' + fmt(a.preco) + '</div>'+
+        '<button class="mkt-card-btn" onclick="event.stopPropagation();verAnuncio(\'" + a.id + "\')">Ver detalhes</button>'+
+      '</div>'+
     '</div>';
   }).join('');
+}
+
+function mktPreviewFoto(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var preview = document.getElementById('anunciar-foto-preview');
+    if (preview) {
+      preview.style.padding = '0';
+      preview.style.border = 'none';
+      preview.innerHTML = '<img src="' + e.target.result + '" style="width:100%;height:160px;object-fit:cover;border-radius:10px;display:block;">' +
+        '<div style="text-align:center;font-size:11px;color:var(--text3);padding:4px 0;">Toque para trocar</div>';
+    }
+    // Store base64 for upload
+    window._mktFotoBase64 = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// Show filter button on mobile
+function _mktCheckMobile() {
+  var btn = document.getElementById('btn-mkt-filtros');
+  if (btn) btn.style.display = window.innerWidth <= 768 ? 'block' : 'none';
+}
+
+function mktFavoritar(id, btn) {
+  btn.textContent = btn.textContent === '♡' ? '❤️' : '♡';
 }
 
 // ── Detalhe do anúncio ───────────────────────────────────────
