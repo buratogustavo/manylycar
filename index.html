@@ -2837,13 +2837,11 @@ select, textarea {
   var _supabaseReady = false;
   var _sb = null;
   try {
-    if (typeof supabase !== 'undefined' && supabase.createClient &&
-        SUPABASE_URL !== 'COLE_SUA_URL_AQUI') {
+    if (typeof supabase !== 'undefined' && supabase.createClient) {
       _sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
       _supabaseReady = true;
     }
   } catch(e) {
-    console.warn('Supabase SDK não carregou — modo local ativo:', e.message);
     _supabaseReady = false;
     _sb = null;
   }
@@ -3056,7 +3054,11 @@ select, textarea {
     </button>
   </div>
 
-  <!-- SIDEBAR OVERLAY (mobile) -->
+  <!-- OFFLINE INDICATOR BANNER -->
+  <div id="offline-banner" style="display:none;position:sticky;top:56px;z-index:99;background:#744210;color:#fefcbf;font-size:12px;font-weight:600;text-align:center;padding:7px 16px;letter-spacing:0.2px;gap:6px;align-items:center;justify-content:center;">
+    <span style="font-size:14px;">📡</span>
+    <span>Modo offline — dados salvos localmente e sincronizados quando a conexão voltar</span>
+  </div>
   <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
 
   <!-- SIDEBAR -->
@@ -3146,7 +3148,7 @@ select, textarea {
     <div class="nav-section">Mercado</div>
     <div class="nav-item" onclick="showPage('marketplace')">
       <span class="nav-icon">🏪</span> Marketplace
-      <span style="margin-left:auto;font-size:9px;font-weight:700;background:rgba(123,128,193,0.12);color:var(--accent);padding:2px 7px;border-radius:10px;">Comprar & Vender</span>
+      <span style="margin-left:auto;font-size:9px;font-weight:700;background:rgba(123,128,193,0.12);color:var(--accent);padding:2px 6px;border-radius:10px;white-space:nowrap;">🏷️ Anunciar</span>
     </div>
     <div class="nav-item" onclick="showPage('sonhar')">
       <span class="nav-icon">🌟</span> Lista de Desejos
@@ -3185,7 +3187,7 @@ select, textarea {
       <div class="user-chip" onclick="_irParaPerfil()" style="cursor:pointer;border-radius:10px;padding:8px;transition:background 0.15s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='transparent'">
         <div class="user-avatar" id="sidebar-avatar" style="font-size:18px;display:flex;align-items:center;justify-content:center;">J</div>
         <div style="flex:1;min-width:0;">
-          <div class="user-name" id="sidebar-name">João</div>
+          <div class="user-name" id="sidebar-name">Usuário</div>
           <div style="font-size:10px;color:var(--text3);margin-top:1px;">Ver perfil →</div>
         </div>
       </div>
@@ -3210,9 +3212,9 @@ select, textarea {
         <span class="bn-icon">🏠</span>
         <span>Início</span>
       </button>
-      <button class="bn-item" onclick="showPage('historico');setBottomNav(this)">
-        <span class="bn-icon">📋</span>
-        <span>Histórico</span>
+      <button class="bn-item" onclick="showPage('veiculos');setBottomNav(this)">
+        <span class="bn-icon">🚗</span>
+        <span>Veículos</span>
       </button>
 
       <!-- Botão "+" central -->
@@ -3222,14 +3224,14 @@ select, textarea {
         </button>
       </div>
 
-      <button class="bn-item" onclick="showPage('alertas');setBottomNav(this)">
-        <span class="bn-icon">🔔</span>
-        <span>Alertas</span>
-        <span class="bn-badge" id="bn-alert-badge" style="display:none;"></span>
+      <button class="bn-item" onclick="showPage('marketplace');setBottomNav(this)">
+        <span class="bn-icon">🏪</span>
+        <span>Mercado</span>
       </button>
       <button class="bn-item" onclick="openSidebar();setBottomNav(this)">
         <span class="bn-icon">☰</span>
         <span>Menu</span>
+        <span class="bn-badge" id="bn-alert-badge" style="display:none;"></span>
       </button>
     </nav>
 
@@ -3275,7 +3277,7 @@ select, textarea {
       <div class="page-header">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
           <div>
-            <div class="page-title"><span id="dash-greeting">BOM DIA,</span> <span id="dash-name" style="color:var(--accent)">JOÃO</span> 👋</div>
+            <div class="page-title"><span id="dash-greeting">BOM DIA,</span> <span id="dash-name" style="color:var(--accent)">VOCÊ</span> 👋</div>
             <div class="page-sub">Aqui está o resumo dos seus veículos</div>
           </div>
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
@@ -3335,7 +3337,7 @@ select, textarea {
           <button onclick="showPage('alertas')" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 8px;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:12px;font-family:'Sora',sans-serif;cursor:pointer;min-height:72px;position:relative;">
             <span style="font-size:22px;">🔔</span>
             <span style="font-size:12px;font-weight:600;color:var(--text2);">Alertas</span>
-            <span id="quick-alert-badge" style="display:none;position:absolute;top:8px;right:10px;background:var(--red);color:white;font-size:9px;font-weight:800;padding:2px 5px;border-radius:10px;line-height:1.4;" id="quick-alert-badge">0</span>
+            <span id="quick-alert-badge" style="display:none;position:absolute;top:8px;right:10px;background:var(--red);color:white;font-size:9px;font-weight:800;padding:2px 5px;border-radius:10px;line-height:1.4;">0</span>
           </button>
         </div>
       </div>
@@ -3765,8 +3767,13 @@ select, textarea {
     <!-- ===== PEÇAS ===== -->
     <div id="page-pecas" class="page">
       <div class="page-header">
-        <div class="page-title">CONSULTAR PEÇAS</div>
-        <div class="page-sub">Peças compatíveis com seu veículo + comparação de preços</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;">‹</button>
+          <div>
+            <div class="page-title" style="margin-bottom:0;">CONSULTAR PEÇAS</div>
+            <div class="page-sub">Peças compatíveis com seu veículo + comparação de preços</div>
+          </div>
+        </div>
       </div>
 
       <!-- BUSCA POR NOME -->
@@ -3800,8 +3807,13 @@ select, textarea {
     <!-- ===== MANUTENÇÃO ===== -->
     <div id="page-manutencao" class="page">
       <div class="page-header">
-        <div class="page-title">🔩 MANUTENÇÃO</div>
-        <div class="page-sub">Registre serviços e veja o guia de próximas manutenções</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;">‹</button>
+          <div>
+            <div class="page-title" style="margin-bottom:0;">🔩 MANUTENÇÃO</div>
+            <div class="page-sub">Registre serviços e veja o guia de próximas manutenções</div>
+          </div>
+        </div>
       </div>
 
       <!-- REGISTRAR -->
@@ -3868,8 +3880,13 @@ select, textarea {
     <!-- ===== SAÚDE DO VEÍCULO ===== -->
     <div id="page-saude" class="page">
       <div class="page-header">
-        <div class="page-title">🩺 SAÚDE DO VEÍCULO</div>
-        <div class="page-sub">Score detalhado, comparativo e diagnóstico completo</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;">‹</button>
+          <div>
+            <div class="page-title" style="margin-bottom:0;">🩺 SAÚDE DO VEÍCULO</div>
+            <div class="page-sub">Score detalhado, comparativo e diagnóstico completo</div>
+          </div>
+        </div>
       </div>
 
       <div id="saude-empty" class="empty-state" style="display:none;">
@@ -3928,6 +3945,7 @@ select, textarea {
     <div id="page-historico" class="page">
       <div class="page-header">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;flex-shrink:0;">‹</button>
           <div>
             <div class="page-title">📋 HISTÓRICO</div>
             <div class="page-sub">Serviços realizados e relatório consolidado</div>
@@ -4005,8 +4023,13 @@ select, textarea {
     <!-- ===== MONETIZAÇÃO ===== -->
     <div id="page-monetizacao" class="page">
       <div class="page-header">
-        <div class="page-title">💰 MONETIZAÇÃO</div>
-        <div class="page-sub">20 formas de gerar receita com o ManyCars — exemplos reais aplicados ao app</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;">‹</button>
+          <div>
+            <div class="page-title" style="margin-bottom:0;">💰 MONETIZAÇÃO</div>
+            <div class="page-sub">20 formas de gerar receita com o ManyCars — exemplos reais aplicados ao app</div>
+          </div>
+        </div>
       </div>
 
       <!-- SUMMARY BAR -->
@@ -4634,8 +4657,13 @@ select, textarea {
     <!-- ===== COMBUSTÍVEL ===== -->
     <div id="page-combustivel" class="page">
       <div class="page-header">
-        <div class="page-title">⛽ COMBUSTÍVEL</div>
-        <div class="page-sub">Controle de abastecimentos e eficiência do seu carro</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;">‹</button>
+          <div>
+            <div class="page-title" style="margin-bottom:0;">⛽ COMBUSTÍVEL</div>
+            <div class="page-sub">Controle de abastecimentos e eficiência do seu carro</div>
+          </div>
+        </div>
       </div>
 
       <!-- Vehicle selector -->
@@ -4711,8 +4739,13 @@ select, textarea {
     <!-- ===== DOCUMENTOS ===== -->
     <div id="page-documentos" class="page">
       <div class="page-header">
-        <div class="page-title">📅 DOCUMENTOS</div>
-        <div class="page-sub">Controle de vencimentos — IPVA, Seguro e Licenciamento</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;">‹</button>
+          <div>
+            <div class="page-title" style="margin-bottom:0;">📅 DOCUMENTOS</div>
+            <div class="page-sub">Controle de vencimentos — IPVA, Seguro e Licenciamento</div>
+          </div>
+        </div>
       </div>
       <div id="documentos-content">
         <div class="empty-state">
@@ -4727,8 +4760,13 @@ select, textarea {
     <!-- ===== ANALYTICS ===== -->
     <div id="page-analytics" class="page">
       <div class="page-header">
-        <div class="page-title">📊 PAINEL FINANCEIRO</div>
-        <div class="page-sub">Visão completa dos seus gastos automotivos</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;">‹</button>
+          <div>
+            <div class="page-title" style="margin-bottom:0;">📊 PAINEL FINANCEIRO</div>
+            <div class="page-sub">Visão completa dos seus gastos automotivos</div>
+          </div>
+        </div>
       </div>
 
       <!-- Vehicle selector -->
@@ -4788,8 +4826,13 @@ select, textarea {
     <!-- ===== QUERO SONHAR (inclui wishlist) ===== -->
     <div id="page-sonhar" class="page">
       <div class="page-header">
-        <div class="page-title">🌟 QUERO SONHAR</div>
-        <div class="page-sub">Pesquise, salve na wishlist ❤️ e compare os carros dos seus sonhos</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;">‹</button>
+          <div>
+            <div class="page-title" style="margin-bottom:0;">🌟 LISTA DE DESEJOS</div>
+            <div class="page-sub">Pesquise, salve e compare os carros dos seus sonhos</div>
+          </div>
+        </div>
       </div>
 
       <!-- BUSCA -->
@@ -5071,9 +5114,9 @@ select, textarea {
 
     <!-- ===== DETALHE DO ANÚNCIO ===== -->
     <div id="page-mkt-detalhe" class="page">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-        <button onclick="showPage('marketplace')"
-          style="background:none;border:none;font-size:20px;cursor:pointer;padding:0;color:var(--text3);">←</button>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+        <button onclick="showPage('marketplace')" aria-label="Voltar"
+          style="background:none;border:none;font-size:22px;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);line-height:1;-webkit-tap-highlight-color:transparent;">‹</button>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;">Detalhes do veículo</div>
       </div>
       <div id="mkt-detalhe-content"></div>
@@ -5082,8 +5125,13 @@ select, textarea {
     <!-- ===== INFO DO MODELO ===== -->
     <div id="page-modelo-info" class="page">
       <div class="page-header">
-        <div class="page-title">📖 INFO DO MODELO</div>
-        <div class="page-sub">Recomendações técnicas e problemas conhecidos do seu carro</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;">‹</button>
+          <div>
+            <div class="page-title" style="margin-bottom:0;">📖 INFO DO MODELO</div>
+            <div class="page-sub">Recomendações técnicas e problemas conhecidos do seu carro</div>
+          </div>
+        </div>
       </div>
       <div id="modelo-info-content">
         <div class="empty-state">
@@ -5099,6 +5147,7 @@ select, textarea {
     <div id="page-viagens" class="page">
       <div class="page-header">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;flex-shrink:0;">‹</button>
           <div>
             <div class="page-title">🗺️ VIAGENS</div>
             <div class="page-sub">Registre rotas, visualize no mapa e descubra novas destinos</div>
@@ -5315,8 +5364,13 @@ select, textarea {
     <!-- ===== VENDER MEU CARRO ===== -->
     <div id="page-vender" class="page">
       <div class="page-header">
-        <div class="page-title">🏷️ VENDER MEU CARRO</div>
-        <div class="page-sub">Dossiê completo + publique no Marketplace com 1 clique</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;flex-shrink:0;">‹</button>
+          <div>
+            <div class="page-title" style="margin-bottom:0;">🏷️ VENDER MEU CARRO</div>
+            <div class="page-sub">Dossiê completo + publique no Marketplace com 1 clique</div>
+          </div>
+        </div>
       </div>
       <!-- CTA rápido para o marketplace -->
       <div style="background:rgba(123,128,193,0.07);border:1px solid rgba(123,128,193,0.2);border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px;">
@@ -5340,8 +5394,13 @@ select, textarea {
     <!-- ===== CHECK-LIST ===== -->
     <div id="page-checklist" class="page">
       <div class="page-header">
-        <div class="page-title">✅ CHECK-LIST</div>
-        <div class="page-sub">Estado atual das manutenções do seu veículo</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;flex-shrink:0;">‹</button>
+          <div>
+            <div class="page-title" style="margin-bottom:0;">✅ CHECK-LIST</div>
+            <div class="page-sub">Estado atual das manutenções do seu veículo</div>
+          </div>
+        </div>
       </div>
       <div class="card" style="padding:14px 20px;margin-bottom:0;">
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
@@ -5376,8 +5435,13 @@ select, textarea {
     <!-- ===== OPINIÕES DE DONOS ===== -->
     <div id="page-opinioes" class="page">
       <div class="page-header">
-        <div class="page-title">💬 OPINIÕES DE DONOS</div>
-        <div class="page-sub">O que outros donos dizem sobre seus carros — avaliações reais</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;">‹</button>
+          <div>
+            <div class="page-title" style="margin-bottom:0;">💬 OPINIÕES DE DONOS</div>
+            <div class="page-sub">O que outros donos dizem sobre seus carros — avaliações reais</div>
+          </div>
+        </div>
       </div>
 
       <!-- Filtros -->
@@ -5456,6 +5520,12 @@ select, textarea {
 
     <!-- ===== SEJA PREMIUM ===== -->
     <div id="page-premium" class="page">
+
+      <!-- Back button -->
+      <div style="padding:12px 16px 0;display:flex;align-items:center;">
+        <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;flex-shrink:0;">‹</button>
+        <span style="font-size:13px;font-weight:600;color:var(--text2);margin-left:2px;">Planos</span>
+      </div>
 
       <!-- ── HERO VALUE PROP ─────────────────────────────────── -->
       <div style="text-align:center;padding:24px 16px 20px;">
@@ -5797,9 +5867,12 @@ select, textarea {
   <!-- HEADER -->
   <div class="page-header">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-      <div>
-        <div class="page-title" style="color:#a78bfa;">🛡️ PAINEL ADMINISTRADOR</div>
-        <div class="page-sub" id="adm-last-refresh">Carregando dados da plataforma…</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:rgba(167,139,250,0.6);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;">‹</button>
+        <div>
+          <div class="page-title" style="color:#a78bfa;margin-bottom:0;">🛡️ PAINEL ADMINISTRADOR</div>
+          <div class="page-sub" id="adm-last-refresh">Carregando dados da plataforma…</div>
+        </div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
         <select id="adm-periodo" class="field-select" style="height:36px;font-size:12px;width:auto;" onchange="renderModoAdminPage()">
@@ -6157,8 +6230,13 @@ select, textarea {
     <!-- ===== RANKING ===== -->
     <div id="page-ranking" class="page">
       <div class="page-header">
-        <div class="page-title">🏆 RANKING</div>
-        <div class="page-sub">Como seus carros se comparam com a frota nacional</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;flex-shrink:0;">‹</button>
+          <div>
+            <div class="page-title" style="margin-bottom:0;">🏆 RANKING</div>
+            <div class="page-sub">Como seus carros se comparam com a frota nacional</div>
+          </div>
+        </div>
       </div>
       <div id="ranking-content"></div>
     </div>
@@ -6323,7 +6401,50 @@ function setBottomNav(el) {
 }
 
 // ============================================================
-// THEME — light / dark toggle with persistence
+// OFFLINE / ONLINE DETECTOR
+// ============================================================
+function _initOfflineDetector() {
+  var banner  = document.getElementById('offline-banner');
+  var wasOnline = navigator.onLine;
+  var toastTimer = null;
+
+  function _setOffline() {
+    if (!banner) return;
+    banner.style.display = 'flex';
+    wasOnline = false;
+  }
+
+  function _setOnline() {
+    if (!banner) return;
+    banner.style.display = 'none';
+    if (!wasOnline) {
+      // Was offline, now back — show toast and trigger sync
+      showToast('☁️ Conexão restaurada! Sincronizando dados...', 'success');
+      wasOnline = true;
+      // Trigger cloud sync if user is logged in
+      if (_supabaseReady && _sb && state.user && state.user.id) {
+        setTimeout(function() {
+          _syncToCloud({ vehicles: state.vehicles, history: state.history, fuel: state.fuel, docs: state.docs, user: state.user });
+        }, 1000);
+      }
+    }
+  }
+
+  // Initial state
+  if (!navigator.onLine) _setOffline();
+
+  // Listen for changes
+  window.addEventListener('online',  _setOnline);
+  window.addEventListener('offline', _setOffline);
+
+  // Periodic check every 30s (some browsers don't fire events reliably)
+  setInterval(function() {
+    if (navigator.onLine && !wasOnline) _setOnline();
+    else if (!navigator.onLine && wasOnline) _setOffline();
+  }, 30000);
+}
+
+
 // ============================================================
 function toggleTheme() {
   var isLight = document.body.classList.toggle('light-mode');
@@ -6366,7 +6487,7 @@ function loadTheme() {
 }
 
 function syncBottomNav(page) {
-  var map = { dashboard:0, historico:1, combustivel:2, alertas:3 };
+  var map = { dashboard:0, veiculos:1, marketplace:3 };
   var items = document.querySelectorAll('.bn-item');
   items.forEach(function(b){ b.classList.remove('active'); });
   if (map[page] !== undefined && items[map[page]]) items[map[page]].classList.add('active');
@@ -6438,7 +6559,7 @@ function _doSaveState() {
     if (el) el.textContent = 'Salvo às ' + now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     // 2. Sincroniza com nuvem em background (não bloqueia UI)
     _syncToCloud(data);
-  } catch(e) { console.warn('Erro ao salvar:', e); }
+  } catch(e) { }
 }
 
 // ── Verifica plano ativo no Supabase ao fazer login ────────────
@@ -6603,7 +6724,6 @@ async function _doSyncToCloud(data) {
     }
   } catch(e) {
     _syncFailCount++;
-    console.warn('Sync nuvem falhou (' + _syncFailCount + 'x):', e.message);
     var el = document.getElementById('saved-at');
     if (el) el.textContent = '💾 Local (sem sync)';
   }
@@ -6685,7 +6805,6 @@ async function _loadFromCloud(userId) {
     _doSaveState();
     return true;
   } catch(e) {
-    console.warn('Erro ao carregar da nuvem:', e.message);
     return false;
   }
 }
@@ -6730,8 +6849,7 @@ async function _salvarPassaporteNuvem(vehicleId) {
       fuel_snap:     fuelV,
       checklist_snap: v.checklist || {}
     });
-    console.log('Passaporte salvo na nuvem ✅');
-  } catch(e) { console.warn('Erro ao salvar passaporte:', e.message); }
+  } catch(e) { }
 }
 
 // ── Busca passaporte por placa ───────────────────────────────
@@ -6778,7 +6896,7 @@ async function _salvarOpiniaoNuvem(opiniao) {
       tags:       opiniao.tags || []
     });
     return true;
-  } catch(e) { console.warn('Erro ao salvar opinião:', e.message); return false; }
+  } catch(e) { return false; }
 }
 
 function loadState() {
@@ -6796,7 +6914,7 @@ function loadState() {
     if (data.viagens  && Array.isArray(data.viagens))  viagens  = data.viagens;
     if (data.wishlist && Array.isArray(data.wishlist))  wishlist = data.wishlist;
     return true;
-  } catch(e) { console.warn('Erro ao carregar:', e); return false; }
+  } catch(e) { return false; }
 }
 
 function clearState() {
@@ -6808,13 +6926,14 @@ window.addEventListener('DOMContentLoaded', function() {
   document.body.classList.add('light-mode');
   loadTheme();
   _initPush(); // Push notifications
+  _initOfflineDetector(); // Offline/online indicator
+  _initSidebarSwipe(); // Swipe para fechar menu lateral
+  _initEscapeKey(); // ESC fecha modais
 
   // Registra Service Worker (PWA + Push) — apenas no domínio real
   if ('serviceWorker' in navigator && location.hostname !== 'localhost' && !location.hostname.includes('claudeusercontent')) {
     navigator.serviceWorker.register('/sw.js').then(function(reg) {
-      console.log('SW registrado:', reg.scope);
     }).catch(function(err) {
-      console.warn('SW falhou:', err);
     });
   }
   updateWishlistBadge();
@@ -7433,6 +7552,7 @@ function switchAuthTab(tab) {
 
 // ── LOGIN ──────────────────────────────────────────────────
 async function doLogin() {
+  _haptic('heavy');
   var email = (document.getElementById('login-email').value || '').trim();
   var pass  = (document.getElementById('login-password').value || '');
   if (!email) { showToast('Informe seu e-mail', 'error'); return; }
@@ -7483,6 +7603,7 @@ async function doLogin() {
 
 // ── CADASTRO ───────────────────────────────────────────────
 async function doRegister() {
+  _haptic('heavy');
   var name   = (document.getElementById('reg-name').value   || '').trim();
   var cidade = (document.getElementById('reg-cidade').value || '').trim();
   var email  = (document.getElementById('reg-email').value  || '').trim();
@@ -7700,7 +7821,6 @@ if (_supabaseReady && _sb) {
     clearTimeout(_authTimeout);
     _authLoading(false);
     // Failed to fetch ou erro de rede — silencioso, DOMContentLoaded já restaura sessão local
-    console.warn('Supabase getSession error:', err && err.message);
   });
 }
 
@@ -8608,6 +8728,7 @@ function renderHistoricoSelects() {
 }
 
 function registrarHistorico() {
+  _haptic('success');
   // The register form was moved to the Manutenção tab
   showPage('manutencao');
   showToast('Use a aba Manutenção para registrar serviços', 'info');
@@ -8653,6 +8774,7 @@ function renderHistoricoList() {
 }
 
 function excluirHistorico(id) {
+  _haptic('warning');
   var item = state.history.find(function(h){ return h.id === id; });
   if (!item) return;
   state.history = state.history.filter(function(h){ return h.id !== id; });
@@ -8746,6 +8868,118 @@ function closeSidebar() {
 }
 
 // ============================================================
+// ESC KEY — fecha modais em ordem de prioridade (z-index)
+// ============================================================
+function _initEscapeKey() {
+  // Map: seletor do overlay → função de fechar
+  var modals = [
+    { id: 'icon-picker-modal',      close: function() { if (typeof fecharIconPicker  === 'function') fecharIconPicker(); } },
+    { id: 'confirm-overlay',        close: function() { if (typeof closeConfirmModal === 'function') closeConfirmModal(); } },
+    { id: 'km-modal-overlay',       close: function() { if (typeof closeKmModal      === 'function') closeKmModal(); } },
+    { id: 'edit-viagem-overlay',    close: function() { if (typeof fecharEditViagem  === 'function') fecharEditViagem(); } },
+    { id: 'edit-manut-overlay',     close: function() { if (typeof closeEditManut    === 'function') closeEditManut(); } },
+    { id: 'edit-fuel-overlay',      close: function() { if (typeof closeEditFuel     === 'function') closeEditFuel(); } },
+    { id: 'relatorio-overlay',      close: function() { if (typeof fecharRelatorio   === 'function') fecharRelatorio(); } },
+    { id: 'price-modal',            close: function() { if (typeof closeModal        === 'function') closeModal(); } },
+    { id: 'registro-rapido-overlay',close: function() { if (typeof fecharRegistroRapido === 'function') fecharRegistroRapido(); } },
+    { id: 'sidebar',                close: function() { closeSidebar(); }, activeClass: 'open' },
+  ];
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape') return;
+    // Find topmost visible modal and close it
+    for (var i = 0; i < modals.length; i++) {
+      var el = document.getElementById(modals[i].id);
+      if (!el) continue;
+      var isVisible = modals[i].activeClass
+        ? el.classList.contains(modals[i].activeClass)
+        : el.style.display !== 'none' && el.style.display !== '';
+      if (isVisible) {
+        modals[i].close();
+        e.preventDefault();
+        return; // close only the topmost
+      }
+    }
+  });
+}
+
+
+// ============================================================
+function _initSidebarSwipe() {
+  var sidebar  = document.getElementById('sidebar');
+  var overlay  = document.getElementById('sidebar-overlay');
+  if (!sidebar || !overlay) return;
+
+  var touchStartX = 0;
+  var touchStartY = 0;
+  var isDragging  = false;
+  var THRESHOLD   = 60; // px mínimos para fechar
+  var MAX_VERT    = 80; // ignora se scroll vertical dominante
+
+  function onTouchStart(e) {
+    if (!sidebar.classList.contains('open')) return;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    isDragging  = true;
+  }
+
+  function onTouchMove(e) {
+    if (!isDragging) return;
+    var dx = e.touches[0].clientX - touchStartX;
+    var dy = Math.abs(e.touches[0].clientY - touchStartY);
+    // Se movimento horizontal para esquerda e não predominantemente vertical
+    if (dx < -10 && dy < MAX_VERT) {
+      // Arrastar a sidebar em tempo real
+      var translate = Math.max(dx, -220);
+      sidebar.style.transform = 'translateX(' + translate + 'px)';
+      overlay.style.opacity   = String(1 + translate / 220);
+      e.preventDefault();
+    }
+  }
+
+  function onTouchEnd(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    // Reset transition para animar o fecho/retorno
+    sidebar.style.transition  = 'transform 0.25s ease';
+    overlay.style.transition  = 'opacity 0.25s ease';
+
+    if (dx < -THRESHOLD) {
+      // Passou do threshold — fechar
+      sidebar.style.transform = 'translateX(-220px)';
+      overlay.style.opacity   = '0';
+      setTimeout(function() {
+        closeSidebar();
+        sidebar.style.transform  = '';
+        sidebar.style.transition = '';
+        overlay.style.opacity    = '';
+        overlay.style.transition = '';
+      }, 250);
+    } else {
+      // Não passou — voltar para aberto
+      sidebar.style.transform  = 'translateX(0)';
+      overlay.style.opacity    = '1';
+      setTimeout(function() {
+        sidebar.style.transform  = '';
+        sidebar.style.transition = '';
+        overlay.style.opacity    = '';
+        overlay.style.transition = '';
+      }, 250);
+    }
+  }
+
+  // Ouve toque na sidebar e no overlay
+  sidebar.addEventListener('touchstart', onTouchStart, { passive: true });
+  sidebar.addEventListener('touchmove',  onTouchMove,  { passive: false });
+  sidebar.addEventListener('touchend',   onTouchEnd,   { passive: true });
+  overlay.addEventListener('touchstart', onTouchStart, { passive: true });
+  overlay.addEventListener('touchmove',  onTouchMove,  { passive: false });
+  overlay.addEventListener('touchend',   onTouchEnd,   { passive: true });
+}
+
+
+// ============================================================
 // ONBOARDING
 // ============================================================
 var OB_STEPS = [
@@ -8813,6 +9047,7 @@ function closeKmModal() {
 }
 
 function salvarKmModal() {
+  _haptic('success');
   var updated = 0;
   state.vehicles.forEach(function(v) {
     var inp = document.getElementById('km-inp-' + v.id);
@@ -9131,6 +9366,7 @@ function updateFuelPreview() {
 }
 
 function registrarAbastecimento() {
+  _haptic('success');
   var vid    = document.getElementById('fuel-veiculo') ? document.getElementById('fuel-veiculo').value : '';
   var tipo   = document.getElementById('fuel-tipo').value;
   var data   = document.getElementById('fuel-data').value;
@@ -9254,6 +9490,7 @@ function closeEditManut() {
 }
 
 function salvarEditManut() {
+  _haptic('success');
   var id    = parseInt(document.getElementById('edit-manut-id').value);
   var tipo  = document.getElementById('edit-manut-tipo').value;
   var data  = document.getElementById('edit-manut-data').value;
@@ -9302,6 +9539,7 @@ function closeEditFuel() {
 }
 
 function salvarEditFuel() {
+  _haptic('success');
   var id     = parseInt(document.getElementById('edit-fuel-id').value);
   var tipo   = document.getElementById('edit-fuel-tipo').value;
   var data   = document.getElementById('edit-fuel-data').value;
@@ -9670,7 +9908,6 @@ async function _syncDocumentoNuvem(vehicleId) {
         .upsert(rows, { onConflict: 'user_id,vehicle_id,tipo' });
     }
   } catch(e) {
-    console.warn('Sync docs falhou:', e.message);
   }
 }
 
@@ -9697,7 +9934,6 @@ async function _loadDocumentosNuvem(userId) {
     // Atualiza cache local
     saveState();
   } catch(e) {
-    console.warn('Load docs falhou:', e.message);
   }
 }
 
@@ -10602,6 +10838,7 @@ function calcTempoEstimado(km) {
 
 // ---- REGISTRAR ----
 function registrarViagem() {
+  _haptic('success');
   var vid    = document.getElementById('viagem-veiculo').value;
   var data   = document.getElementById('viagem-data').value;
   var origem = (document.getElementById('viagem-origem').value || '').trim();
@@ -11116,6 +11353,7 @@ function fecharEditViagem() {
 }
 
 function salvarEditViagem() {
+  _haptic('success');
   var id      = parseInt(document.getElementById('edit-viagem-id').value);
   var tipo    = document.getElementById('edit-viagem-tipo').value;
   var data    = document.getElementById('edit-viagem-data').value;
@@ -11369,6 +11607,7 @@ function prefillManutKm() {
 }
 
 function registrarManutencao() {
+  _haptic('success');
   var vidEl = document.getElementById('manut-veiculo');
   var tipo  = (document.getElementById('manut-tipo').value || '').trim();
   var data  = document.getElementById('manut-data').value;
@@ -13827,6 +14066,7 @@ function renderQrKmList() {
 }
 
 function salvarKmRapido() {
+  _haptic('success');
   var active = state.vehicles.filter(function(v){ return !v.archived; });
   var updated = 0;
   active.forEach(function(v) {
@@ -13915,6 +14155,7 @@ function toggleChecklistDetail(id, checked) {
 }
 
 function salvarChecklist() {
+  _haptic('success');
   if (!_checklistVehicleId) { closeChecklist(); return; }
   if (!state.docs[_checklistVehicleId]) state.docs[_checklistVehicleId] = {};
   var checks = {};
@@ -14505,6 +14746,7 @@ function renderConfigPage() {
 }
 
 function salvarPerfil() {
+  _haptic('success');
   var nomeEl  = document.getElementById('cfg-nome');
   var emailEl = document.getElementById('cfg-email');
   var nome  = nomeEl  ? nomeEl.value.trim()  : '';
@@ -14523,6 +14765,7 @@ function salvarPerfil() {
 }
 
 function salvarConfigs() {
+  _haptic('success');
   var alertOleo = document.getElementById('cfg-alert-oleo');
   var alertDocs = document.getElementById('cfg-alert-docs');
   var kmMes     = document.getElementById('cfg-km-mes');
@@ -14679,6 +14922,7 @@ function renderModoTestePage() {
 }
 
 function limparSandbox() {
+  _haptic('warning');
   if (!confirm('Limpar todos os dados do sandbox?')) return;
   _stateTeste = { vehicles:[], history:[], fuel:[], docs:{} };
   try { localStorage.setItem('manycars_teste', JSON.stringify(_stateTeste)); } catch(e) {}
@@ -14843,6 +15087,7 @@ var _MP_LINKS = {
 };
 
 function _abrirCheckout(plano, periodo) {
+  _haptic('heavy');
   periodo = periodo || 'mensal';
   var chave = plano + '_' + periodo;
   var url = _MP_LINKS[chave];
@@ -15152,6 +15397,7 @@ function _mktCheckMobile() {
 }
 
 function mktFavoritar(id, btn) {
+  _haptic('light');
   btn.textContent = btn.textContent === '♡' ? '❤️' : '♡';
 }
 
@@ -15533,7 +15779,7 @@ async function _initPush() {
       });
       _pushEnabled = await OneSignal.Notifications.permission;
     });
-  } catch(e) { console.warn('OneSignal init:', e.message); }
+  } catch(e) { }
 }
 
 async function _solicitarPush() {
@@ -16142,6 +16388,7 @@ function _admBiAlertas(d) {
 }
 
 function openRegistroRapido() {
+  _haptic('heavy');
   var overlay = document.getElementById('registro-rapido-overlay');
   var sheet   = document.getElementById('registro-rapido-sheet');
   if (!overlay || !sheet) return;
