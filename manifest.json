@@ -1,0 +1,102 @@
+{
+  "name": "ManyCars — Seu carro, seu controle",
+  "short_name": "ManyCars",
+  "description": "Gerencie seus veículos, histórico de manutenções e documentos em um só lugar.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f2f1f8",
+  "theme_color": "#7B80C1",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "categories": [
+    "automotive",
+    "utilities",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20512%20512%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%22115%22%20fill%3D%22%237B80C1%22%2F%3E%3Cg%20transform%3D%22translate%28256%2C256%29%22%3E%3Cpath%20d%3D%22M0%2C-185%20A185%2C185%2C0%2C1%2C1%2C-184.9%2C-4%20L-150%2C-3.3%20A150%2C150%2C0%2C1%2C0%2C0%2C-150%20Z%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%22-155%22%20r%3D%2220%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22185%22%20cy%3D%220%22%20r%3D%2220%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2296%22%20fill%3D%22white%22%2F%3E%3Crect%20x%3D%22-14%22%20y%3D%22-96%22%20width%3D%2228%22%20height%3D%2268%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%22-14%22%20y%3D%2228%22%20width%3D%2228%22%20height%3D%2268%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%22-96%22%20y%3D%22-14%22%20width%3D%2268%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%2228%22%20y%3D%22-14%22%20width%3D%2268%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2236%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2220%22%20fill%3D%22%237B80C1%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20512%20512%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%22115%22%20fill%3D%22%237B80C1%22%2F%3E%3Cg%20transform%3D%22translate%28256%2C256%29%22%3E%3Cpath%20d%3D%22M0%2C-185%20A185%2C185%2C0%2C1%2C1%2C-184.9%2C-4%20L-150%2C-3.3%20A150%2C150%2C0%2C1%2C0%2C0%2C-150%20Z%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%22-155%22%20r%3D%2220%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22185%22%20cy%3D%220%22%20r%3D%2220%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2296%22%20fill%3D%22white%22%2F%3E%3Crect%20x%3D%22-14%22%20y%3D%22-96%22%20width%3D%2228%22%20height%3D%2268%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%22-14%22%20y%3D%2228%22%20width%3D%2228%22%20height%3D%2268%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%22-96%22%20y%3D%22-14%22%20width%3D%2268%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%2228%22%20y%3D%22-14%22%20width%3D%2268%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2236%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2220%22%20fill%3D%22%237B80C1%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Registrar manutenção",
+      "short_name": "Manutenção",
+      "description": "Adicionar registro de manutenção",
+      "url": "/?action=manutencao",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20512%20512%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%22115%22%20fill%3D%22%237B80C1%22%2F%3E%3Cg%20transform%3D%22translate%28256%2C256%29%22%3E%3Cpath%20d%3D%22M0%2C-185%20A185%2C185%2C0%2C1%2C1%2C-184.9%2C-4%20L-150%2C-3.3%20A150%2C150%2C0%2C1%2C0%2C0%2C-150%20Z%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%22-155%22%20r%3D%2220%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22185%22%20cy%3D%220%22%20r%3D%2220%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2296%22%20fill%3D%22white%22%2F%3E%3Crect%20x%3D%22-14%22%20y%3D%22-96%22%20width%3D%2228%22%20height%3D%2268%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%22-14%22%20y%3D%2228%22%20width%3D%2228%22%20height%3D%2268%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%22-96%22%20y%3D%22-14%22%20width%3D%2268%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%2228%22%20y%3D%22-14%22%20width%3D%2268%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2236%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2220%22%20fill%3D%22%237B80C1%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E",
+          "sizes": "any"
+        }
+      ]
+    },
+    {
+      "name": "Abastecer",
+      "short_name": "Combustível",
+      "description": "Registrar abastecimento",
+      "url": "/?action=combustivel",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20512%20512%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%22115%22%20fill%3D%22%237B80C1%22%2F%3E%3Cg%20transform%3D%22translate%28256%2C256%29%22%3E%3Cpath%20d%3D%22M0%2C-185%20A185%2C185%2C0%2C1%2C1%2C-184.9%2C-4%20L-150%2C-3.3%20A150%2C150%2C0%2C1%2C0%2C0%2C-150%20Z%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%22-155%22%20r%3D%2220%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22185%22%20cy%3D%220%22%20r%3D%2220%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2296%22%20fill%3D%22white%22%2F%3E%3Crect%20x%3D%22-14%22%20y%3D%22-96%22%20width%3D%2228%22%20height%3D%2268%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%22-14%22%20y%3D%2228%22%20width%3D%2228%22%20height%3D%2268%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%22-96%22%20y%3D%22-14%22%20width%3D%2268%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%2228%22%20y%3D%22-14%22%20width%3D%2268%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2236%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2220%22%20fill%3D%22%237B80C1%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E",
+          "sizes": "any"
+        }
+      ]
+    },
+    {
+      "name": "Meus veículos",
+      "short_name": "Veículos",
+      "description": "Ver meus veículos cadastrados",
+      "url": "/?page=veiculos",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20512%20512%22%3E%3Crect%20width%3D%22512%22%20height%3D%22512%22%20rx%3D%22115%22%20fill%3D%22%237B80C1%22%2F%3E%3Cg%20transform%3D%22translate%28256%2C256%29%22%3E%3Cpath%20d%3D%22M0%2C-185%20A185%2C185%2C0%2C1%2C1%2C-184.9%2C-4%20L-150%2C-3.3%20A150%2C150%2C0%2C1%2C0%2C0%2C-150%20Z%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%22-155%22%20r%3D%2220%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%22185%22%20cy%3D%220%22%20r%3D%2220%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2296%22%20fill%3D%22white%22%2F%3E%3Crect%20x%3D%22-14%22%20y%3D%22-96%22%20width%3D%2228%22%20height%3D%2268%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%22-14%22%20y%3D%2228%22%20width%3D%2228%22%20height%3D%2268%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%22-96%22%20y%3D%22-14%22%20width%3D%2268%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Crect%20x%3D%2228%22%20y%3D%22-14%22%20width%3D%2268%22%20height%3D%2228%22%20rx%3D%2214%22%20fill%3D%22%237B80C1%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2236%22%20fill%3D%22white%22%2F%3E%3Ccircle%20cx%3D%220%22%20cy%3D%220%22%20r%3D%2220%22%20fill%3D%22%237B80C1%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E",
+          "sizes": "any"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "label": "Dashboard ManyCars",
+      "form_factor": "narrow"
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": []
+}
