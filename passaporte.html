@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Passaporte do Veículo — ManyCars</title>
+  <meta name="description" content="Histórico completo de manutenção e cuidados do veículo, verificado pelo ManyCars.">
+  <meta name="theme-color" content="#7B80C1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --accent:  #7B80C1;
+      --accent2: #5860A8;
+      --bg:      #f2f1f8;
+      --surface: #ffffff;
+      --surface2:#eae9f2;
+      --border:  #d8d6e8;
+      --text:    #1a1820;
+      --text2:   #4a485a;
+      --text3:   #8a88a0;
+      --green:   #276749;
+      --green-bg:#eaf3de;
+      --red:     #c53030;
+      --red-bg:  #fff0f0;
+      --gold:    #b87800;
+      --gold-bg: #fffbeb;
+      --radius:  12px;
+    }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--accent);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 12px rgba(88,96,168,0.25);
+    }
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .header-logo svg { width: 32px; height: 32px; flex-shrink: 0; }
+    .header-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 2px;
+      color: white;
+    }
+    .header-brand span { color: rgba(255,255,255,0.7); }
+    .header-badge {
+      font-size: 10px;
+      font-weight: 700;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* ── CONTAINER ── */
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 20px 16px 60px;
+    }
+
+    /* ── BUSCA ── */
+    .search-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .search-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 1px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .search-sub {
+      font-size: 13px;
+      color: var(--text3);
+      margin-bottom: 18px;
+    }
+    .search-row {
+      display: flex;
+      gap: 10px;
+    }
+    .placa-input {
+      flex: 1;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--text);
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .placa-input:focus { border-color: var(--accent); }
+    .search-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 22px;
+      font-family: 'Sora', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .search-btn:hover { background: var(--accent2); }
+    .search-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ── ESTADOS ── */
+    .estado {
+      text-align: center;
+      padding: 48px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .estado-icon { font-size: 48px; margin-bottom: 14px; }
+    .estado-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px; color: var(--text); margin-bottom: 8px; }
+    .estado-sub { font-size: 13px; color: var(--text3); line-height: 1.6; max-width: 300px; margin: 0 auto; }
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 14px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── RESULTADO ── */
+    #resultado { display: none; }
+
+    /* Verified banner */
+    .verified-banner {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+      color: white;
+    }
+    .verified-icon { font-size: 28px; flex-shrink: 0; }
+    .verified-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1px; }
+    .verified-sub { font-size: 11px; opacity: 0.85; margin-top: 2px; }
+    .verified-placa {
+      margin-left: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      letter-spacing: 3px;
+      background: rgba(255,255,255,0.2);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 12px;
+    }
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
+    }
+
+    /* Veiculo info */
+    .veiculo-row {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .veiculo-nome {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 1px;
+      color: var(--text);
+      line-height: 1;
+    }
+    .veiculo-sub { font-size: 13px; color: var(--text3); margin-top: 4px; }
+
+    /* Stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .stat {
+      background: var(--surface2);
+      border-radius: 8px;
+      padding: 12px 10px;
+      text-align: center;
+    }
+    .stat-val {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .stat-lbl { font-size: 10px; color: var(--text3); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* Score */
+    .score-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .score-ring {
+      position: relative;
+      width: 72px; height: 72px;
+      flex-shrink: 0;
+    }
+    .score-ring svg { transform: rotate(-90deg); }
+    .score-num {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+    }
+    .score-label { font-size: 15px; font-weight: 700; color: var(--text); }
+    .score-desc { font-size: 12px; color: var(--text3); margin-top: 3px; line-height: 1.5; }
+
+    /* Historico */
+    .hist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .hist-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .hist-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+    .hist-tipo { font-size: 13px; font-weight: 600; color: var(--text); }
+    .hist-meta { font-size: 11px; color: var(--text3); margin-top: 2px; }
+    .hist-custo { font-size: 12px; font-weight: 700; color: var(--accent); margin-left: auto; flex-shrink: 0; }
+
+    /* Combustivel */
+    .fuel-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+    .fuel-item:last-child { border-bottom: none; }
+    .fuel-tipo { flex: 1; color: var(--text2); }
+    .fuel-litros { color: var(--text3); }
+    .fuel-custo { font-weight: 700; color: var(--accent); }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .badge-green { background: var(--green-bg); color: var(--green); }
+    .badge-gold  { background: var(--gold-bg);  color: var(--gold); }
+    .badge-red   { background: var(--red-bg);   color: var(--red); }
+
+    /* CTA */
+    .cta-card {
+      background: linear-gradient(135deg, rgba(123,128,193,0.07), rgba(88,96,168,0.04));
+      border: 1px solid rgba(123,128,193,0.25);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .cta-title { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .cta-sub { font-size: 12px; color: var(--text3); margin-bottom: 14px; line-height: 1.6; }
+    .cta-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'Sora', sans-serif;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 11px;
+      color: var(--text3);
+    }
+    .footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 400px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .verified-placa { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <a class="header-logo" href="https://buratogustavo.github.io">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <path d="M50,8 A42,42,0,1,1,11.5,65 L19,61 A34,34,0,1,0,50,16 Z" fill="white"/>
+      <circle cx="72" cy="16" r="4.5" fill="white"/>
+      <circle cx="89" cy="50" r="4.5" fill="white"/>
+      <circle cx="50" cy="50" r="22" fill="white"/>
+      <rect x="47" y="28" width="6" height="16" rx="3" fill="#7B80C1"/>
+      <rect x="47" y="56" width="6" height="16" rx="3" fill="#7B80C1"/>
+      <rect x="28" y="47" width="16" height="6" rx="3" fill="#7B80C1"/>
+      <rect x="56" y="47" width="16" height="6" rx="3" fill="#7B80C1"/>
+      <circle cx="50" cy="50" r="8" fill="white"/>
+      <circle cx="50" cy="50" r="4.5" fill="#7B80C1"/>
+    </svg>
+    <span class="header-brand">MANY<span>CARS</span></span>
+  </a>
+  <span class="header-badge">Passaporte</span>
+</header>
+
+<div class="container">
+
+  <!-- Busca -->
+  <div class="search-card">
+    <div class="search-title">🔍 Consultar Passaporte</div>
+    <div class="search-sub">Digite a placa do veículo para ver o histórico verificado</div>
+    <div class="search-row">
+      <input class="placa-input" id="input-placa" type="text" maxlength="8"
+        placeholder="ABC1D23" autocomplete="off" autocorrect="off" spellcheck="false">
+      <button class="search-btn" id="btn-buscar" onclick="buscar()">Consultar →</button>
+    </div>
+  </div>
+
+  <!-- Estados -->
+  <div id="estado-inicial" class="estado">
+    <div class="estado-icon">🏷️</div>
+    <div class="estado-title">Verifique o histórico antes de comprar</div>
+    <div class="estado-sub">O Passaporte ManyCars mostra todas as manutenções, abastecimentos e cuidados registrados pelo dono do veículo.</div>
+  </div>
+
+  <div id="estado-loading" class="estado" style="display:none;">
+    <div class="spinner"></div>
+    <div class="estado-title">Consultando passaporte...</div>
+    <div class="estado-sub">Verificando histórico do veículo na base ManyCars</div>
+  </div>
+
+  <div id="estado-nao-encontrado" class="estado" style="display:none;">
+    <div class="estado-icon">📭</div>
+    <div class="estado-title">Nenhum passaporte encontrado</div>
+    <div class="estado-sub">Este veículo ainda não tem histórico registrado no ManyCars. Se você é o dono, cadastre-se gratuitamente e comece a construir o passaporte do seu carro.</div>
+    <br>
+    <a href="https://buratogustavo.github.io" style="display:inline-block;margin-top:8px;background:var(--accent);color:white;text-decoration:none;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:700;">Cadastrar meu veículo →</a>
+  </div>
+
+  <!-- Resultado -->
+  <div id="resultado"></div>
+
+</div>
+
+<footer class="footer">
+  Passaporte verificado por <a href="https://buratogustavo.github.io">ManyCars</a> — Seu carro, seu controle
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL  = 'https://owxlowvptbuomusaxfoi.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im93eGxvd3ZwdGJ1b211c2F4Zm9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3MTUwNDQsImV4cCI6MjA4OTI5MTA0NH0.dVdgj1GB9VJ4LwruLFeCTcRQzyab8C5qoT03AAhn_Mw';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+// Formata placa ao digitar
+document.getElementById('input-placa').addEventListener('input', function() {
+  this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+});
+document.getElementById('input-placa').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') buscar();
+});
+
+// Lê placa da URL ao carregar (?placa=ABC1D23)
+window.addEventListener('DOMContentLoaded', function() {
+  var params = new URLSearchParams(window.location.search);
+  var placa  = params.get('placa') || params.get('p');
+  if (placa) {
+    document.getElementById('input-placa').value = placa.toUpperCase();
+    buscar();
+  }
+});
+
+function mostrarEstado(id) {
+  ['estado-inicial','estado-loading','estado-nao-encontrado'].forEach(function(s) {
+    document.getElementById(s).style.display = s === id ? 'block' : 'none';
+  });
+  document.getElementById('resultado').style.display = 'none';
+}
+
+async function buscar() {
+  var raw   = document.getElementById('input-placa').value.trim();
+  var placa = raw.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (placa.length < 7) {
+    document.getElementById('input-placa').style.borderColor = '#e53e3e';
+    setTimeout(function(){ document.getElementById('input-placa').style.borderColor = ''; }, 1500);
+    return;
+  }
+
+  // Atualiza URL sem recarregar
+  window.history.replaceState({}, '', '?placa=' + placa);
+
+  mostrarEstado('estado-loading');
+  document.getElementById('btn-buscar').disabled = true;
+
+  try {
+    var { data, error } = await sb
+      .from('passaportes')
+      .select('*')
+      .eq('placa', placa)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (error || !data) {
+      mostrarEstado('estado-nao-encontrado');
+      return;
+    }
+
+    renderPassaporte(data, placa);
+  } catch(e) {
+    mostrarEstado('estado-nao-encontrado');
+  } finally {
+    document.getElementById('btn-buscar').disabled = false;
+  }
+}
+
+function renderPassaporte(p, placa) {
+  var hist    = Array.isArray(p.history_snap) ? p.history_snap : [];
+  var fuel    = Array.isArray(p.fuel_snap)    ? p.fuel_snap    : [];
+  var check   = p.checklist_snap || {};
+
+  // Calcular score do veículo
+  var score       = calcScore(hist, fuel, check, p.km_venda);
+  var scoreColor  = score >= 80 ? '#276749' : score >= 55 ? '#b87800' : '#c53030';
+  var scoreBadge  = score >= 80 ? 'badge-green' : score >= 55 ? 'badge-gold' : 'badge-red';
+  var scoreLabel  = score >= 80 ? '✅ Bem cuidado' : score >= 55 ? '⚠️ Cuidados medianos' : '❌ Necessita revisão';
+
+  // Totais
+  var gastoManut  = hist.reduce(function(s,h){ return s+(h.custo||0); }, 0);
+  var gastoFuel   = fuel.reduce(function(s,f){ return s+(f.custo||0); }, 0);
+  var totalLitros = fuel.reduce(function(s,f){ return s+(f.litros||0); }, 0);
+
+  // Formato de moeda BRL
+  function fmtR(v) { return 'R$' + Math.round(v).toLocaleString('pt-BR'); }
+  function fmtN(v) { return Number(v).toLocaleString('pt-BR'); }
+  function fmtDt(str) {
+    if (!str) return '—';
+    var d = new Date(str + 'T12:00:00');
+    return d.toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' });
+  }
+
+  // Vendedor e data
+  var dataVenda = p.data_venda ? fmtDt(p.data_venda) : 'Data não informada';
+  var vendedor  = p.vendedor_nome ? p.vendedor_nome.split(' ')[0] : 'Proprietário anterior';
+
+  var html = '';
+
+  // Verified banner
+  html += '<div class="verified-banner">' +
+    '<div class="verified-icon">🛡️</div>' +
+    '<div>' +
+      '<div class="verified-title">Passaporte Verificado ManyCars</div>' +
+      '<div class="verified-sub">Histórico autêntico registrado pelo proprietário · ' + dataVenda + '</div>' +
+    '</div>' +
+    '<div class="verified-placa">' + placa + '</div>' +
+  '</div>';
+
+  // Score card
+  var circum = 2 * Math.PI * 28;
+  var dash   = (score / 100) * circum;
+  html += '<div class="card">' +
+    '<div class="card-title">Avaliação do veículo</div>' +
+    '<div class="score-row">' +
+      '<div class="score-ring">' +
+        '<svg width="72" height="72" viewBox="0 0 72 72">' +
+          '<circle cx="36" cy="36" r="28" fill="none" stroke="#eae9f2" stroke-width="6"/>' +
+          '<circle cx="36" cy="36" r="28" fill="none" stroke="' + scoreColor + '" stroke-width="6"' +
+          ' stroke-dasharray="' + dash.toFixed(1) + ' ' + circum.toFixed(1) + '" stroke-linecap="round"/>' +
+        '</svg>' +
+        '<div class="score-num" style="color:' + scoreColor + '">' + score + '</div>' +
+      '</div>' +
+      '<div>' +
+        '<div class="score-label"><span class="badge ' + scoreBadge + '">' + scoreLabel + '</span></div>' +
+        '<div class="score-desc" style="margin-top:8px;">Baseado em ' + hist.length + ' manutenção(ões) e ' + fuel.length + ' abastecimento(s) registrados.</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="stats-grid">' +
+      '<div class="stat"><div class="stat-val">' + fmtN(p.km_venda || 0) + '</div><div class="stat-lbl">KM na venda</div></div>' +
+      '<div class="stat"><div class="stat-val">' + hist.length + '</div><div class="stat-lbl">Manutenções</div></div>' +
+      '<div class="stat"><div class="stat-val">' + fuel.length + '</div><div class="stat-lbl">Abastec.</div></div>' +
+      '<div class="stat"><div class="stat-val">' + fmtR(gastoManut) + '</div><div class="stat-lbl">Investido manut.</div></div>' +
+      '<div class="stat"><div class="stat-val">' + totalLitros.toFixed(0) + 'L</div><div class="stat-lbl">Litros total</div></div>' +
+      '<div class="stat"><div class="stat-val">' + fmtR(gastoManut + gastoFuel) + '</div><div class="stat-lbl">Total registrado</div></div>' +
+    '</div>' +
+  '</div>';
+
+  // Histórico de manutenção
+  if (hist.length) {
+    html += '<div class="card"><div class="card-title">🔧 Histórico de Manutenção</div>';
+    hist.slice().sort(function(a,b){ return (b.data||'').localeCompare(a.data||''); })
+      .slice(0, 20)
+      .forEach(function(h) {
+        html += '<div class="hist-item">' +
+          '<div class="hist-dot"></div>' +
+          '<div style="flex:1;min-width:0;">' +
+            '<div class="hist-tipo">' + (h.tipo || 'Manutenção') + '</div>' +
+            '<div class="hist-meta">' +
+              (h.data ? fmtDt(h.data) : '') +
+              (h.km   ? ' · ' + fmtN(h.km) + ' km' : '') +
+              (h.local ? ' · ' + h.local : '') +
+            '</div>' +
+          '</div>' +
+          (h.custo ? '<div class="hist-custo">' + fmtR(h.custo) + '</div>' : '') +
+        '</div>';
+      });
+    if (hist.length > 20) {
+      html += '<div style="text-align:center;padding:10px 0;font-size:12px;color:var(--text3);">+ ' + (hist.length-20) + ' registros anteriores</div>';
+    }
+    html += '</div>';
+  }
+
+  // Abastecimentos
+  if (fuel.length) {
+    html += '<div class="card"><div class="card-title">⛽ Abastecimentos</div>';
+    fuel.slice().sort(function(a,b){ return (b.data||'').localeCompare(a.data||''); })
+      .slice(0, 10)
+      .forEach(function(f) {
+        html += '<div class="fuel-item">' +
+          '<span style="font-size:15px;">⛽</span>' +
+          '<span class="fuel-tipo">' + (f.tipo||'Combustível') + ' · ' + fmtDt(f.data) + '</span>' +
+          '<span class="fuel-litros">' + (f.litros||0).toFixed(1) + 'L</span>' +
+          '<span class="fuel-custo">' + fmtR(f.custo||0) + '</span>' +
+        '</div>';
+      });
+    if (fuel.length > 10) {
+      html += '<div style="text-align:center;padding:8px 0;font-size:12px;color:var(--text3);">+ ' + (fuel.length-10) + ' abastecimentos anteriores</div>';
+    }
+    html += '</div>';
+  }
+
+  // Checklist de revisão
+  var checkItems = Object.keys(check).filter(function(k){ return check[k] && check[k].done; });
+  if (checkItems.length) {
+    html += '<div class="card"><div class="card-title">✅ Checklist de entrega</div>';
+    html += '<div style="display:flex;flex-wrap:wrap;gap:8px;">';
+    checkItems.forEach(function(k) {
+      var labels = { oleo:'Óleo trocado', filtroar:'Filtro de ar', filtroc:'Filtro de combustível',
+        velas:'Velas OK', freios:'Freios revisados', pneus:'Pneus calibrados',
+        correia:'Correia dentada', fluidos:'Fluidos OK', bateria:'Bateria OK', revisao:'Última revisão' };
+      html += '<span class="badge badge-green">✅ ' + (labels[k]||k) + '</span>';
+    });
+    html += '</div></div>';
+  }
+
+  // CTA
+  html += '<div class="cta-card">' +
+    '<div class="cta-title">Vai comprar este veículo?</div>' +
+    '<div class="cta-sub">Cadastre-o no ManyCars gratuitamente e continue construindo o histórico. Quando vender, o próximo dono poderá consultar tudo aqui.</div>' +
+    '<a class="cta-btn" href="https://buratogustavo.github.io">Cadastrar no ManyCars →</a>' +
+  '</div>';
+
+  // Compartilhar
+  html += '<div class="card" style="text-align:center;">' +
+    '<div style="font-size:12px;color:var(--text3);margin-bottom:10px;">Compartilhe o passaporte</div>' +
+    '<div style="font-family:\'JetBrains Mono\',monospace;font-size:13px;background:var(--surface2);padding:10px 14px;border-radius:8px;word-break:break-all;color:var(--accent);">' +
+      window.location.href +
+    '</div>' +
+    '<button onclick="navigator.clipboard.writeText(window.location.href).then(function(){ this.textContent=\'✅ Copiado!\'; }.bind(this))" ' +
+      'style="margin-top:10px;padding:8px 18px;background:var(--accent);color:white;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:\'Sora\',sans-serif;">📋 Copiar link</button>' +
+  '</div>';
+
+  var el = document.getElementById('resultado');
+  el.innerHTML = html;
+  el.style.display = 'block';
+  mostrarEstado(null);
+  document.getElementById('estado-loading').style.display = 'none';
+}
+
+function calcScore(hist, fuel, check, km) {
+  var score = 20; // base
+  // Manutenções registradas (até 35 pts)
+  score += Math.min(35, hist.length * 4);
+  // Abastecimentos (até 15 pts)
+  score += Math.min(15, fuel.length * 2);
+  // Checklist (até 20 pts)
+  var checkDone = Object.keys(check).filter(function(k){ return check[k] && check[k].done; }).length;
+  score += Math.min(20, checkDone * 3);
+  // KM registrado (até 10 pts)
+  if (km && km > 0) score += 10;
+  return Math.min(100, score);
+}
+</script>
+</body>
+</html>
