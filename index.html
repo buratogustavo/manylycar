@@ -6538,6 +6538,21 @@ function _initOfflineDetector() {
 
 
 // ============================================================
+// ============================================================
+// HAPTIC FEEDBACK — vibração tátil em ações importantes
+// ============================================================
+function _haptic(type) {
+  if (!navigator.vibrate) return;
+  var patterns = {
+    light:   [10],
+    success: [15, 60, 15],
+    warning: [30, 40, 30],
+    error:   [50, 30, 50, 30, 50],
+    heavy:   [50],
+  };
+  navigator.vibrate(patterns[type] || patterns.light);
+}
+
 function toggleTheme() {
   var isLight = document.body.classList.toggle('light-mode');
   localStorage.setItem('manycars_theme', isLight ? 'light' : 'dark');
@@ -14758,76 +14773,6 @@ function removerItemChecklist(itemId) {
   saveState();
   renderChecklistPage();
   showToast('Item removido', 'info');
-}
-
-// ============================================================
-// PREMIUM PAGE — features and FAQ
-// ============================================================
-function renderPremiumPage() {
-  var mkFeature = function(text, ok) {
-    var col = ok ? '#38a169' : 'var(--text3)';
-    var textCol = ok ? 'var(--text)' : 'var(--text3)';
-    var icon = ok ? '\u2713' : '\u2717';
-    var body = ok ? text : '<s style="opacity:0.5">' + text + '</s>';
-    return '<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;">' +
-      '<span style="color:' + col + ';font-size:14px;flex-shrink:0;">' + icon + '</span>' +
-      '<span style="font-size:12px;color:' + textCol + '">' + body + '</span></div>';
-  };;
-
-  var freeF = document.getElementById('premium-free-features');
-  if (freeF) freeF.innerHTML =
-    mkFeature('1 veículo cadastrado', true) +
-    mkFeature('Histórico de manutenções', true) +
-    mkFeature('Alertas básicos por KM', true) +
-    mkFeature('Registro de combustível', true) +
-    mkFeature('Check-list de manutenção', true) +
-    mkFeature('Múltiplos veículos', false) +
-    mkFeature('Sincronização na nuvem', false) +
-    mkFeature('Relatórios PDF', false) +
-    mkFeature('Alertas por WhatsApp', false) +
-    mkFeature('Comparativo de oficinas', false);
-
-  var plusF = document.getElementById('premium-plus-features');
-  if (plusF) plusF.innerHTML =
-    mkFeature('Veículos ilimitados', true) +
-    mkFeature('Tudo do plano Gratuito', true) +
-    mkFeature('Sincronização na nuvem', true) +
-    mkFeature('Relatórios PDF completos', true) +
-    mkFeature('Alertas por WhatsApp/email', true) +
-    mkFeature('Histórico ilimitado', true) +
-    mkFeature('Suporte prioritário', true) +
-    mkFeature('Dashboard compartilhável', false) +
-    mkFeature('API para frotas', false) +
-    mkFeature('Gestão multi-usuário', false);
-
-  var proF = document.getElementById('premium-pro-features');
-  if (proF) proF.innerHTML =
-    mkFeature('Tudo do plano Plus', true) +
-    mkFeature('Dashboard compartilhável', true) +
-    mkFeature('Gestão de frotas ilimitada', true) +
-    mkFeature('API de integração', true) +
-    mkFeature('Multi-usuário (até 5)', true) +
-    mkFeature('Relatórios personalizados', true) +
-    mkFeature('Consultoria automotiva', true) +
-    mkFeature('White-label (marca própria)', true) +
-    mkFeature('Suporte 24/7 dedicado', true) +
-    mkFeature('Acesso antecipado a features', true);
-
-  var faq = document.getElementById('premium-faq');
-  if (faq) {
-    var items = [
-      ['Posso cancelar quando quiser?', 'Sim! Cancele a qualquer momento sem taxa ou burocracia. Seu acesso continua até o fim do período pago.'],
-      ['Meus dados ficam salvos se eu cancelar?', 'Todos os seus dados ficam salvos no plano gratuito. Você só perde acesso às funcionalidades premium.'],
-      ['Como funciona o plano anual?', 'Você paga uma vez por ano com desconto de até 31% em relação ao mensal. O acesso é liberado imediatamente.'],
-      ['Posso usar em vários dispositivos?', 'Com o plano Plus ou Pro, seus dados são sincronizados na nuvem e acessíveis em qualquer dispositivo.']
-    ];
-    faq.innerHTML = items.map(function(q) {
-      return '<div style="padding:14px 0;border-bottom:1px solid var(--border);">' +
-        '<div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">'+q[0]+'</div>' +
-        '<div style="font-size:12px;color:var(--text2);line-height:1.6;">'+q[1]+'</div>' +
-      '</div>';
-    }).join('');
-  }
 }
 
 // ============================================================
