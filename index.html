@@ -8,6 +8,28 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ManyCars">
 <meta name="description" content="Gerencie seu veículo, compare peças e acompanhe manutenções">
+
+  <!-- ── Open Graph — compartilhamento rico no WhatsApp, Facebook, LinkedIn ── -->
+  <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://buratogustavo.github.io/manycars">
+  <meta property="og:title"       content="ManyCars — Seu Carro, Seu Controle">
+  <meta property="og:description" content="Nunca perca uma manutenção. Venda seu carro pelo preço justo com o Passaporte verificado. Grátis para sempre no básico.">
+  <meta property="og:image"       content="https://buratogustavo.github.io/manycars/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height"content="630">
+  <meta property="og:locale"      content="pt_BR">
+  <meta property="og:site_name"   content="ManyCars">
+
+  <!-- ── Twitter / X Card ── -->
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="ManyCars — Seu Carro, Seu Controle">
+  <meta name="twitter:description" content="Nunca perca uma manutenção. Venda seu carro pelo preço justo com o Passaporte verificado.">
+  <meta name="twitter:image"       content="https://buratogustavo.github.io/manycars/og-image.png">
+<!-- Favicon & PWA icons -->
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32"  href="/icon-192.png">
+<link rel="shortcut icon"                         href="/icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180"      href="/icon-512.png">
 <link rel="manifest" id="pwa-manifest">
 <!-- OneSignal Push Notifications -->
   <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
@@ -2896,6 +2918,52 @@ select, textarea {
       ⚠️ <strong>Modo local</strong> — sem conexão com o servidor.<br>Seus dados ficam salvos apenas neste dispositivo.
     </div>
 
+    <!-- ── SOCIAL PROOF ─────────────────────────────────────── -->
+    <div style="margin-bottom:20px;">
+
+      <!-- Estrelas + usuários -->
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:6px 14px;">
+          <span style="color:#f6c90e;font-size:14px;letter-spacing:1px;">★★★★★</span>
+          <span style="font-size:13px;font-weight:700;color:var(--white);">4.9</span>
+          <span style="font-size:11px;color:var(--text3);">· +12 mil motoristas</span>
+        </div>
+      </div>
+
+      <!-- 3 benefícios rápidos -->
+      <div style="display:flex;flex-direction:column;gap:7px;">
+        <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.04);border-radius:10px;padding:9px 13px;">
+          <span style="font-size:18px;flex-shrink:0;">🛡️</span>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--white);line-height:1.2;">Passaporte verificado</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:1px;">Venda seu carro pelo preço justo com histórico comprovado</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.04);border-radius:10px;padding:9px 13px;">
+          <span style="font-size:18px;flex-shrink:0;">🔔</span>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--white);line-height:1.2;">Alertas inteligentes por km</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:1px;">Nunca perca uma manutenção e economize em reparos</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.04);border-radius:10px;padding:9px 13px;">
+          <span style="font-size:18px;flex-shrink:0;">💰</span>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--white);line-height:1.2;">Grátis para sempre no básico</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:1px;">Sem cartão. Sem compromisso. Cancele quando quiser.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Depoimento rotativo -->
+      <div id="auth-testimonial" style="margin-top:14px;background:rgba(123,128,193,0.1);border:1px solid rgba(123,128,193,0.2);border-radius:10px;padding:10px 13px;position:relative;min-height:52px;">
+        <div style="font-size:11px;color:var(--text2);line-height:1.6;font-style:italic;" id="auth-testimonial-text">"Vendi meu Corolla R$8.000 mais caro porque tinha o histórico completo no ManyCars."</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px;" id="auth-testimonial-author">— Rafael M., São Paulo</div>
+      </div>
+
+    </div>
+    <!-- ── FIM SOCIAL PROOF ──────────────────────────────────── -->
+
     <!-- Card principal -->
     <div class="auth-card">
 
@@ -3204,10 +3272,8 @@ select, textarea {
     <span style="font-size:12px;font-weight:800;color:#0c0d0f;letter-spacing:1px;">MODO TESTE ATIVO — dados não afetam estatísticas reais</span>
     <button onclick="toggleModoTeste()" style="margin-left:8px;background:rgba(0,0,0,0.15);border:none;border-radius:4px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;color:#0c0d0f;">Desativar</button>
   </div>
-  <div class="main-content">
-
-    <!-- BOTTOM NAV (mobile) -->
-    <nav class="bottom-nav" id="bottom-nav">
+  <!-- BOTTOM NAV (mobile) -->
+  <nav class="bottom-nav" id="bottom-nav">
       <button class="bn-item active" onclick="showPage('dashboard');setBottomNav(this)">
         <span class="bn-icon">🏠</span>
         <span>Início</span>
@@ -3233,11 +3299,11 @@ select, textarea {
         <span>Menu</span>
         <span class="bn-badge" id="bn-alert-badge" style="display:none;"></span>
       </button>
-    </nav>
+  </nav>
 
-    <!-- Modal de Registro Rápido -->
-    <div id="registro-rapido-overlay" onclick="if(event.target===this)fecharRegistroRapido()" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:flex-end;justify-content:center;padding:0;">
-      <div id="registro-rapido-sheet" style="background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:20px 20px 36px;border:1px solid var(--border);transform:translateY(100%);transition:transform .32s cubic-bezier(0.22,1,0.36,1);">
+  <!-- Modal de Registro Rápido -->
+  <div id="registro-rapido-overlay" onclick="if(event.target===this)fecharRegistroRapido()" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);align-items:flex-end;justify-content:center;padding:0;">
+    <div id="registro-rapido-sheet" style="background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:20px 20px 36px;border:1px solid var(--border);transform:translateY(100%);transition:transform .32s cubic-bezier(0.22,1,0.36,1);">
 
         <!-- Handle bar -->
         <div style="width:40px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 20px;"></div>
@@ -3271,6 +3337,8 @@ select, textarea {
         </button>
       </div>
     </div>
+
+  <div class="main-content">
 
     <!-- ===== DASHBOARD ===== -->
     <div id="page-dashboard" class="page active">
@@ -3511,7 +3579,7 @@ select, textarea {
     <!-- ===== VEÍCULOS ===== -->
     <div id="page-veiculos" class="page">
       <div class="page-header">
-        <div class="page-title">MEUS VEÍCULOS</div>
+        <div class="page-title">🚗 MEUS VEÍCULOS</div>
         <div class="page-sub">Cadastre e gerencie seus carros</div>
       </div>
 
@@ -3589,8 +3657,8 @@ select, textarea {
       <div id="vehicles-list">
         <div class="empty-state">
           <div class="empty-icon">🚗</div>
-          <div class="empty-title">Nenhum veículo cadastrado</div>
-          <div class="empty-desc">Cadastre seu primeiro carro acima</div>
+          <div class="empty-title">Seu carro ainda não está aqui</div>
+          <div class="empty-desc">Cadastre agora e descubra quanto custa por km, quando trocar o óleo e quanto seu carro vale na revenda.</div>
         </div>
       </div>
     </div>
@@ -3770,7 +3838,7 @@ select, textarea {
         <div style="display:flex;align-items:center;gap:10px;">
           <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;">‹</button>
           <div>
-            <div class="page-title" style="margin-bottom:0;">CONSULTAR PEÇAS</div>
+            <div class="page-title" style="margin-bottom:0;">🔧 CONSULTAR PEÇAS</div>
             <div class="page-sub">Peças compatíveis com seu veículo + comparação de preços</div>
           </div>
         </div>
@@ -3891,8 +3959,8 @@ select, textarea {
 
       <div id="saude-empty" class="empty-state" style="display:none;">
         <div class="empty-icon">🩺</div>
-        <div class="empty-title">Nenhum veículo cadastrado</div>
-        <div class="empty-desc">Cadastre um veículo para ver o score de saúde</div>
+        <div class="empty-title">Saúde do carro: sem dados ainda</div>
+        <div class="empty-desc">Cadastre seu veículo e veja um score de 0 a 100 — quanto mais manutenções registradas, mais preciso o diagnóstico.</div>
         <button class="empty-cta" onclick="showPage('veiculos')">+ Cadastrar veículo</button>
       </div>
 
@@ -3976,8 +4044,8 @@ select, textarea {
       <div id="historico-list">
         <div class="empty-state">
           <div class="empty-icon">📋</div>
-          <div class="empty-title">Nenhuma manutenção registrada</div>
-          <div class="empty-desc">Registre a primeira manutenção na aba <strong>Manutenção</strong></div>
+          <div class="empty-title">Histórico vazio = carro sem valor</div>
+          <div class="empty-desc">Carros com histórico documentado valem até 15% a mais na revenda. Registre sua primeira manutenção agora.</div>
           <button class="empty-cta" onclick="showPage('manutencao')">🔩 Ir para Manutenção</button>
         </div>
       </div>
@@ -4003,7 +4071,7 @@ select, textarea {
     <!-- ===== ALERTAS ===== -->
     <div id="page-alertas" class="page">
       <div class="page-header">
-        <div class="page-title">ALERTAS</div>
+        <div class="page-title">🔔 ALERTAS</div>
         <div class="page-sub">Manutenções preventivas baseadas na quilometragem</div>
       </div>
 
@@ -4730,8 +4798,8 @@ select, textarea {
       <div id="fuel-list">
         <div class="empty-state">
           <div class="empty-icon">⛽</div>
-          <div class="empty-title">Nenhum abastecimento registrado</div>
-          <div class="empty-desc">Registre o primeiro abastecimento para calcular o consumo do seu carro</div>
+          <div class="empty-title">Quanto você gasta por km?</div>
+          <div class="empty-desc">Registre o primeiro abastecimento e descubra se seu carro está consumindo dentro do esperado para o modelo.</div>
         </div>
       </div>
     </div>
@@ -4750,8 +4818,8 @@ select, textarea {
       <div id="documentos-content">
         <div class="empty-state">
           <div class="empty-icon">📅</div>
-          <div class="empty-title">Nenhum veículo cadastrado</div>
-          <div class="empty-desc">Cadastre um veículo para gerenciar seus documentos</div>
+          <div class="empty-title">Evite multas e apreensão</div>
+          <div class="empty-desc">Cadastre seu veículo e o ManyCars avisa antes do IPVA, seguro e licenciamento vencerem — direto no seu celular.</div>
           <button class="empty-cta" onclick="showPage('veiculos')">+ Cadastrar veículo</button>
         </div>
       </div>
@@ -5136,8 +5204,8 @@ select, textarea {
       <div id="modelo-info-content">
         <div class="empty-state">
           <div class="empty-icon">📖</div>
-          <div class="empty-title">Nenhum veículo cadastrado</div>
-          <div class="empty-desc">Cadastre um veículo para ver informações específicas do modelo</div>
+          <div class="empty-title">Manual técnico do seu carro</div>
+          <div class="empty-desc">Cadastre seu veículo e acesse intervalos de manutenção, capacidades e problemas conhecidos do modelo — tudo em um lugar.</div>
           <button class="empty-cta" onclick="showPage('veiculos')">+ Cadastrar veículo</button>
         </div>
       </div>
@@ -5384,8 +5452,8 @@ select, textarea {
       <div id="vender-content">
         <div class="empty-state">
           <div class="empty-icon">🚗</div>
-          <div class="empty-title">Nenhum veículo cadastrado</div>
-          <div class="empty-desc">Cadastre um veículo para gerar seu dossiê de venda</div>
+          <div class="empty-title">Venda pelo preço que seu carro merece</div>
+          <div class="empty-desc">Cadastre seu carro e gere um Passaporte verificado com histórico completo — compradores pagam mais por transparência.</div>
           <button class="empty-cta" onclick="showPage('veiculos')">+ Cadastrar veículo</button>
         </div>
       </div>
@@ -5426,8 +5494,8 @@ select, textarea {
       <div id="checklist-page-content">
         <div class="empty-state">
           <div class="empty-icon">✅</div>
-          <div class="empty-title">Selecione um veículo acima</div>
-          <div class="empty-desc">Marque os itens já realizados para alertas mais precisos</div>
+          <div class="empty-title">Check-list de manutenção</div>
+          <div class="empty-desc">Selecione o veículo acima. Marque o que já foi feito e os alertas ficam muito mais precisos.</div>
         </div>
       </div>
     </div>
@@ -6154,18 +6222,39 @@ select, textarea {
   <!-- ===== ONBOARDING OVERLAY ===== -->
   <div class="onboarding-overlay" id="onboarding-overlay">
     <div class="onboarding-card">
-      <div class="ob-step-dots">
-        <div class="ob-dot active" id="ob-dot-0"></div>
-        <div class="ob-dot" id="ob-dot-1"></div>
-        <div class="ob-dot" id="ob-dot-2"></div>
+
+      <!-- Progress bar -->
+      <div style="margin-bottom:20px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-size:10px;font-weight:600;color:var(--text3);letter-spacing:0.5px;" id="ob-step-label">PASSO 1 DE 3</span>
+          <span style="font-size:10px;color:var(--text3);" id="ob-pct-label">33%</span>
+        </div>
+        <div style="height:4px;background:var(--surface2);border-radius:2px;overflow:hidden;">
+          <div id="ob-progress-bar" style="height:100%;border-radius:2px;background:var(--accent);transition:width 0.4s cubic-bezier(0.4,0,0.2,1);width:33%;"></div>
+        </div>
       </div>
-      <div class="ob-icon" id="ob-icon">🚗</div>
-      <div class="ob-title" id="ob-title">Bem-vindo ao ManyCars</div>
-      <div class="ob-desc" id="ob-desc">Seu app para cuidar do seu carro, comparar peças e nunca perder uma manutenção.</div>
-      <div class="ob-actions">
+
+      <!-- Content (animated) -->
+      <div id="ob-content" style="transition:opacity 0.25s,transform 0.25s;opacity:1;transform:translateX(0);">
+        <div class="ob-icon" id="ob-icon">🚗</div>
+        <div class="ob-title" id="ob-title">Bem-vindo ao ManyCars</div>
+        <div class="ob-desc" id="ob-desc">Seu app para cuidar do carro, comparar peças e nunca perder uma manutenção.</div>
+
+        <!-- KM Input — visível apenas no passo KM -->
+        <div id="ob-km-block" style="display:none;margin-top:16px;">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:6px;font-weight:600;" id="ob-km-label">KM atual do veículo</div>
+          <input id="ob-km-input" type="number" inputmode="numeric"
+            placeholder="Ex: 45.000"
+            style="width:100%;background:var(--surface2);border:2px solid var(--accent);border-radius:10px;padding:12px 14px;font-size:18px;font-weight:700;color:var(--text);font-family:'Sora',sans-serif;text-align:center;outline:none;box-sizing:border-box;">
+          <div style="font-size:11px;color:var(--text3);margin-top:6px;text-align:center;">Não precisa ser exato — ajuste depois</div>
+        </div>
+      </div>
+
+      <div class="ob-actions" style="margin-top:24px;">
         <button class="ob-skip" onclick="skipOnboarding()">Pular</button>
-        <button class="ob-next" id="ob-next-btn" onclick="nextOnboarding()">Começar →</button>
+        <button class="ob-next" id="ob-next-btn" onclick="nextOnboarding()">Próximo →</button>
       </div>
+
     </div>
   </div>
 
@@ -6314,6 +6403,9 @@ select, textarea {
       </div>
       <div id="passaporte-export-info" style="font-size:12px;color:var(--text2);margin-bottom:12px;padding:8px 12px;background:var(--surface2);border-radius:8px;"></div>
       <button class="btn-primary" style="width:100%;padding:13px;" onclick="exportarPassaporte()">📥 Baixar Passaporte (.json)</button>
+      <button onclick="compartilharPassaporte()" style="width:100%;padding:13px;margin-top:10px;background:rgba(123,128,193,0.1);border:1.5px solid var(--accent);border-radius:10px;color:var(--accent);font-size:14px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <span>🔗</span><span id="btn-compartilhar-passaporte-txt">Compartilhar link do Passaporte</span>
+      </button>
     </div>
     <div style="background:rgba(96,165,250,0.06);border:1px solid rgba(96,165,250,0.25);border-radius:12px;padding:18px;">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
@@ -6922,13 +7014,99 @@ function clearState() {
 }
 
 // Auto-restore ao carregar a página
+// ============================================================
+// ERROR BOUNDARY GLOBAL — captura erros JS não tratados
+// ============================================================
+(function() {
+  var _lastError = null;
+  var _errorCount = 0;
+
+  window.onerror = function(msg, src, line, col, err) {
+    _errorCount++;
+    // Evita spam de toasts para o mesmo erro
+    var key = (msg || '') + ':' + line;
+    if (_lastError === key) return false;
+    _lastError = key;
+
+    // Só mostra toast se a função já estiver disponível (app carregado)
+    if (typeof showToast === 'function') {
+      showToast('⚠️ Algo inesperado aconteceu. Tente novamente.', 'error');
+    }
+
+    // Reset do lastError após 10s para não suprimir erros diferentes
+    setTimeout(function() { _lastError = null; }, 10000);
+
+    // Não propaga — evita que o browser mostre sua própria mensagem de erro
+    return true;
+  };
+
+  window.addEventListener('unhandledrejection', function(e) {
+    // Captura Promises rejeitadas sem .catch()
+    if (typeof showToast === 'function') {
+      showToast('⚠️ Algo inesperado aconteceu. Tente novamente.', 'error');
+    }
+    e.preventDefault();
+  });
+})();
+
+// ============================================================
+// DEPOIMENTOS ROTATIVOS — tela de login
+// ============================================================
+function _initTestimonialRotator() {
+  var testimonials = [
+    { text: '"Vendi meu Corolla R$8.000 mais caro porque tinha o histórico completo no ManyCars."', author: '— Rafael M., São Paulo' },
+    { text: '"Finalmente sei quando trocar o óleo sem precisar ficar anotando no papel."', author: '— Camila F., Belo Horizonte' },
+    { text: '"O Passaporte me salvou de comprar um carro com histórico de batida escondido."', author: '— Thiago R., Curitiba' },
+    { text: '"Controlo 3 carros da família em um só lugar. Nunca mais esqueci o licenciamento."', author: '— Ana Paula S., Porto Alegre' },
+    { text: '"Em 2 anos de uso, evitei 4 quebras inesperadas seguindo os alertas."', author: '— Marcos T., Rio de Janeiro' },
+  ];
+  var el  = document.getElementById('auth-testimonial-text');
+  var aut = document.getElementById('auth-testimonial-author');
+  var box = document.getElementById('auth-testimonial');
+  if (!el || !aut || !box) return;
+  var idx = 0;
+  setInterval(function() {
+    // Fade out
+    box.style.transition = 'opacity 0.4s';
+    box.style.opacity = '0';
+    setTimeout(function() {
+      idx = (idx + 1) % testimonials.length;
+      el.textContent  = testimonials[idx].text;
+      aut.textContent = testimonials[idx].author;
+      box.style.opacity = '1';
+    }, 400);
+  }, 5000);
+}
+
 window.addEventListener('DOMContentLoaded', function() {
   document.body.classList.add('light-mode');
   loadTheme();
+
+  // ── Carrega nome do usuário IMEDIATAMENTE do localStorage ──
+  // Evita que o dash-name fique "VOCÊ" enquanto o Supabase não responde
+  (function() {
+    try {
+      var raw = localStorage.getItem('manycars_v1');
+      if (raw) {
+        var data = JSON.parse(raw);
+        var name = data && data.user && data.user.name;
+        if (name) {
+          var firstName = name.split(' ')[0].toUpperCase();
+          var el = document.getElementById('dash-name');
+          if (el) el.textContent = firstName;
+          // Sidebar avatar name too
+          var sn = document.getElementById('sidebar-name');
+          if (sn) sn.textContent = name.split(' ')[0];
+        }
+      }
+    } catch(e) {}
+  })();
+
   _initPush(); // Push notifications
   _initOfflineDetector(); // Offline/online indicator
   _initSidebarSwipe(); // Swipe para fechar menu lateral
   _initEscapeKey(); // ESC fecha modais
+  _initTestimonialRotator(); // Depoimentos rotativos na tela de login
 
   // Registra Service Worker (PWA + Push) — apenas no domínio real
   if ('serviceWorker' in navigator && location.hostname !== 'localhost' && !location.hostname.includes('claudeusercontent')) {
@@ -7159,8 +7337,10 @@ function getVehicleAlerts(vehicle) {
     var lastKm = lastService ? (lastService.km || 0) : 0;
     var kmSinceLast = km - lastKm;
     var urgencyKm = (item.id === 'oleo') ? oleoUrgencyKm : item.urgencyKm;
-    var kmLeft = item.kmInterval - kmSinceLast;
-    var pct = Math.min(100, Math.round((kmSinceLast / item.kmInterval) * 100));
+    // Aplica adiamento se existir para este item
+    var adiamentoOffset = (vehicle.adiamentos && vehicle.adiamentos[item.title]) || 0;
+    var kmLeft = item.kmInterval + adiamentoOffset - kmSinceLast;
+    var pct = Math.min(100, Math.round((kmSinceLast / (item.kmInterval + adiamentoOffset)) * 100));
 
     // Time-based check: if last service was more than 12 months ago, flag it
     var timeWarning = false;
@@ -7202,6 +7382,77 @@ function getVehicleAlerts(vehicle) {
   return alerts;
 }
 
+
+// ============================================================
+// ADIAR ALERTA DE MANUTENÇÃO
+// ============================================================
+function adiarAlerta(titulo, vehicleId) {
+  _haptic('light');
+  // Options: 500km, 1000km, 2000km
+  var opcoes = [
+    { label: '500 km',   km: 500  },
+    { label: '1.000 km', km: 1000 },
+    { label: '2.000 km', km: 2000 },
+  ];
+
+  // Build inline picker inside the alert item
+  var alertItems = document.querySelectorAll('.alert-item');
+  var targetItem = null;
+  alertItems.forEach(function(item) {
+    if (item.innerHTML.indexOf(titulo.replace(/&/g, '&amp;').replace(/'/g, '&#39;')) >= 0 ||
+        item.innerHTML.indexOf(titulo) >= 0) {
+      targetItem = item;
+    }
+  });
+  if (!targetItem) { showToast('Selecione o alerta primeiro.', 'error'); return; }
+
+  // Remove previous picker if exists
+  var prev = targetItem.querySelector('.adiar-picker');
+  if (prev) { prev.remove(); return; }
+
+  var picker = document.createElement('div');
+  picker.className = 'adiar-picker';
+  picker.style.cssText = 'display:flex;gap:8px;flex-wrap:wrap;padding:10px 0 4px;border-top:1px solid var(--border);margin-top:4px;align-items:center;';
+
+  var label = document.createElement('span');
+  label.style.cssText = 'font-size:11px;color:var(--text3);font-weight:600;';
+  label.textContent = 'Adiar por:';
+  picker.appendChild(label);
+
+  opcoes.forEach(function(op) {
+    var btn = document.createElement('button');
+    btn.textContent = op.label;
+    btn.style.cssText = 'padding:6px 14px;border-radius:20px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-size:12px;font-weight:700;cursor:pointer;font-family:Sora,sans-serif;transition:all 0.15s;';
+    btn.onmouseover = function() { this.style.background = 'var(--accent)'; this.style.color = 'var(--bg)'; };
+    btn.onmouseout  = function() { this.style.background = 'transparent'; this.style.color = 'var(--accent)'; };
+    btn.onclick = function() { confirmarAdiamento(titulo, vehicleId, op.km); };
+    picker.appendChild(btn);
+  });
+
+  var cancel = document.createElement('button');
+  cancel.textContent = 'Cancelar';
+  cancel.style.cssText = 'padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--text3);font-size:11px;cursor:pointer;font-family:Sora,sans-serif;';
+  cancel.onclick = function() { picker.remove(); };
+  picker.appendChild(cancel);
+
+  targetItem.appendChild(picker);
+}
+
+function confirmarAdiamento(titulo, vehicleId, kmExtra) {
+  _haptic('success');
+  var v = state.vehicles.find(function(x){ return x.id === vehicleId; });
+  if (!v) return;
+
+  // Salva o adiamento na estrutura de dados do veículo
+  if (!v.adiamentos) v.adiamentos = {};
+  v.adiamentos[titulo] = (v.adiamentos[titulo] || 0) + kmExtra;
+
+  saveState();
+  renderAlerts();
+  updateDashboard();
+  showToast('⏰ ' + titulo + ' adiada por ' + kmExtra.toLocaleString('pt-BR') + ' km', 'success');
+}
+
 function atualizarKm() {
   var sel = document.getElementById('alert-veiculo-sel');
   var kmInput = document.getElementById('alert-km-input');
@@ -7230,7 +7481,7 @@ function renderAlerts() {
 
   if (!activeVehicles.length) {
     if (kmSec) kmSec.style.display = 'none';
-    el.innerHTML = '<div class="empty-state"><div class="empty-icon">🔔</div><div class="empty-title">Nenhum veículo ativo</div><div class="empty-desc">Cadastre ou reative um veículo para ver seus alertas</div></div>';
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">🔔</div><div class="empty-title">Tudo em dia por enquanto 🎉</div><div class="empty-desc">Cadastre seu veículo e informe o KM. Os alertas aparecem automaticamente antes de cada manutenção vencer.</div></div>';
     return;
   }
 
@@ -7280,6 +7531,7 @@ function renderAlerts() {
     html += '<div class="alert-urgency ' + urgencyClass[a.urgency] + '" style="white-space:nowrap;">' + a.label + '</div>';
     if (a.urgency !== 'low') {
       html += '<button onclick="marcarAlertaFeito(\'' + safeTitle + '\',' + vehicle.id + ')" title="Marcar como realizado" style="background:rgba(56,161,105,0.12);border:1px solid rgba(56,161,105,0.3);border-radius:6px;color:#38a169;font-size:11px;font-weight:700;padding:5px 10px;cursor:pointer;white-space:nowrap;font-family:\'Sora\',sans-serif;">✓ Feito</button>';
+      html += '<button onclick="adiarAlerta(\'' + safeTitle + '\',' + vehicle.id + ')" title="Adiar manutenção" style="background:rgba(123,128,193,0.08);border:1px solid rgba(123,128,193,0.25);border-radius:6px;color:var(--accent);font-size:11px;font-weight:700;padding:5px 10px;cursor:pointer;white-space:nowrap;font-family:\'Sora\',sans-serif;">⏰ Adiar</button>';
     }
     html += '</div>';
     html += '</div>';
@@ -8380,7 +8632,7 @@ function reativarVeiculo(vehicleId) {
 function renderVehiclesList() {
   var el = document.getElementById('vehicles-list');
   if (!state.vehicles.length) {
-    el.innerHTML = '<div class="empty-state"><div class="empty-icon">🚗</div><div class="empty-title">Nenhum veículo cadastrado</div><div class="empty-desc">Busque pela placa acima para cadastrar</div></div>';
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">🚗</div><div class="empty-title">Adicione seu primeiro carro</div><div class="empty-desc">Digite a placa acima e os dados são preenchidos automaticamente. Leva menos de 1 minuto.</div></div>';
     return;
   }
   var html = '<div class="vehicles-grid">';
@@ -8745,7 +8997,7 @@ function renderHistoricoList() {
   renderHistoricoSummary();
 
   if (!history.length) {
-    el.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">Nenhuma manutenção registrada</div><div class="empty-desc">Registre a primeira manutenção na aba <strong>Manutenção</strong></div><button class="empty-cta" onclick="showPage(\'manutencao\')">🔩 Ir para Manutenção</button></div>';
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">Histórico vazio = carro sem valor</div><div class="empty-desc">Cada manutenção registrada aumenta a confiança do comprador. Carros com histórico valem até 15% mais.</div><button class="empty-cta" onclick="showPage(\'manutencao\')">🔩 Registrar primeira manutenção</button></div>';
     return;
   }
   var iconMap = {
@@ -8983,38 +9235,148 @@ function _initSidebarSwipe() {
 // ONBOARDING
 // ============================================================
 var OB_STEPS = [
-  { icon: '🚗', title: 'Bem-vindo ao ManyCars', desc: 'Seu app para cuidar do carro, comparar peças e nunca perder uma manutenção. Vamos dar uma volta rápida?', btn: 'Próximo →' },
-  { icon: '🔍', title: 'Busque pela placa', desc: 'Cadastre seu carro em segundos buscando pela placa. Os dados são preenchidos automaticamente — você só informa o KM.', btn: 'Próximo →' },
-  { icon: '⚡', title: 'Alertas inteligentes', desc: 'O app monitora o KM do seu veículo e avisa quando uma manutenção está próxima ou vencida. Sem surpresas na oficina.', btn: 'Começar agora 🚀' },
+  {
+    icon: '🚗',
+    title: 'Bem-vindo ao ManyCars',
+    desc: 'Seu app para cuidar do carro, nunca perder uma manutenção e vender pelo preço justo. Leva 1 minuto para configurar.',
+    btn: 'Próximo →',
+    kmStep: false
+  },
+  {
+    icon: '🛡️',
+    title: 'Passaporte verificado',
+    desc: 'Cada manutenção que você registrar gera um Passaporte público — provando o histórico real do seu carro na hora de vender.',
+    btn: 'Próximo →',
+    kmStep: false
+  },
+  {
+    icon: '🔔',
+    title: 'Alertas por quilometragem',
+    desc: 'Informe o KM atual e o app monitora automaticamente quando cada manutenção está próxima. Sem anotações, sem esquecer.',
+    btn: 'Próximo →',
+    kmStep: false
+  },
+  {
+    icon: '📍',
+    title: 'Qual o KM do seu carro hoje?',
+    desc: 'Com isso, os alertas começam a funcionar imediatamente. Não precisa ser exato.',
+    btn: 'Salvar e começar 🚀',
+    kmStep: true
+  },
 ];
 var obStep = 0;
 
 function showOnboarding() {
+  // Decide se mostra o passo de KM (só se já tem veículo cadastrado)
   obStep = 0;
-  renderObStep();
+  _obUpdateStepCount();
+  renderObStep('init');
   document.getElementById('onboarding-overlay').classList.add('active');
 }
 
-function renderObStep() {
-  var s = OB_STEPS[obStep];
-  document.getElementById('ob-icon').textContent  = s.icon;
-  document.getElementById('ob-title').textContent = s.title;
-  document.getElementById('ob-desc').textContent  = s.desc;
-  document.getElementById('ob-next-btn').textContent = s.btn;
-  for (var i = 0; i < 3; i++) {
-    var dot = document.getElementById('ob-dot-' + i);
-    if (dot) dot.classList.toggle('active', i === obStep);
+// Filtra os steps relevantes dinamicamente
+function _obGetSteps() {
+  var hasVehicle = state.vehicles && state.vehicles.filter(function(v){ return !v.archived; }).length > 0;
+  return OB_STEPS.filter(function(s) {
+    return !s.kmStep || hasVehicle;
+  });
+}
+
+function _obUpdateStepCount() {
+  // Atualiza o "DE X" na label conforme steps disponíveis
+  var steps = _obGetSteps();
+  var lbl = document.getElementById('ob-step-label');
+  if (lbl) lbl.textContent = 'PASSO 1 DE ' + steps.length;
+}
+
+function renderObStep(direction) {
+  var steps   = _obGetSteps();
+  var s       = steps[obStep];
+  var total   = steps.length;
+  var pct     = Math.round(((obStep + 1) / total) * 100);
+  var content = document.getElementById('ob-content');
+  var kmBlock = document.getElementById('ob-km-block');
+  var kmInput = document.getElementById('ob-km-input');
+  var kmLabel = document.getElementById('ob-km-label');
+
+  // Update progress bar
+  var bar  = document.getElementById('ob-progress-bar');
+  var lbl  = document.getElementById('ob-step-label');
+  var pLbl = document.getElementById('ob-pct-label');
+  if (bar)  bar.style.width  = pct + '%';
+  if (lbl)  lbl.textContent  = 'PASSO ' + (obStep + 1) + ' DE ' + total;
+  if (pLbl) pLbl.textContent = pct + '%';
+
+  var doRender = function() {
+    document.getElementById('ob-icon').textContent  = s.icon;
+    document.getElementById('ob-title').textContent = s.title;
+    document.getElementById('ob-desc').textContent  = s.desc;
+    document.getElementById('ob-next-btn').textContent = s.btn;
+
+    // Show/hide KM input
+    if (kmBlock) kmBlock.style.display = s.kmStep ? 'block' : 'none';
+    if (s.kmStep && kmInput) {
+      // Pre-fill with first vehicle's KM
+      var v = state.vehicles && state.vehicles.filter(function(x){ return !x.archived; })[0];
+      if (v && kmLabel) kmLabel.textContent = 'KM atual — ' + v.marca + ' ' + v.modelo.split(' ')[0];
+      if (v && kmInput && !kmInput.value) kmInput.value = v.km || '';
+      setTimeout(function(){ if (kmInput) kmInput.focus(); }, 300);
+    }
+  };
+
+  // Slide animation
+  if (content && direction !== 'init') {
+    var outX = direction === 'next' ? '-30px' : '30px';
+    var inX  = direction === 'next' ?  '30px' : '-30px';
+    content.style.opacity   = '0';
+    content.style.transform = 'translateX(' + outX + ')';
+    setTimeout(function() {
+      doRender();
+      content.style.transform = 'translateX(' + inX + ')';
+      content.getBoundingClientRect();
+      content.style.transition = 'opacity 0.25s, transform 0.25s';
+      content.style.opacity    = '1';
+      content.style.transform  = 'translateX(0)';
+    }, 250);
+  } else {
+    if (content) { content.style.opacity = '1'; content.style.transform = 'translateX(0)'; }
+    doRender();
   }
 }
 
 function nextOnboarding() {
-  obStep++;
-  if (obStep >= OB_STEPS.length) {
+  _haptic('light');
+  var steps = _obGetSteps();
+
+  // Se é o passo de KM, salva antes de avançar
+  var current = steps[obStep];
+  if (current && current.kmStep) {
+    var kmInput = document.getElementById('ob-km-input');
+    var km = parseInt(kmInput ? kmInput.value : '') || 0;
+    if (km > 0) {
+      var v = state.vehicles && state.vehicles.filter(function(x){ return !x.archived; })[0];
+      if (v) {
+        v.km = km;
+        saveState();
+        _haptic('success');
+        showToast('✅ KM registrado! Alertas ativados para o ' + v.marca + ' ' + v.modelo.split(' ')[0], 'success');
+      }
+    }
     skipOnboarding();
-    showPage('veiculos');
+    updateDashboard();
+    showPage('dashboard');
     return;
   }
-  renderObStep();
+
+  obStep++;
+  if (obStep >= steps.length) {
+    skipOnboarding();
+    // Se não tem veículo, vai para cadastro; se tem, vai para dashboard
+    var hasVehicle = state.vehicles && state.vehicles.filter(function(v){ return !v.archived; }).length > 0;
+    showPage(hasVehicle ? 'dashboard' : 'veiculos');
+    return;
+  }
+  renderObStep('next');
 }
 
 function skipOnboarding() {
@@ -9160,7 +9522,7 @@ function validarCampo(id, check, msgEl, msg) {
 function renderVenderPage(vehicleIdx) {
   var content = document.getElementById('vender-content');
   if (!state.vehicles.length) {
-    content.innerHTML = '<div class="empty-state"><div class="empty-icon">🚗</div><div class="empty-title">Nenhum veículo cadastrado</div><div class="empty-desc">Cadastre um veículo para gerar seu dossiê de venda</div><button class="empty-cta" onclick="showPage(\'veiculos\')">+ Cadastrar veículo</button></div>';
+    content.innerHTML = '<div class="empty-state"><div class="empty-icon">🚗</div><div class="empty-title">Adicione seu primeiro carro</div><div class="empty-desc">Cadastre um veículo para gerar seu dossiê de venda</div><button class="empty-cta" onclick="showPage(\'veiculos\')">+ Cadastrar veículo</button></div>';
     return;
   }
 
@@ -9300,12 +9662,6 @@ function copiarAnuncio() {
   catch(e) { showToast('Copie o texto manualmente', 'info'); }
 }
 
-function compartilharWhatsApp() {
-  var txt = document.getElementById('sell-anuncio-txt');
-  if (!txt) return;
-  var msg = encodeURIComponent(txt.value);
-  window.open('https://wa.me/?text=' + msg, '_blank');
-}
 
 
 // ============================================================
@@ -9416,7 +9772,7 @@ function renderFuelList() {
     .sort(function(a,b){ return b.data.localeCompare(a.data); });
 
   if (!entries.length) {
-    listEl.innerHTML = '<div class="empty-state"><div class="empty-icon">⛽</div><div class="empty-title">Nenhum abastecimento registrado</div><div class="empty-desc">Registre o primeiro abastecimento para calcular o consumo</div></div>';
+    listEl.innerHTML = '<div class="empty-state"><div class="empty-icon">⛽</div><div class="empty-title">Quanto você gasta por km?</div><div class="empty-desc">Registre o primeiro abastecimento e descubra se seu motor está saudável ou gastando mais do que deveria.</div></div>';
     return;
   }
 
@@ -9784,7 +10140,7 @@ var DOC_TYPES = [
 function renderDocumentos() {
   var content = document.getElementById('documentos-content');
   if (!state.vehicles.length) {
-    content.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><div class="empty-title">Nenhum veículo cadastrado</div><div class="empty-desc">Cadastre um veículo para gerenciar seus documentos</div><button class="empty-cta" onclick="showPage(\'veiculos\')">+ Cadastrar veículo</button></div>';
+    content.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><div class="empty-title">Nunca mais pague multa por atraso</div><div class="empty-desc">Cadastre seu carro e receba alertas antes do IPVA, seguro e licenciamento vencerem.</div><button class="empty-cta" onclick="showPage(\'veiculos\')">+ Cadastrar veículo</button></div>';
     return;
   }
 
@@ -10150,7 +10506,7 @@ function renderInsights() {
 
   var insights = gerarInsights();
   if (!insights.length) {
-    listEl.innerHTML = '<div class="empty-state" style="padding:20px 0;"><div class="empty-icon">🤖</div><div class="empty-title">Sem dados suficientes</div><div class="empty-desc">Registre manutenções e abastecimentos para receber insights personalizados</div></div>';
+    listEl.innerHTML = '<div class="empty-state" style="padding:20px 0;"><div class="empty-icon">🤖</div><div class="empty-title">Insights chegam com o uso</div><div class="empty-desc">Registre 2 ou mais manutenções e o ManyCars começa a gerar análises personalizadas do seu carro — gasto por km, comparativos e previsões.</div></div>';
     return;
   }
 
@@ -12872,6 +13228,66 @@ function fecharPassaporteModal() {
   if (modal) modal.style.display = 'none';
 }
 
+function compartilharPassaporte() {
+  _haptic('light');
+  var v = state.vehicles.find(function(x){ return x.id === _passaporteVehicleId; });
+  if (!v) return;
+
+  var placa    = (v.placa && v.placa !== '—') ? v.placa : '';
+  var nomeVei  = v.marca + ' ' + v.modelo + ' ' + v.ano;
+  var url      = placa
+    ? 'https://buratogustavo.github.io/passaporte.html?placa=' + placa
+    : 'https://buratogustavo.github.io/passaporte.html';
+  var titulo   = '🛡️ Passaporte ManyCars — ' + nomeVei;
+  var texto    = 'Confira o histórico verificado de manutenções do ' + nomeVei +
+    (placa ? ' (placa ' + placa + ')' : '') +
+    '. Gerado pelo ManyCars.';
+
+  if (navigator.share) {
+    // Web Share API — abre menu nativo do iOS/Android
+    navigator.share({ title: titulo, text: texto, url: url })
+      .then(function() { showToast('Passaporte compartilhado! 🛡️', 'success'); })
+      .catch(function(err) {
+        if (err.name !== 'AbortError') _compartilharFallback(url, texto);
+      });
+  } else {
+    _compartilharFallback(url, texto);
+  }
+}
+
+function _compartilharFallback(url, texto) {
+  // Fallback: copia o link para a área de transferência
+  var full = texto + '\n' + url;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(full)
+      .then(function(){ showToast('Link copiado! Cole no WhatsApp ou onde quiser 📋', 'success'); })
+      .catch(function(){ _compartilharWhatsAppDireto(full); });
+  } else {
+    _compartilharWhatsAppDireto(full);
+  }
+}
+
+function _compartilharWhatsAppDireto(texto) {
+  window.open('https://wa.me/?text=' + encodeURIComponent(texto), '_blank');
+}
+
+// ── Compartilhar anúncio de venda (tela Vender meu carro) ───
+function compartilharWhatsApp() {
+  _haptic('light');
+  var txt = document.getElementById('sell-anuncio-txt');
+  if (!txt) return;
+  var texto = txt.value;
+
+  if (navigator.share) {
+    navigator.share({ title: 'Vendo meu carro — ManyCars', text: texto })
+      .catch(function(err) {
+        if (err.name !== 'AbortError') _compartilharWhatsAppDireto(texto);
+      });
+  } else {
+    _compartilharWhatsAppDireto(texto);
+  }
+}
+
 function exportarPassaporte() {
   var vehicleId = _passaporteVehicleId;
   var v = state.vehicles.find(function(x){ return x.id === vehicleId; });
@@ -13002,7 +13418,7 @@ function renderOpinioes() {
   if (!listEl) return;
 
   if (!lista.length) {
-    listEl.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><div class="empty-title">Nenhuma opinião encontrada</div><div class="empty-desc">Tente mudar o filtro ou a busca</div></div>';
+    listEl.innerHTML = '<div class="empty-state"><div class="empty-icon">💬</div><div class="empty-title">Seja o primeiro a opinar</div><div class="empty-desc">Nenhum dono deste modelo compartilhou a experiência ainda. Mude o filtro ou conte a sua.</div></div>';
     return;
   }
 
@@ -13885,7 +14301,7 @@ function renderModeloInfo() {
   var active = state.vehicles.filter(function(v){ return !v.archived; });
   if (!active.length) {
     content.innerHTML = '<div class="empty-state"><div class="empty-icon">📖</div>' +
-      (state.vehicles.length ? '<div class="empty-title">Todos os veículos foram vendidos</div>' : '<div class="empty-title">Nenhum veículo cadastrado</div>') +
+      (state.vehicles.length ? '<div class="empty-title">Todos os veículos foram vendidos</div>' : '<div class="empty-title">Adicione seu primeiro carro</div>') +
       '<button class="empty-cta" onclick="showPage(\'veiculos\')">+ Cadastrar veículo</button></div>';
     return;
   }
@@ -14232,13 +14648,13 @@ function renderChecklistPage() {
   if (!content) return;
   if (!vehicleId) {
     if (addCard) addCard.style.display = 'none';
-    content.innerHTML = '<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-title">Selecione um veículo acima</div><div class="empty-desc">Marque os itens já realizados para alertas mais precisos</div></div>';
+    content.innerHTML = '<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-title">Check-list do seu carro</div><div class="empty-desc">Selecione o veículo e marque o que já foi feito. Os alertas ficam muito mais precisos com o check-list preenchido.</div></div>';
     return;
   }
   if (addCard) addCard.style.display = 'block';
   var v = state.vehicles.find(function(x){ return x.id===vehicleId; });
   if (!v) {
-    content.innerHTML = '<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-title">Selecione um veículo acima</div></div>';
+    content.innerHTML = '<div class="empty-state"><div class="empty-icon">✅</div><div class="empty-title">Check-list do seu carro</div><div class="empty-desc">Selecione o veículo para ver e marcar as manutenções realizadas.</div></div>';
     return;
   }
   var vChecks = (state.docs[vehicleId] && state.docs[vehicleId].checklist) || {};
@@ -15097,11 +15513,17 @@ function _abrirCheckout(plano, periodo) {
     return;
   }
 
-  // Abre checkout do Mercado Pago
-  window.open(url, '_blank', 'noopener');
+  // Abre via <a> click — nunca bloqueado por popup blockers
+  var a = document.createElement('a');
+  a.href = url;
+  a.target = '_blank';
+  a.rel = 'noopener noreferrer';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 
   // Webhook ativa automaticamente — mostra aviso ao usuário
-  showToast('Você será redirecionado para o pagamento. O plano ativa automaticamente após a confirmação. 💳', 'success');
+  showToast('Redirecionando para o pagamento... O plano ativa automaticamente após a confirmação. 💳', 'success');
 
   // Polling: verifica a cada 10s por até 5 minutos se o plano foi ativado via webhook
   _aguardarAtivacaoPlano(plano, 30);
@@ -15178,7 +15600,10 @@ function _comprarPassaporte(placa) {
     showToast('Configure o link de pagamento do passaporte nas configurações.', 'error');
     return;
   }
-  window.open(url + '?external_reference=passaporte_' + placa, '_blank', 'noopener');
+  var fullUrl = url + '?external_reference=passaporte_' + placa;
+  var a = document.createElement('a');
+  a.href = fullUrl; a.target = '_blank'; a.rel = 'noopener noreferrer';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
 }
 
 
