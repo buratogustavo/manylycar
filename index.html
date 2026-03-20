@@ -2730,6 +2730,88 @@ select, textarea {
 .mkt-grad-4 { background: linear-gradient(135deg,#e8f0ff,#b8c8f5); }
 .mkt-grad-5 { background: linear-gradient(135deg,#fff8e8,#f5e0b8); }
 
+
+/* ====================================================
+   TOUR INTERATIVO — tooltips sobre elementos reais
+   ==================================================== */
+#tour-overlay {
+  position: fixed; inset: 0; z-index: 8000;
+  pointer-events: none;
+}
+#tour-spotlight {
+  position: absolute;
+  border-radius: 12px;
+  box-shadow: 0 0 0 9999px rgba(0,0,0,0.72);
+  transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+  pointer-events: none;
+}
+#tour-tooltip {
+  position: absolute;
+  background: var(--surface);
+  border: 1.5px solid var(--accent);
+  border-radius: 14px;
+  padding: 16px 18px;
+  width: 280px;
+  max-width: calc(100vw - 32px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  pointer-events: all;
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  z-index: 8001;
+}
+#tour-tooltip::before {
+  content: '';
+  position: absolute;
+  width: 12px; height: 12px;
+  background: var(--surface);
+  border-left: 1.5px solid var(--accent);
+  border-top: 1.5px solid var(--accent);
+  border-radius: 2px;
+}
+#tour-tooltip.arrow-top::before    { top: -7px; left: 50%; transform: translateX(-50%) rotate(45deg); }
+#tour-tooltip.arrow-bottom::before { bottom: -7px; left: 50%; transform: translateX(-50%) rotate(225deg); }
+#tour-tooltip.arrow-left::before   { left: -7px; top: 50%; transform: translateY(-50%) rotate(-45deg); }
+#tour-tooltip.arrow-right::before  { right: -7px; top: 50%; transform: translateY(-50%) rotate(135deg); }
+.tour-step-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 1px;
+  color: var(--accent); text-transform: uppercase; margin-bottom: 6px;
+}
+.tour-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px; letter-spacing: 1px; color: var(--text);
+  margin-bottom: 6px;
+}
+.tour-desc {
+  font-size: 12px; color: var(--text2); line-height: 1.65;
+  margin-bottom: 14px;
+}
+.tour-actions {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.tour-skip {
+  background: none; border: none; color: var(--text3);
+  font-size: 12px; cursor: pointer; font-family: 'Sora', sans-serif;
+  padding: 0; text-decoration: underline;
+}
+.tour-next {
+  background: var(--accent); color: var(--bg);
+  border: none; border-radius: 8px; padding: 9px 20px;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  font-family: 'Sora', sans-serif;
+  transition: opacity 0.15s;
+}
+.tour-next:hover { opacity: 0.88; }
+.tour-dots {
+  display: flex; gap: 5px; align-items: center;
+}
+.tour-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--border2);
+  transition: all 0.2s;
+}
+.tour-dot.active {
+  background: var(--accent); width: 16px; border-radius: 3px;
+}
+
 /* ===== FAQ PLANOS ===== */
 .faq-item { border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; }
 .faq-item:last-child { border-bottom: none; }
@@ -3112,7 +3194,11 @@ select, textarea {
         <circle cx="50" cy="50" r="8" fill="white"/>
         <circle cx="50" cy="50" r="4.5" fill="#7B80C1"/>
       </svg>
-      MANY<span>CARS</span>
+      <!-- Logo + badge de plano empilhados -->
+      <div style="display:flex;flex-direction:column;align-items:center;line-height:1;">
+        <div>MANY<span>CARS</span></div>
+        <div id="topbar-plan-badge" style="font-size:9px;font-weight:700;letter-spacing:1px;padding:1px 7px;border-radius:20px;margin-top:2px;background:rgba(123,128,193,0.12);color:var(--text3);font-family:'Sora',sans-serif;display:none;"></div>
+      </div>
     </div>
 
     <!-- Theme toggle DIREITA — sempre visível -->
@@ -3261,6 +3347,7 @@ select, textarea {
       </div>
       <button class="logout-btn" onclick="doLogout()">Sair da conta</button>
       <button class="logout-btn" style="margin-top:6px; background:rgba(229,62,62,0.08); color:var(--red); border-color:rgba(229,62,62,0.2);" onclick="confirmarLimparDados()">🗑 Limpar todos os dados</button>
+      <button class="logout-btn" style="margin-top:6px;color:var(--accent);border-color:rgba(123,128,193,0.3);background:rgba(123,128,193,0.06);" onclick="closeSidebar();setTimeout(function(){localStorage.removeItem('mc_tour_done');iniciarTour();},300);">🗺️ Ver tour do app</button>
       <div style="text-align:center;margin-top:8px;font-size:9px;color:var(--text3);padding:4px;">v1.0 MVP</div>
     </div>
   </div>
@@ -6553,6 +6640,33 @@ function _haptic(type) {
   navigator.vibrate(patterns[type] || patterns.light);
 }
 
+// ============================================================
+// PLAN BADGE — exibe plano atual no topbar de forma discreta
+// ============================================================
+function _updatePlanBadge() {
+  var badge = document.getElementById('topbar-plan-badge');
+  if (!badge) return;
+
+  var plano = (state.user && state.user.plano) || 'free';
+
+  var configs = {
+    free:  { label: 'FREE',  bg: 'rgba(123,128,193,0.1)',  color: 'var(--text3)',          show: true  },
+    plus:  { label: 'PLUS',  bg: 'rgba(123,128,193,0.18)', color: 'var(--accent)',          show: true  },
+    pro:   { label: 'PRO',   bg: 'linear-gradient(90deg,rgba(123,128,193,0.25),rgba(167,139,250,0.25))', color: '#a78bfa', show: true },
+  };
+
+  var cfg = configs[plano] || configs.free;
+  badge.textContent          = cfg.label;
+  badge.style.background     = cfg.bg;
+  badge.style.color          = cfg.color;
+  badge.style.display        = cfg.show ? 'block' : 'none';
+
+  // Pro gets a subtle glow
+  badge.style.boxShadow = plano === 'pro'
+    ? '0 0 6px rgba(167,139,250,0.4)'
+    : 'none';
+}
+
 function toggleTheme() {
   var isLight = document.body.classList.toggle('light-mode');
   localStorage.setItem('manycars_theme', isLight ? 'light' : 'dark');
@@ -7030,7 +7144,172 @@ function clearState() {
 
 // Auto-restore ao carregar a página
 // ============================================================
-// ERROR BOUNDARY GLOBAL — captura erros JS não tratados
+// TOUR INTERATIVO — guia pós-cadastro pelo app
+// ============================================================
+var _tourStep   = 0;
+var _tourActive = false;
+var _tourSteps  = [
+  {
+    target:  '.mobile-topbar',
+    title:   'Seu painel de controle',
+    desc:    'Esta é a barra de navegação do ManyCars. O logo no centro, o menu à esquerda e o botão de tema à direita.',
+    arrow:   'arrow-top',
+    pos:     'below',
+  },
+  {
+    target:  '.bn-fab',
+    title:   'Registro rápido ⚡',
+    desc:    'Este botão + é o mais importante do app. Com um toque você registra manutenção, abastecimento, documento ou adiciona um veículo.',
+    arrow:   'arrow-bottom',
+    pos:     'above',
+  },
+  {
+    target:  '#bottom-nav',
+    title:   'Navegação principal',
+    desc:    'Acesse Início, Veículos e Mercado com um toque. O Menu tem todas as outras funcionalidades do app.',
+    arrow:   'arrow-bottom',
+    pos:     'above',
+  },
+  {
+    target:  '#dash-vehicles-section',
+    title:   'Seus veículos aqui',
+    desc:    'Os cards dos seus carros aparecem aqui. Toque em um carro para ver score de saúde, histórico e gerar o Passaporte verificado.',
+    arrow:   'arrow-top',
+    pos:     'below',
+  },
+  {
+    target:  '#quick-actions',
+    title:   'Ações rápidas do dashboard',
+    desc:    'Atalhos para as funcionalidades mais usadas: alertas de manutenção, abastecimento, documentos e muito mais.',
+    arrow:   'arrow-top',
+    pos:     'below',
+    fallbackTarget: '.stat-grid',
+  },
+  {
+    target:  null,
+    title:   'Tudo pronto! 🚀',
+    desc:    'Cadastre seu primeiro carro e deixa o ManyCars cuidar do resto. Alertas, histórico e Passaporte verificado — tudo automático.',
+    arrow:   'arrow-top',
+    pos:     'center',
+    isLast:  true,
+  },
+];
+
+function iniciarTour() {
+  if (_tourActive) return;
+  _tourActive = true;
+  _tourStep   = 0;
+  document.getElementById('tour-overlay').style.display = 'block';
+  _tourRender();
+}
+
+function encerrarTour() {
+  _tourActive = false;
+  document.getElementById('tour-overlay').style.display = 'none';
+  document.getElementById('tour-spotlight').style.cssText = '';
+  try { localStorage.setItem('mc_tour_done', '1'); } catch(e) {}
+  // Scroll back to top
+  var mc = document.querySelector('.main-content');
+  if (mc) mc.scrollTop = 0;
+}
+
+function tourProximo() {
+  _haptic('light');
+  _tourStep++;
+  if (_tourStep >= _tourSteps.length) {
+    encerrarTour();
+    return;
+  }
+  _tourRender();
+}
+
+function _tourRender() {
+  var step     = _tourSteps[_tourStep];
+  var total    = _tourSteps.length;
+  var overlay  = document.getElementById('tour-overlay');
+  var spotlight= document.getElementById('tour-spotlight');
+  var tooltip  = document.getElementById('tour-tooltip');
+  if (!overlay || !tooltip) return;
+
+  // Update text
+  document.getElementById('tour-step-label').textContent = 'PASSO ' + (_tourStep + 1) + ' DE ' + total;
+  document.getElementById('tour-title').textContent = step.title;
+  document.getElementById('tour-desc').textContent  = step.desc;
+  var nextBtn = document.getElementById('tour-next-btn');
+  if (nextBtn) nextBtn.textContent = step.isLast ? 'Começar agora 🚀' : 'Próximo →';
+
+  // Dots
+  var dots = document.getElementById('tour-dots');
+  if (dots) {
+    dots.innerHTML = Array.from({length: total}).map(function(_, i) {
+      return '<div class="tour-dot' + (i === _tourStep ? ' active' : '') + '"></div>';
+    }).join('');
+  }
+
+  // Spotlight + tooltip position
+  if (!step.target || step.pos === 'center') {
+    // Center — no spotlight, tooltip centered
+    spotlight.style.cssText = 'display:none;';
+    tooltip.className = 'arrow-top';
+    tooltip.style.cssText =
+      'top:50%;left:50%;transform:translate(-50%,-50%);position:fixed;';
+    return;
+  }
+
+  var el = document.querySelector(step.target);
+  if (!el && step.fallbackTarget) el = document.querySelector(step.fallbackTarget);
+  if (!el) { tourProximo(); return; } // skip if element not found
+
+  // Scroll element into view
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  var rect = el.getBoundingClientRect();
+  var pad  = 8;
+
+  // Spotlight
+  spotlight.style.cssText =
+    'display:block;' +
+    'top:'    + (rect.top    - pad) + 'px;' +
+    'left:'   + (rect.left   - pad) + 'px;' +
+    'width:'  + (rect.width  + pad*2) + 'px;' +
+    'height:' + (rect.height + pad*2) + 'px;';
+
+  // Tooltip position
+  var ttW  = 280;
+  var ttH  = 160; // estimate
+  var vw   = window.innerWidth;
+  var vh   = window.innerHeight;
+  var cx   = rect.left + rect.width / 2;
+  var left = Math.max(16, Math.min(cx - ttW/2, vw - ttW - 16));
+  var top, arrowClass;
+
+  if (step.pos === 'below') {
+    top        = rect.bottom + pad + 12;
+    arrowClass = 'arrow-top';
+    if (top + ttH > vh) { top = rect.top - ttH - pad - 12; arrowClass = 'arrow-bottom'; }
+  } else {
+    top        = rect.top - ttH - pad - 12;
+    arrowClass = 'arrow-bottom';
+    if (top < 16) { top = rect.bottom + pad + 12; arrowClass = 'arrow-top'; }
+  }
+
+  tooltip.className = arrowClass;
+  tooltip.style.cssText =
+    'position:fixed;' +
+    'top:'  + Math.max(16, top) + 'px;' +
+    'left:' + left + 'px;' +
+    'width:' + ttW + 'px;';
+}
+
+// ── Auto-start tour after first login ───────────────────────
+function _checkStartTour() {
+  var tourDone = localStorage.getItem('mc_tour_done');
+  if (!tourDone && state.user) {
+    setTimeout(iniciarTour, 1200);
+  }
+}
+
+
 // ============================================================
 (function() {
   var _lastError = null;
@@ -7145,6 +7424,7 @@ window.addEventListener('DOMContentLoaded', function() {
       document.body.classList.add('app-active');
       var firstName = state.user.name.split(' ')[0];
       _syncSidebarAvatar();
+  _updatePlanBadge();
       document.getElementById('dash-name').textContent      = firstName.toUpperCase();
 
       try {
@@ -8011,6 +8291,7 @@ function _loginUser(user) {
   document.getElementById('screen-app').classList.add('active');
   var firstName = (user.name || user.email || 'Usuário').split(' ')[0];
   _syncSidebarAvatar();
+  _updatePlanBadge();
   document.getElementById('dash-name').textContent = firstName.toUpperCase();
   renderAlerts();
   updateDashboard();
@@ -8022,6 +8303,7 @@ function _loginUser(user) {
         renderAlerts();
         updateDashboard();
         _syncSidebarAvatar();
+  _updatePlanBadge();
         var cnt = state.vehicles.length;
         showToast('☁️ ' + (cnt > 0 ? cnt + ' veículo' + (cnt > 1 ? 's' : '') + ' carregado' + (cnt > 1 ? 's' : '') + ' da nuvem' : 'Dados sincronizados'), 'success');
       } else {
@@ -8036,6 +8318,8 @@ function _loginUser(user) {
   }
   // Verifica alertas e sugere push após login
   setTimeout(_verificarEEnviarAlertas, 2500);
+  // Inicia tour para novos usuários (após onboarding de slides)
+  setTimeout(_checkStartTour, 2000);
   try {
     if (!localStorage.getItem('mc_onboarded')) setTimeout(showOnboarding, 600);
   } catch(e) {}
@@ -13211,6 +13495,7 @@ function salvarIconPicker() {
   state.user.perfilColor = _pickerSelColor || '#7B80C1';
   saveState();
   _syncSidebarAvatar();
+  _updatePlanBadge();
   fecharIconPicker();
   renderPerfilPage();
   showToast('Ícone atualizado! ' + state.user.perfilIcon, 'success');
@@ -15121,6 +15406,7 @@ function salvarPerfil() {
   var firstName = nome.split(' ')[0];
   var dn = document.getElementById('dash-name');
   _syncSidebarAvatar();
+  _updatePlanBadge();
   if (dn) dn.textContent = firstName.toUpperCase();
   showToast('Perfil atualizado! ✅', 'success');
 }
@@ -16782,3 +17068,20 @@ function fecharRegistroRapido() {
 })();
 
 </script>
+
+  <!-- ===== TOUR INTERATIVO ===== -->
+  <div id="tour-overlay" style="display:none;position:fixed;inset:0;z-index:8000;pointer-events:none;">
+    <div id="tour-spotlight" style="position:absolute;border-radius:12px;box-shadow:0 0 0 9999px rgba(0,0,0,0.72);transition:all 0.35s cubic-bezier(0.4,0,0.2,1);pointer-events:none;"></div>
+    <div id="tour-tooltip" class="arrow-bottom" style="position:fixed;background:var(--surface);border:1.5px solid var(--accent);border-radius:14px;padding:16px 18px;width:280px;max-width:calc(100vw - 32px);box-shadow:0 8px 32px rgba(0,0,0,0.3);pointer-events:all;z-index:8001;">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1px;color:var(--accent);text-transform:uppercase;margin-bottom:6px;" id="tour-step-label">PASSO 1 DE 6</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--text);margin-bottom:6px;" id="tour-title">Bem-vindo!</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.65;margin-bottom:14px;" id="tour-desc">Deixa eu te mostrar o app em 30 segundos.</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+        <div style="display:flex;gap:5px;align-items:center;" id="tour-dots"></div>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button onclick="encerrarTour()" style="background:none;border:none;color:var(--text3);font-size:12px;cursor:pointer;font-family:'Sora',sans-serif;text-decoration:underline;">Pular tour</button>
+          <button id="tour-next-btn" onclick="tourProximo()" style="background:var(--accent);color:var(--bg);border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;">Próximo →</button>
+        </div>
+      </div>
+    </div>
+  </div>
