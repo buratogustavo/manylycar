@@ -2812,6 +2812,79 @@ select, textarea {
   background: var(--accent); width: 16px; border-radius: 3px;
 }
 
+
+/* ===================================================
+   DIAGNÓSTICO DO VEÍCULO — bottom sheet
+   =================================================== */
+.diag-overlay {
+  display:none; position:fixed; inset:0; z-index:9000;
+  background:rgba(0,0,0,0.6); backdrop-filter:blur(4px);
+  align-items:flex-end; justify-content:center;
+}
+.diag-overlay.active { display:flex; }
+.diag-sheet {
+  background:var(--surface); border-radius:20px 20px 0 0;
+  width:100%; max-width:520px; max-height:88vh;
+  overflow-y:auto; padding:20px 20px 40px;
+  transform:translateY(100%);
+  transition:transform .32s cubic-bezier(0.22,1,0.36,1);
+  border:1px solid var(--border);
+}
+.diag-sheet.open { transform:translateY(0); }
+.diag-handle {
+  width:36px; height:4px; background:var(--border2);
+  border-radius:2px; margin:0 auto 18px;
+}
+.diag-section-title {
+  font-size:11px; font-weight:700; letter-spacing:1px;
+  text-transform:uppercase; color:var(--text3);
+  margin:20px 0 10px; display:flex; align-items:center; gap:8px;
+}
+.diag-section-title:first-of-type { margin-top:0; }
+.diag-item {
+  display:flex; align-items:flex-start; gap:12px;
+  padding:11px 12px; border-radius:10px; cursor:pointer;
+  transition:background .15s; margin-bottom:4px;
+  background:var(--surface2);
+}
+.diag-item:hover { background:rgba(123,128,193,.08); }
+.diag-item.done-item { opacity:.65; }
+.diag-cb {
+  width:20px; height:20px; accent-color:var(--accent);
+  cursor:pointer; flex-shrink:0; margin-top:1px;
+}
+.diag-item-body { flex:1; }
+.diag-item-title {
+  font-size:13px; font-weight:600; color:var(--text); line-height:1.3;
+}
+.diag-item-sub {
+  font-size:11px; color:var(--text3); margin-top:2px; line-height:1.5;
+}
+.diag-item-badge {
+  font-size:9px; font-weight:700; padding:2px 7px;
+  border-radius:20px; flex-shrink:0; margin-top:2px;
+}
+.diag-alert {
+  background:rgba(229,62,62,.08); border:1px solid rgba(229,62,62,.2);
+  border-radius:10px; padding:10px 12px; margin-bottom:6px;
+  display:flex; gap:10px; align-items:flex-start;
+}
+.diag-alert-icon { font-size:16px; flex-shrink:0; }
+.diag-alert-title { font-size:12px; font-weight:700; color:var(--red); }
+.diag-alert-desc  { font-size:11px; color:var(--text3); margin-top:2px; line-height:1.5; }
+.diag-progress {
+  background:var(--surface2); border-radius:10px;
+  padding:12px 14px; margin-bottom:16px;
+  display:flex; align-items:center; gap:14px;
+}
+.diag-progress-bar {
+  flex:1; height:6px; background:var(--border2); border-radius:3px; overflow:hidden;
+}
+.diag-progress-fill {
+  height:100%; background:var(--accent); border-radius:3px;
+  transition:width .4s cubic-bezier(.4,0,.2,1);
+}
+
 /* ===== FAQ PLANOS ===== */
 .faq-item { border-bottom: 1px solid var(--border); cursor: pointer; user-select: none; }
 .faq-item:last-child { border-bottom: none; }
@@ -3091,12 +3164,8 @@ select, textarea {
       <!-- ── FORM: CADASTRO ── -->
       <div id="auth-register" class="auth-form">
         <div class="form-group">
-          <div class="field-label">Nome completo</div>
-          <input class="field-input" id="reg-name" type="text" autocomplete="name" placeholder="João Silva" onkeydown="if(event.key==='Enter')doRegister()">
-        </div>
-        <div class="form-group">
-          <div class="field-label">Cidade</div>
-          <input class="field-input" id="reg-cidade" type="text" autocomplete="address-level2" placeholder="Ex: São Paulo" onkeydown="if(event.key==='Enter')doRegister()">
+          <div class="field-label">Primeiro nome</div>
+          <input class="field-input" id="reg-name" type="text" autocomplete="given-name" placeholder="Como quer ser chamado?" onkeydown="if(event.key==='Enter')doRegister()">
         </div>
         <div class="form-group">
           <div class="field-label">E-mail</div>
@@ -3256,7 +3325,7 @@ select, textarea {
     <div class="nav-item" onclick="showPage('perfil')">
       <span class="nav-icon">👤</span> Meu Perfil
     </div>
-    <div class="nav-item" onclick="showPage('alertas')">
+    <div class="nav-item" data-unlock="hasVehicle" onclick="showPage('alertas')">
       <span class="nav-icon">🔔</span> Alertas
       <span id="alert-badge" style="margin-left:auto;background:var(--red);color:white;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;display:none;"></span>
     </div>
@@ -3268,58 +3337,49 @@ select, textarea {
     <div class="nav-item" onclick="showPage('veiculos')">
       <span class="nav-icon">🚗</span> Veículos
     </div>
-    <div class="nav-item" onclick="showPage('manutencao')">
+    <div class="nav-item" data-unlock="hasVehicle" onclick="showPage('manutencao')">
       <span class="nav-icon">🔩</span> Manutenção
     </div>
-    <div class="nav-item" onclick="showPage('historico')">
+    <div class="nav-item" data-unlock="hasRecord" onclick="showPage('historico')">
       <span class="nav-icon">📋</span> Histórico
     </div>
-    <div class="nav-item" onclick="showPage('combustivel')">
+    <div class="nav-item" data-unlock="hasVehicle" onclick="showPage('combustivel')">
       <span class="nav-icon">⛽</span> Combustível
     </div>
-    <div class="nav-item" onclick="showPage('documentos')">
+    <div class="nav-item" data-unlock="hasVehicle" onclick="showPage('documentos')">
       <span class="nav-icon">📅</span> Documentos
       <span id="doc-badge" style="display:none;margin-left:auto;background:var(--red);color:white;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;"></span>
     </div>
-    <div class="nav-item" onclick="showPage('checklist')">
-      <span class="nav-icon">✅</span> Check-list
-    </div>
 
     <div class="nav-section">Análise</div>
-    <div class="nav-item" onclick="showPage('saude')">
-      <span class="nav-icon">🩺</span> Saúde do Veículo
-    </div>
-    <div class="nav-item" onclick="showPage('analytics')">
+    <div class="nav-item" data-unlock="record5" onclick="showPage('analytics')">
       <span class="nav-icon">📊</span> Painel Financeiro
     </div>
-    <div class="nav-item" onclick="showPage('viagens')">
+    <div class="nav-item" data-unlock="record5" onclick="showPage('viagens')">
       <span class="nav-icon">🗺️</span> Viagens
-    </div>
-    <div class="nav-item" onclick="showPage('ranking')">
-      <span class="nav-icon">🏆</span> Ranking
     </div>
 
     <div class="nav-section">Mercado</div>
-    <div class="nav-item" onclick="showPage('marketplace')">
+    <div class="nav-item" data-unlock="record3" onclick="showPage('marketplace')">
       <span class="nav-icon">🏪</span> Marketplace
       <span style="margin-left:auto;font-size:9px;font-weight:700;background:rgba(123,128,193,0.12);color:var(--accent);padding:2px 6px;border-radius:10px;white-space:nowrap;">🏷️ Anunciar</span>
     </div>
-    <div class="nav-item" onclick="showPage('sonhar')">
+    <div class="nav-item" data-unlock="record3" onclick="showPage('sonhar')">
       <span class="nav-icon">🌟</span> Lista de Desejos
       <span id="wishlist-badge" style="margin-left:auto;background:rgba(123,128,193,0.15);color:var(--accent);font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;display:none;"></span>
     </div>
-    <div class="nav-item" onclick="showPage('vender')">
+    <div class="nav-item" data-unlock="record3" onclick="showPage('vender')">
       <span class="nav-icon">🏷️</span> Vender meu carro
     </div>
-    <div class="nav-item" onclick="showPage('pecas')">
+    <div class="nav-item" data-unlock="record3" onclick="showPage('pecas')">
       <span class="nav-icon">🔧</span> Consultar Peças
     </div>
 
     <div class="nav-section">Meu Modelo</div>
-    <div class="nav-item" onclick="showPage('modelo-info')">
+    <div class="nav-item" data-unlock="record3" onclick="showPage('modelo-info')">
       <span class="nav-icon">📖</span> Info do Modelo
     </div>
-    <div class="nav-item" onclick="showPage('opinioes')">
+    <div class="nav-item" data-unlock="record3" onclick="showPage('opinioes')">
       <span class="nav-icon">💬</span> Opiniões de Donos
     </div>
     <div class="nav-item" onclick="showPage('premium')" style="background:linear-gradient(135deg,rgba(123,128,193,0.1),rgba(167,139,250,0.1));border:1px solid rgba(123,128,193,0.25);">
@@ -3328,7 +3388,6 @@ select, textarea {
 
     <!-- Modos ocultos (acesso via v1.0 MVP × 5) -->
     <div id="nav-teste"   class="nav-item" style="display:none;" onclick="showPage('modo-teste')"><span class="nav-icon">🧪</span> Modo Teste</div>
-    <div id="nav-empresa" class="nav-item" style="display:none;" onclick="showPage('modo-empresa')"><span class="nav-icon">🏢</span> Empresa</div>
 
     <div class="sidebar-bottom">
       <!-- Indicador de modo ativo -->
@@ -3377,9 +3436,10 @@ select, textarea {
         </button>
       </div>
 
-      <button class="bn-item" onclick="showPage('marketplace');setBottomNav(this)">
-        <span class="bn-icon">🏪</span>
-        <span>Mercado</span>
+      <button class="bn-item" onclick="showPage('alertas');setBottomNav(this)" style="position:relative;">
+        <span class="bn-icon">🔔</span>
+        <span>Alertas</span>
+        <span class="bn-badge" id="bn-alert-badge-nav" style="display:none;"></span>
       </button>
       <button class="bn-item" onclick="openSidebar();setBottomNav(this)">
         <span class="bn-icon">☰</span>
@@ -3670,6 +3730,15 @@ select, textarea {
         <div class="page-sub">Cadastre e gerencie seus carros</div>
       </div>
 
+      <!-- Tabs -->
+      <div style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:16px;">
+        <button id="vtab-carros" onclick="_veiculosTab('carros')" style="flex:1;padding:10px 0;background:none;border:none;font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--accent);border-bottom:2px solid var(--accent);margin-bottom:-2px;cursor:pointer;transition:all .2s;">🚗 Meus Carros</button>
+        <button id="vtab-saude"  onclick="_veiculosTab('saude')"  style="flex:1;padding:10px 0;background:none;border:none;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all .2s;">❤️ Saúde</button>
+      </div>
+
+      <!-- Tab: Meus Carros -->
+      <div id="vtab-carros-content">
+
       <div class="form-card">
         <div class="card-title">🔍 Buscar veículo pela placa</div>
 
@@ -3748,6 +3817,14 @@ select, textarea {
           <div class="empty-desc">Cadastre agora e descubra quanto custa por km, quando trocar o óleo e quanto seu carro vale na revenda.</div>
         </div>
       </div>
+      </div><!-- /vtab-carros-content -->
+
+      <!-- Tab: Saúde -->
+      <div id="vtab-saude-content" style="display:none;">
+        <!-- conteúdo injetado por renderSaudePage() via _veiculosTab() -->
+        <div id="saude-inline-wrap"></div>
+      </div>
+
     </div>
 
     <!-- ===== WISHLIST ===== -->
@@ -3769,6 +3846,11 @@ select, textarea {
           <div class="form-group">
             <div class="field-label">E-mail</div>
             <input class="field-input" id="cfg-email" type="email" placeholder="seu@email.com">
+          </div>
+          <div class="form-group">
+            <div class="field-label">CEP <span style="font-size:10px;color:var(--text3);font-weight:400;">· usado para comparar preços de peças na sua região</span></div>
+            <input class="field-input" id="cfg-cep" type="text" inputmode="numeric" maxlength="9" placeholder="00000-000" oninput="this.value=this.value.replace(/\D/g,'').replace(/(\d{5})(\d)/,'$1-$2').slice(0,9)">
+          </div>
           </div>
         </div>
         <button class="btn-primary" style="width:auto;padding:10px 24px;margin-top:8px;" onclick="salvarPerfil()">💾 Salvar perfil</button>
@@ -4558,27 +4640,6 @@ select, textarea {
             <span class="mono-revenue-val">R$9,90/mês</span>
           </div>
         </div>
-
-        <!-- 14. WHITE LABEL -->
-        <div class="mono-card" data-tier="future" data-type="b2b">
-          <div class="mono-card-header">
-            <div class="mono-icon">🧑‍💼</div>
-            <div class="mono-header-text">
-              <div class="mono-num">#14</div>
-              <div class="mono-title">White Label para Empresas</div>
-            </div>
-            <div class="mono-tier tier-future">🚀 FUTURO</div>
-          </div>
-          <div class="mono-card-body">
-            <div class="mono-desc">Empresas automotivas usam a plataforma com sua própria marca. Alto valor por contrato, baixo custo marginal de entrega.</div>
-            <div class="mono-demo">
-              <div class="mono-demo-label">Clientes potenciais</div>
-              <div class="data-stat"><span class="data-key">Redes de oficinas</span><span class="data-val">R$3k/mês</span></div>
-              <div class="data-stat"><span class="data-key">Concessionárias</span><span class="data-val">R$5k/mês</span></div>
-              <div class="data-stat"><span class="data-key">Seguradoras</span><span class="data-val">R$8k/mês</span></div>
-              <div class="data-stat"><span class="data-key">Frotas corporativas</span><span class="data-val">R$2k/mês</span></div>
-            </div>
-          </div>
           <div class="mono-card-footer">
             <span class="mono-revenue-label">Contrato mensal B2B</span>
             <span class="mono-revenue-val">R$2k – R$10k</span>
@@ -5905,118 +5966,8 @@ select, textarea {
 </div>
 
 <!-- ============================================================ -->
-<!-- MODO EMPRESA                                                 -->
 <!-- ============================================================ -->
-<div id="page-modo-empresa" class="page">
-  <div class="page-header">
-    <div class="page-title" style="color:#60a5fa;">🏢 PAINEL EMPRESA</div>
-    <div class="page-sub">Conta empresarial B2B · Gerencie sua frota corporativa</div>
-  </div>
 
-  <!-- Cadastro empresa -->
-  <div id="empresa-form-card" class="card">
-    <div class="card-title">📋 Dados da Empresa</div>
-    <div class="form-grid">
-      <div class="form-group">
-        <div class="field-label">Razão Social *</div>
-        <input class="field-input" id="emp-razao" type="text" placeholder="Ex: Transportes Silva Ltda.">
-      </div>
-      <div class="form-group">
-        <div class="field-label">CNPJ *</div>
-        <input class="field-input" id="emp-cnpj" type="text" inputmode="numeric" placeholder="00.000.000/0001-00" oninput="formatarCNPJ(this)">
-      </div>
-      <div class="form-group">
-        <div class="field-label">Nome do responsável *</div>
-        <input class="field-input" id="emp-responsavel" type="text" placeholder="Nome completo">
-      </div>
-      <div class="form-group">
-        <div class="field-label">E-mail corporativo *</div>
-        <input class="field-input" id="emp-email" type="email" placeholder="contato@empresa.com.br">
-      </div>
-      <div class="form-group">
-        <div class="field-label">Telefone / WhatsApp</div>
-        <input class="field-input" id="emp-tel" type="tel" inputmode="numeric" placeholder="(11) 99999-9999" oninput="formatarTel(this)">
-      </div>
-      <div class="form-group">
-        <div class="field-label">Segmento</div>
-        <select class="field-select" id="emp-segmento">
-          <option value="">Selecione...</option>
-          <option>Transporte de cargas</option>
-          <option>Locadora de veículos</option>
-          <option>Frota corporativa</option>
-          <option>Oficina / Mecânica</option>
-          <option>Concessionária</option>
-          <option>Agronegócio</option>
-          <option>Outro</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <div class="field-label">Nº estimado de veículos</div>
-        <select class="field-select" id="emp-frota-size">
-          <option value="5">Até 5 veículos</option>
-          <option value="20">6 a 20 veículos</option>
-          <option value="50">21 a 50 veículos</option>
-          <option value="100">51 a 100 veículos</option>
-          <option value="999">Mais de 100 veículos</option>
-        </select>
-      </div>
-    </div>
-  </div>
-
-  <!-- Planos B2B -->
-  <div class="card">
-    <div class="card-title">💼 Escolha o Plano B2B</div>
-    <div style="display:flex;flex-direction:column;gap:10px;" id="emp-planos">
-      <div class="emp-plano" id="plano-starter" onclick="selecionarPlano('starter')" style="border:2px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;transition:border-color .2s;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--text);">🚀 Starter</div>
-          <div style="text-align:right;"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent);">R$49<span style="font-size:13px;color:var(--text3);">/mês</span></div></div>
-        </div>
-        <div style="font-size:11px;color:var(--text3);line-height:1.6;">Até 5 veículos · 2 usuários · Histórico básico · Relatório mensal</div>
-      </div>
-
-      <div class="emp-plano" id="plano-pro" onclick="selecionarPlano('pro')" style="border:2px solid var(--accent);border-radius:10px;padding:14px;cursor:pointer;background:rgba(123,128,193,0.04);position:relative;">
-        <div style="position:absolute;top:-8px;left:14px;background:var(--accent);color:#0c0d0f;font-size:9px;font-weight:800;padding:2px 8px;border-radius:4px;letter-spacing:1px;">MAIS POPULAR</div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--text);">⚡ Pro</div>
-          <div style="text-align:right;"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent);">R$129<span style="font-size:13px;color:var(--text3);">/mês</span></div></div>
-        </div>
-        <div style="font-size:11px;color:var(--text3);line-height:1.6;">Até 25 veículos · 5 usuários · Histórico completo · Alertas automáticos · Relatórios avançados · API parcial</div>
-      </div>
-
-      <div class="emp-plano" id="plano-enterprise" onclick="selecionarPlano('enterprise')" style="border:2px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--text);">🏆 Enterprise</div>
-          <div style="text-align:right;"><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#a78bfa;">Sob consulta</div></div>
-        </div>
-        <div style="font-size:11px;color:var(--text3);line-height:1.6;">Frota ilimitada · Usuários ilimitados · API completa · SLA 99.9% · Suporte dedicado · Integrações personalizadas</div>
-      </div>
-    </div>
-
-    <div id="emp-plano-sel" style="display:none;margin-top:12px;padding:10px 14px;background:rgba(56,161,105,0.07);border:1px solid rgba(56,161,105,0.2);border-radius:8px;font-size:12px;color:#38a169;font-weight:700;"></div>
-  </div>
-
-  <!-- Mensalidade simulada -->
-  <div class="card" id="emp-billing-card" style="display:none;">
-    <div class="card-title">💳 Resumo da Assinatura</div>
-    <div id="emp-billing-content"></div>
-    <button class="btn-primary" style="margin-top:14px;width:100%;" onclick="salvarEmpresa()">✅ Solicitar cadastro empresarial</button>
-    <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:8px;">Nossa equipe entrará em contato em até 24h para confirmar e ativar sua conta.</div>
-  </div>
-
-  <!-- Empresa já cadastrada -->
-  <div class="card" id="emp-dados-card" style="display:none;margin-bottom:32px;">
-    <div class="card-title" style="display:flex;justify-content:space-between;">
-      <span>🏢 Conta Empresarial Ativa</span>
-      <button onclick="editarEmpresa()" style="font-size:11px;padding:4px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-family:'Sora',sans-serif;color:var(--text);">Editar</button>
-    </div>
-    <div id="emp-dados-content"></div>
-  </div>
-</div>
-
-<!-- ============================================================ -->
-<!-- MODO ADMIN                                                   -->
-<!-- ============================================================ -->
 <div id="page-modo-admin" class="page">
 
   <!-- HEADER -->
@@ -6399,6 +6350,15 @@ select, textarea {
       <!-- Conquistas -->
       <div class="card" id="perfil-conquistas" style="margin-top:4px;"></div>
 
+      <!-- Ranking -->
+      <div class="card" id="perfil-ranking-card" style="margin-top:4px;">
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
+          🏆 Ranking nacional
+          <span style="font-size:11px;color:var(--text3);font-weight:400;">Como você se compara</span>
+        </div>
+        <div id="perfil-ranking-content" style="margin-top:8px;"></div>
+      </div>
+
       <!-- Dados do app -->
       <div class="card" id="perfil-app-info" style="margin-top:4px;margin-bottom:32px;"></div>
     </div>
@@ -6625,9 +6585,180 @@ function _initOfflineDetector() {
 
 
 // ============================================================
+// PROGRESSIVE DISCLOSURE — revela menu por tarefas executadas
 // ============================================================
-// HAPTIC FEEDBACK — vibração tátil em ações importantes
-// ============================================================
+// Fases:
+//   hasVehicle — 1+ veículo cadastrado
+//   hasRecord  — 1+ manutenção ou abastecimento registrado
+//   record3    — 3+ registros no total
+//   record5    — 5+ registros no total
+
+function _pdGetTasks() {
+  // Lê o estado atual de tarefas diretamente do state
+  var vehicles = (state && state.vehicles) ? state.vehicles.filter(function(v){ return !v.archived; }) : [];
+  var history  = (state && state.history)  ? state.history  : [];
+  var fuel     = (state && state.fuel)     ? state.fuel     : [];
+  var total    = history.length + fuel.length;
+  return {
+    hasVehicle: vehicles.length > 0,
+    hasRecord:  total >= 1,
+    record3:    total >= 3,
+    record5:    total >= 5,
+  };
+}
+
+function _pdIsUnlocked(phase, tasks) {
+  if (!phase) return true;
+  return !!tasks[phase];
+}
+
+function _applyProgressiveDisclosure() {
+  var tasks    = _pdGetTasks();
+  var newPages = []; // páginas recém-desbloqueadas nesta chamada
+
+  document.querySelectorAll('.nav-item[data-unlock]').forEach(function(el) {
+    var phase    = el.getAttribute('data-unlock');
+    var unlocked = _pdIsUnlocked(phase, tasks);
+    el.style.display = unlocked ? '' : 'none';
+
+    if (!unlocked) return;
+
+    // Descobre qual page esse item abre
+    var onclick  = el.getAttribute('onclick') || '';
+    var match    = onclick.match(/showPage\('([^']+)'\)/);
+    var pageName = match ? match[1] : null;
+    if (!pageName) return;
+
+    // Checa se é recém-desbloqueado (ainda não foi visto)
+    var seenKey  = 'mc_seen_' + pageName;
+    var seen     = localStorage.getItem(seenKey);
+
+    // Remove badge anterior antes de decidir
+    var oldBadge = el.querySelector('.nav-new-badge');
+    if (oldBadge) oldBadge.remove();
+
+    if (!seen) {
+      // Marca como recém-desbloqueado — badge NOVO até a primeira visita
+      var badge = document.createElement('span');
+      badge.className = 'nav-new-badge';
+      badge.textContent = 'NOVO';
+      badge.style.cssText =
+        'font-size:9px;font-weight:700;background:var(--accent);color:var(--bg);' +
+        'padding:2px 6px;border-radius:20px;margin-left:auto;letter-spacing:0.5px;' +
+        'flex-shrink:0;';
+      el.appendChild(badge);
+    }
+  });
+
+  // Bottom nav: oculta até o usuário cadastrar o primeiro veículo
+  var bnav = document.getElementById('bottom-nav');
+  if (bnav) bnav.style.display = tasks.hasVehicle ? '' : 'none';
+
+  // Alertas sempre visível na bottom nav — sem restrição de fase
+}
+
+// Chamado quando o usuário visita uma página — remove badge e dispara mini-tour
+function _pdOnPageVisit(page) {
+  // Remove badge NOVO do item de menu correspondente
+  var navItem = document.querySelector('.nav-item[data-unlock][onclick*="' + page + '"]');
+  if (navItem) {
+    var badge = navItem.querySelector('.nav-new-badge');
+    if (badge) badge.remove();
+  }
+
+  // Marca como visto
+  try { localStorage.setItem('mc_seen_' + page, '1'); } catch(e) {}
+
+  // Dispara mini-tour se for a primeira visita E a página tem tour definido
+  var tourKey = 'mc_toured_' + page;
+  if (!localStorage.getItem(tourKey) && _miniTours[page]) {
+    setTimeout(function() { _iniciarMiniTour(page); }, 400);
+  }
+}
+
+// ── Mini-tours por página ────────────────────────────────────
+var _miniTours = {
+  manutencao: [
+    { target: '#page-manutencao .field-input', title: 'Registre uma manutenção', desc: 'Selecione o veículo, informe o tipo de serviço e o KM. O app calcula automaticamente quando o próximo serviço vence.', arrow: 'arrow-top', pos: 'below' },
+    { target: '#page-manutencao .btn-primary', title: 'Salve o registro', desc: 'Cada registro aqui vai para o Passaporte verificado do seu carro — prova pública para quando você vender.', arrow: 'arrow-bottom', pos: 'above' },
+  ],
+  alertas: [
+    { target: '#page-alertas', title: 'Seus alertas de manutenção', desc: 'O ManyCars monitora o KM do seu carro e avisa aqui quando uma manutenção está próxima ou vencida. Nada para configurar.', arrow: 'arrow-top', pos: 'below' },
+  ],
+  combustivel: [
+    { target: '#page-combustivel .field-input', title: 'Controle de combustível', desc: 'Registre cada abastecimento e o app calcula automaticamente o consumo médio — e avisa se ele piorar.', arrow: 'arrow-top', pos: 'below' },
+  ],
+  documentos: [
+    { target: '#page-documentos', title: 'Documentos e vencimentos', desc: 'Cadastre IPVA, seguro e licenciamento. O ManyCars avisa antes de vencer — sem multa, sem apreensão.', arrow: 'arrow-top', pos: 'below' },
+  ],
+  checklist: [
+    { target: '#page-checklist', title: 'Check-list de manutenção', desc: 'Marque o que já foi feito no seu carro. Com o check-list preenchido, os alertas ficam muito mais precisos.', arrow: 'arrow-top', pos: 'below' },
+  ],
+  historico: [
+    { target: '#page-historico', title: 'Histórico completo', desc: 'Aqui fica o registro de todas as manutenções do carro — ordenadas por data. Esse histórico compõe o Passaporte verificado.', arrow: 'arrow-top', pos: 'below' },
+  ],
+  saude: [
+    { target: '#page-saude', title: 'Score de saúde do carro', desc: 'O ManyCars analisa todas as suas manutenções e gera um score de 0 a 100. Quanto mais completo o histórico, mais preciso o diagnóstico.', arrow: 'arrow-top', pos: 'below' },
+  ],
+  marketplace: [
+    { target: '#page-marketplace .mkt-search', title: 'Compre e venda com Passaporte', desc: 'Todos os anúncios com 🛡️ têm histórico verificado pelo ManyCars — você sabe exatamente o que está comprando.', arrow: 'arrow-top', pos: 'below', fallbackTarget: '#page-marketplace' },
+    { target: '.mkt-filters-sidebar', title: 'Filtros inteligentes', desc: 'Filtre por preço, ano, combustível e pela opção "Com Passaporte" para ver só os carros com histórico comprovado.', arrow: 'arrow-left', pos: 'right', fallbackTarget: '#page-marketplace' },
+  ],
+  vender: [
+    { target: '#page-vender', title: 'Dossiê de venda', desc: 'O ManyCars gera um anúncio completo com o histórico do seu carro. Compradores pagam mais por transparência — até 15% a mais.', arrow: 'arrow-top', pos: 'below' },
+  ],
+  pecas: [
+    { target: '#page-pecas', title: 'Compare preços de peças', desc: 'Pesquise peças pelo nome ou código e veja preços de diferentes fornecedores. Evite pagar caro na oficina.', arrow: 'arrow-top', pos: 'below' },
+  ],
+  analytics: [
+    { target: '#page-analytics', title: 'Analytics do seu carro', desc: 'Com 5 ou mais registros, o ManyCars começa a gerar gráficos de gastos, consumo médio e projeções. Tudo personalizado para o seu carro.', arrow: 'arrow-top', pos: 'below' },
+  ],
+  ranking: [
+    { target: '#page-ranking', title: 'Ranking de motoristas', desc: 'Compare o histórico de manutenções do seu carro com outros usuários do ManyCars. Quem tem o carro mais saudável?', arrow: 'arrow-top', pos: 'below' },
+  ],
+  viagens: [
+    { target: '#page-viagens', title: 'Controle de viagens', desc: 'Registre viagens longas e veja o custo por km. Útil para reembolso de combustível ou para calcular o custo real de uma viagem.', arrow: 'arrow-top', pos: 'below' },
+  ],
+  sonhar: [
+    { target: '#page-sonhar', title: 'Lista de desejos', desc: 'Adicione carros que você quer ter no futuro. O ManyCars monitora os preços no marketplace e avisa quando um aparece.', arrow: 'arrow-top', pos: 'below' },
+  ],
+  opinioes: [
+    { target: '#page-opinioes', title: 'Opiniões de donos reais', desc: 'Veja o que outros donos do mesmo modelo pensam sobre manutenção, consumo e problemas comuns. Sem filtro, sem marketing.', arrow: 'arrow-top', pos: 'below' },
+  ],
+  'modelo-info': [
+    { target: '#page-modelo-info', title: 'Manual técnico do modelo', desc: 'Intervalos de manutenção, capacidades de fluidos e problemas conhecidos do seu modelo. Informação para chegar na oficina preparado.', arrow: 'arrow-top', pos: 'below' },
+  ],
+};
+
+function _iniciarMiniTour(page) {
+  var steps = _miniTours[page];
+  if (!steps || !steps.length) return;
+
+  try { localStorage.setItem('mc_toured_' + page, '1'); } catch(e) {}
+
+  // Reutiliza o engine do tour principal, mas com steps temporários
+  var saved = _tourSteps.slice();
+  var savedStep = _tourStep;
+  _tourSteps = steps;
+  _tourStep  = 0;
+  _tourActive = true;
+
+  // Override encerrar para restaurar estado
+  _miniTourRestoreFn = function() {
+    _tourSteps  = saved;
+    _tourStep   = savedStep;
+    _tourActive = false;
+    document.getElementById('tour-overlay').style.display = 'none';
+    document.getElementById('tour-spotlight').style.cssText = 'display:none;';
+  };
+
+  document.getElementById('tour-overlay').style.display = 'block';
+  _tourRender();
+}
+
+var _miniTourRestoreFn = null;
+
+
 function _haptic(type) {
   if (!navigator.vibrate) return;
   var patterns = {
@@ -6708,21 +6839,25 @@ function loadTheme() {
 }
 
 function syncBottomNav(page) {
-  var map = { dashboard:0, veiculos:1, marketplace:3 };
+  var map = { dashboard:0, veiculos:1, alertas:3 };
   var items = document.querySelectorAll('.bn-item');
   items.forEach(function(b){ b.classList.remove('active'); });
   if (map[page] !== undefined && items[map[page]]) items[map[page]].classList.add('active');
 }
 
 function updateBnBadge() {
-  var badge = document.getElementById('bn-alert-badge');
-  if (!badge) return;
+  // Badge no botão Alertas da bottom nav
+  var badge = document.getElementById('bn-alert-badge-nav');
+  // Badge legado no botão Menu (mantém compatibilidade)
+  var badgeLegacy = document.getElementById('bn-alert-badge');
   var pending = 0;
   state.vehicles.filter(function(v){ return !v.archived; }).forEach(function(v){
     pending += getVehicleAlerts(v).filter(function(a){ return a.urgency !== 'low'; }).length;
   });
-  badge.textContent = pending;
-  badge.style.display = pending > 0 ? 'inline' : 'none';
+  var txt = pending > 0 ? (pending > 9 ? '9+' : String(pending)) : '';
+  var show = pending > 0;
+  if (badge)       { badge.textContent = txt;       badge.style.display = show ? 'inline' : 'none'; }
+  if (badgeLegacy) { badgeLegacy.textContent = txt;  badgeLegacy.style.display = show ? 'inline' : 'none'; }
 }
 
 // ============================================================
@@ -6861,8 +6996,7 @@ async function _doSyncToCloud(data) {
 
     // Sync veículos
     var vehicles = (data.vehicles || []).map(function(v) {
-      return {
-        id:          v.supabaseId || undefined,
+      var row = {
         user_id:     userId,
         marca:       v.marca,
         modelo:      v.modelo,
@@ -6874,17 +7008,31 @@ async function _doSyncToCloud(data) {
         archived:    v.archived || false,
         updated_at:  new Date().toISOString()
       };
+      // Só inclui id se for um UUID já existente no Supabase
+      if (v.supabaseId && typeof v.supabaseId === 'string' && v.supabaseId.length > 10) {
+        row.id = v.supabaseId;
+      }
+      return row;
     });
     if (vehicles.length) {
-      var { data: vRes } = await _sb.from('vehicles').upsert(vehicles, { onConflict: 'id' }).select('id, marca, modelo');
-      // Mapeia IDs de volta ao state local
+      var { data: vRes } = await _sb.from('vehicles')
+        .upsert(vehicles, { onConflict: 'user_id, placa', ignoreDuplicates: false })
+        .select('id, marca, modelo, placa');
+      // Mapeia IDs de volta ao state local para syncs futuros
       if (vRes) {
         vRes.forEach(function(sv) {
           var local = state.vehicles.find(function(v) {
-            return v.marca === sv.marca && v.modelo === sv.modelo && !v.supabaseId;
+            return (v.placa && v.placa === sv.placa) ||
+                   (v.marca === sv.marca && v.modelo === sv.modelo && !v.supabaseId);
           });
           if (local) local.supabaseId = sv.id;
         });
+        // Persiste o mapeamento de volta ao localStorage
+        try { localStorage.setItem(LS_KEY, JSON.stringify({
+          user: state.user, vehicles: state.vehicles,
+          history: state.history, fuel: state.fuel, docs: state.docs,
+          viagens: viagens, wishlist: wishlist
+        })); } catch(e) {}
       }
     }
 
@@ -6898,11 +7046,22 @@ async function _doSyncToCloud(data) {
         data:       h.data,
         km:         h.km || 0,
         custo:      h.custo || 0,
-        local:      h.local || null
+        local:      h.local || null,
+        _localRef:  h.id  // mantém ref local para marcar como sincronizado
       };
-    }).filter(function(h){ return h.vehicle_id; });
-    if (history.length) {
-      await _sb.from('history').insert(history);
+    });
+    // Insere apenas os que já têm vehicle_id; os demais serão reprocessados no próximo sync
+    var historyReady = history.filter(function(h){ return h.vehicle_id; });
+    if (historyReady.length) {
+      var { data: hRes } = await _sb.from('history').insert(
+        historyReady.map(function(h){ var r = Object.assign({}, h); delete r._localRef; return r; })
+      ).select('id');
+      if (hRes) {
+        hRes.forEach(function(sr, i) {
+          var local = state.history.find(function(h){ return h.id === historyReady[i]._localRef; });
+          if (local) local.supabaseId = sr.id;
+        });
+      }
     }
 
     // Sync abastecimentos
@@ -6916,11 +7075,21 @@ async function _doSyncToCloud(data) {
         km:         f.km || 0,
         litros:     f.litros || 0,
         preco:      f.preco || 0,
-        custo:      f.custo || 0
+        custo:      f.custo || 0,
+        _localRef:  f.id
       };
-    }).filter(function(f){ return f.vehicle_id; });
-    if (fuel.length) {
-      await _sb.from('fuel').insert(fuel);
+    });
+    var fuelReady = fuel.filter(function(f){ return f.vehicle_id; });
+    if (fuelReady.length) {
+      var { data: fRes } = await _sb.from('fuel').insert(
+        fuelReady.map(function(f){ var r = Object.assign({}, f); delete r._localRef; return r; })
+      ).select('id');
+      if (fRes) {
+        fRes.forEach(function(sr, i) {
+          var local = state.fuel.find(function(f){ return f.id === fuelReady[i]._localRef; });
+          if (local) local.supabaseId = sr.id;
+        });
+      }
     }
 
     // Sync perfil
@@ -7204,11 +7373,17 @@ function iniciarTour() {
 }
 
 function encerrarTour() {
+  // Se era um mini-tour, restaura o estado do tour principal
+  if (_miniTourRestoreFn) {
+    var fn = _miniTourRestoreFn;
+    _miniTourRestoreFn = null;
+    fn();
+    return;
+  }
   _tourActive = false;
   document.getElementById('tour-overlay').style.display = 'none';
   document.getElementById('tour-spotlight').style.cssText = '';
   try { localStorage.setItem('mc_tour_done', '1'); } catch(e) {}
-  // Scroll back to top
   var mc = document.querySelector('.main-content');
   if (mc) mc.scrollTop = 0;
 }
@@ -7884,6 +8059,7 @@ function marcarAlertaFeito(titulo, vehicleId) {
   saveState();
   renderAlerts();
   updateDashboard();
+  _applyProgressiveDisclosure(); // unlock fases hasRecord / record3 / record5
   showToast('✓ ' + titulo + ' registrado! ' + (kmAtual > 0 ? kmAtual.toLocaleString('pt-BR') + ' km' : ''), 'success');
 }
 
@@ -8151,18 +8327,17 @@ async function doLogin() {
 // ── CADASTRO ───────────────────────────────────────────────
 async function doRegister() {
   _haptic('heavy');
-  var name   = (document.getElementById('reg-name').value   || '').trim();
-  var cidade = (document.getElementById('reg-cidade').value || '').trim();
-  var email  = (document.getElementById('reg-email').value  || '').trim();
-  var pass   = (document.getElementById('reg-password').value || '');
-  if (!name)           { showToast('Informe seu nome', 'error'); return; }
+  var name  = (document.getElementById('reg-name').value  || '').trim().split(' ')[0]; // só primeiro nome
+  var email = (document.getElementById('reg-email').value || '').trim();
+  var pass  = (document.getElementById('reg-password').value || '');
+  if (!name)           { showToast('Informe seu primeiro nome', 'error'); return; }
   if (!email)          { showToast('Informe seu e-mail', 'error'); return; }
   if (pass.length < 6) { showToast('Senha deve ter no mínimo 6 caracteres', 'error'); return; }
 
   _setAuthBtnLoading('btn-register','btn-register-txt','btn-register-spin',true);
 
   if (!_supabaseReady) {
-    _loginUser({ name: name, email: email, cidade: cidade, id: 'local_' + Date.now() });
+    _loginUser({ name: name, email: email, id: 'local_' + Date.now() });
     _setAuthBtnLoading('btn-register','btn-register-txt','btn-register-spin',false);
     return;
   }
@@ -8171,7 +8346,7 @@ async function doRegister() {
     var res = await _sb.auth.signUp({
       email: email,
       password: pass,
-      options: { data: { full_name: name, cidade: cidade } }
+      options: { data: { full_name: name } }
     });
     if (res.error) throw res.error;
     var needsConfirm = !res.data.session;
@@ -8320,6 +8495,8 @@ function _loginUser(user) {
   setTimeout(_verificarEEnviarAlertas, 2500);
   // Inicia tour para novos usuários (após onboarding de slides)
   setTimeout(_checkStartTour, 2000);
+  // Aplica disclosure por dias de uso
+  _applyProgressiveDisclosure();
   try {
     if (!localStorage.getItem('mc_onboarded')) setTimeout(showOnboarding, 600);
   } catch(e) {}
@@ -8383,6 +8560,25 @@ function showAuthConfig() {
 // NAVIGATION
 // ============================================================
 function showPage(page) {
+  // Saúde agora vive dentro da aba de Veículos
+  if (page === 'saude') {
+    showPage('veiculos');
+    setTimeout(function(){ _veiculosTab('saude'); }, 50);
+    return;
+  }
+  // Ranking agora vive dentro do Perfil
+  if (page === 'ranking') {
+    showPage('perfil');
+    setTimeout(function(){
+      var card = document.getElementById('perfil-ranking-card');
+      if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 150);
+    return;
+  }
+
+  // Progressive disclosure: marca visita e dispara mini-tour se necessário
+  _pdOnPageVisit(page);
+
   if (page === 'premium') { setTimeout(renderPremiumPage, 50); }
   if (page === 'marketplace' && !_mktAnuncios.length) {
     setTimeout(_loadAnuncios, 50);
@@ -8426,7 +8622,6 @@ function showPage(page) {
   if (page === 'perfil')       renderPerfilPage();
   if (page === 'ranking')      renderRankingPage();
   if (page === 'modo-teste')   renderModoTestePage();
-  if (page === 'modo-empresa') renderModoEmpresaPage();
   if (page === 'modo-admin')   renderModoAdminPage();
 }
 
@@ -8662,6 +8857,7 @@ function cadastrarVeiculo() {
   saveState();
   renderVehiclesList();
   updateDashboard();
+  _applyProgressiveDisclosure(); // unlock fase hasVehicle
   showToast(marca + ' ' + modelo + ' cadastrado! 🚗', 'success');
   resetBusca();
   // Perguntar sobre importação de histórico antes do checklist
@@ -8878,6 +9074,7 @@ function vehicleImgCard(v, i) {
   html += '</div></div>';
   html += '<div class="vehicle-img-actions" onclick="event.stopPropagation()">';
   if (!isArchived) {
+    html += '<div class="btn-icon" title="Diagnóstico do carro" onclick="abrirDiagnostico(' + v.id + ')" style="font-size:13px;">🩺</div>';
     html += '<div class="btn-icon" title="Consultar peças" onclick="selectVehicleForParts(' + i + ');showPage(\'pecas\')">🔧</div>';
     html += '<div class="btn-icon" title="Passaporte do carro" onclick="abrirPassaporteModal(' + v.id + ')" style="font-size:13px;">📋</div>';
     html += '<div class="btn-icon" title="Marcar como vendido" onclick="marcarVendido(' + v.id + ')" style="font-size:13px;">🏷️</div>';
@@ -9401,6 +9598,7 @@ function toggleSidebar() {
   sidebar.classList.toggle('open');
   overlay.classList.toggle('active');
   if (closeBtn) closeBtn.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
+  if (sidebar.classList.contains('open')) _applyProgressiveDisclosure();
 }
 
 // Alias used by bottom-nav
@@ -10058,6 +10256,7 @@ function registrarAbastecimento() {
   renderFuelList();
   renderFuelStats();
   updateDashboard();
+  _applyProgressiveDisclosure(); // unlock fases hasRecord / record3 / record5
   showToast('Abastecimento registrado! ⛽', 'success');
 }
 
@@ -12845,6 +13044,54 @@ function _calcUserStats() {
   };
 }
 
+function _renderRankingInPerfil() {
+  var el = document.getElementById('perfil-ranking-content');
+  if (!el) return;
+
+  var active = state.vehicles.filter(function(v){ return !v.archived; });
+  if (!active.length) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--text3);padding:8px 0;">Cadastre um veículo para aparecer no ranking.</div>';
+    return;
+  }
+
+  // Melhor score do usuário
+  var bestScore = Math.max.apply(null, active.map(function(v){ return calcScore(v); }));
+  var bestV     = active.find(function(v){ return calcScore(v) === bestScore; });
+  var tier = bestScore >= 90 ? { label:'Elite',    color:'#7B80C1' }
+           : bestScore >= 75 ? { label:'Avançado', color:'#60a5fa' }
+           : bestScore >= 55 ? { label:'Médio',    color:'#68d391' }
+           :                   { label:'Iniciante', color:'#fc8181' };
+
+  // Percentil simulado baseado no score
+  var pct = Math.min(99, Math.round(bestScore * 0.95));
+
+  var html = '';
+  html += '<div style="display:flex;align-items:center;gap:14px;padding:10px 0;">';
+  // Score ring pequeno
+  var offset = Math.round(157 * (1 - bestScore / 100));
+  html += '<svg width="60" height="60" viewBox="0 0 60 60" style="flex-shrink:0;">';
+  html += '<circle cx="30" cy="30" r="25" fill="none" stroke="var(--surface2)" stroke-width="5"/>';
+  html += '<circle cx="30" cy="30" r="25" fill="none" stroke="' + tier.color + '" stroke-width="5" stroke-dasharray="157" stroke-dashoffset="' + offset + '" stroke-linecap="round" transform="rotate(-90 30 30)"/>';
+  html += '<text x="30" y="35" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="16" fill="' + tier.color + '">' + bestScore + '</text>';
+  html += '</svg>';
+  // Info
+  html += '<div style="flex:1;">';
+  html += '<div style="font-size:13px;font-weight:700;color:var(--text);">' + bestV.marca + ' ' + bestV.modelo.split(' ')[0] + '</div>';
+  html += '<div style="display:flex;align-items:center;gap:8px;margin-top:4px;">';
+  html += '<span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:' + tier.color + '20;color:' + tier.color + ';">' + tier.label + '</span>';
+  html += '<span style="font-size:11px;color:var(--text3);">Top ' + (100 - pct) + '% dos usuários</span>';
+  html += '</div>';
+  html += '<div style="margin-top:8px;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden;">';
+  html += '<div style="height:100%;width:' + pct + '%;background:' + tier.color + ';border-radius:3px;transition:width .5s;"></div>';
+  html += '</div>';
+  html += '</div></div>';
+
+  html += '<button onclick="showPage(\'ranking\')" style="width:100%;padding:9px;background:none;border:1px solid var(--border2);border-radius:8px;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;font-family:\'Sora\',sans-serif;margin-top:4px;">Ver ranking completo →</button>';
+
+  el.innerHTML = html;
+}
+
+
 function renderRankingPage() {
   var el = document.getElementById('ranking-content');
   if (!el) return;
@@ -13413,6 +13660,9 @@ function renderPerfilPage() {
         _perfilRow('💾', 'Dados salvos', 'localmente no dispositivo') +
       '</div>' + transferHtml;
   }
+
+  // ── Ranking inline no perfil ─────────────────────────────
+  _renderRankingInPerfil();
 }
 
 function _perfilRow(icon, label, val) {
@@ -14729,17 +14979,272 @@ function _renderOpiniaoCard(o) {
     (o.data ? '<div style="font-size:10px;color:var(--text3);margin-top:6px;text-align:right;">'+o.data+'</div>' : '') +
   '</div>';
 }
+// ── Tab switcher — página Veículos ──────────────────────────
+function _veiculosTab(tab) {
+  var tabs   = ['carros', 'saude'];
+  var accent = 'var(--accent)';
+  var muted  = 'var(--text3)';
+
+  tabs.forEach(function(t) {
+    var btn     = document.getElementById('vtab-' + t);
+    var content = document.getElementById('vtab-' + t + '-content');
+    var active  = t === tab;
+    if (btn) {
+      btn.style.color        = active ? accent : muted;
+      btn.style.fontWeight   = active ? '700'  : '600';
+      btn.style.borderBottom = active ? '2px solid var(--accent)' : '2px solid transparent';
+    }
+    if (content) content.style.display = active ? 'block' : 'none';
+  });
+
+  if (tab === 'saude') _renderSaudeInline();
+}
+
+function _renderSaudeInline() {
+  var wrap   = document.getElementById('saude-inline-wrap');
+  if (!wrap) return;
+  var active = state.vehicles.filter(function(v){ return !v.archived; });
+
+  if (!active.length) {
+    wrap.innerHTML =
+      '<div class="empty-state">' +
+        '<div class="empty-icon">🩺</div>' +
+        '<div class="empty-title">Saúde do carro: sem dados ainda</div>' +
+        '<div class="empty-desc">Cadastre seu veículo e veja um score de 0 a 100 — quanto mais manutenções registradas, mais preciso o diagnóstico.</div>' +
+      '</div>';
+    return;
+  }
+
+  // Build vehicle selector + score cards inline
+  var opts = active.map(function(v){
+    return '<option value="' + v.id + '">' + v.marca + ' ' + v.modelo.split(' ')[0] + ' ' + v.ano + '</option>';
+  }).join('');
+
+  var html = '<div class="card" style="margin-bottom:0;">';
+  html += '<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;">';
+  html += '<span style="font-size:13px;color:var(--text2);font-weight:600;">🚗 Analisar veículo:</span>';
+  html += '<select class="field-select" id="saude-inline-sel" style="flex:1;max-width:280px;" onchange="_renderSaudeInline()">' + opts + '</select>';
+  html += '</div>';
+
+  var selEl    = null; // will be set after innerHTML
+  var selId    = active[0].id;
+  html += '<div id="saude-inline-body"></div>';
+  html += '</div>';
+
+  wrap.innerHTML = html;
+
+  // After render, read the selector value and populate body
+  var body = document.getElementById('saude-inline-body');
+  var sel  = document.getElementById('saude-inline-sel');
+  var vid  = sel ? (parseInt(sel.value) || active[0].id) : active[0].id;
+  var v    = state.vehicles.find(function(x){ return x.id === vid; }) || active[0];
+  if (!body || !v) return;
+
+  var score      = calcScore(v);
+  var scoreColor = getScoreColor(score);
+  var offset     = Math.round(283 * (1 - score / 100));
+  var hist       = state.history.filter(function(h){ return h.veiculoId === v.id; });
+  var fuel       = state.fuel.filter(function(f){ return f.veiculoId === v.id; });
+
+  var t = score >= 80 ? { label:'Excelente', color:'#68d391' }
+        : score >= 60 ? { label:'Bom',       color:'#7B80C1' }
+        : score >= 40 ? { label:'Regular',   color:'#f6ad55' }
+        :               { label:'Atenção',   color:'#fc8181' };
+
+  body.innerHTML =
+    '<div class="score-section" style="margin-bottom:14px;">' +
+      '<div class="score-ring-wrap">' +
+        '<svg width="110" height="110" viewBox="0 0 110 110">' +
+          '<circle class="score-ring-bg" cx="55" cy="55" r="45"/>' +
+          '<circle class="score-ring-fill" cx="55" cy="55" r="45" stroke-dasharray="283" stroke-dashoffset="' + offset + '" style="stroke:' + scoreColor + ';"/>' +
+        '</svg>' +
+        '<div class="score-center"><div class="score-num" style="color:' + scoreColor + ';">' + score + '</div><div class="score-lbl">/ 100</div></div>' +
+      '</div>' +
+      '<div class="score-details">' +
+        '<div style="display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;background:' + t.color + '22;color:' + t.color + ';margin-bottom:8px;">' + t.label + '</div>' +
+        '<div style="font-size:12px;color:var(--text2);margin-bottom:4px;">📋 ' + hist.length + ' manutenção(ões) registrada(s)</div>' +
+        '<div style="font-size:12px;color:var(--text2);">⛽ ' + fuel.length + ' abastecimento(s)</div>' +
+      '</div>' +
+    '</div>' +
+    '<button class="btn-secondary" style="width:100%;padding:11px;font-size:13px;" onclick="showPage(\'saude\')">Ver análise completa →</button>';
+}
+
+
+
+// ============================================================
+
+// Problemas conhecidos por modelo (base inicial — expansível)
+var _MODEL_ISSUES = {
+  'uno':      [{ title:'Bobina de ignição fraca', desc:'Esse motor é sensível à bobina — falha causa marcha lenta irregular. Verificar a cada 40.000km.' },
+               { title:'Filtro de ar entupindo cedo', desc:'Motor 1.0 é sensível a filtro sujo. Trocar a cada 15.000km.' }],
+  'palio':    [{ title:'Problema no módulo de injeção', desc:'Módulo IAW pode falhar causando dificulde de partida. Verificar se há histórico de troca.' },
+               { title:'Tensionador de correia', desc:'Correia dentada pode deslocar em altas temperaturas. Substituir conforme manual.' }],
+  'strada':   [{ title:'Amortecedor traseiro desgasta rápido', desc:'Comum após 60.000km de uso em estradas irregulares. Verificar estado atual.' }],
+  'gol':      [{ title:'Correia dentada crítica', desc:'Motor AP tem correia dentada — ruptura causa dano severo. Trocar a cada 60.000km sem exceção.' },
+               { title:'Bucha dianteira', desc:'Bucha do braço dianteiro desgasta e causa tranco. Comum após 80.000km.' }],
+  'polo':     [{ title:'Bobina de ignição 2.0', desc:'Bobina individual falha com frequência no motor 2.0. Verificar se foi substituída.' }],
+  'fox':      [{ title:'Trava elétrica da porta', desc:'Atuador da trava falha frequentemente. Verificar funcionamento das 4 portas.' }],
+  'onix':     [{ title:'Transmissão automatizada (AGS)', desc:'O câmbio AGS é sensível — requer calibração periódica. Verificar se há tranco nas trocas.' },
+               { title:'Sensor de rotação', desc:'Falha gera código P0335. Verificar se há alertas no painel.' }],
+  'celta':    [{ title:'Módulo de ABS', desc:'ABS pode falhar sem aviso prévio. Verificar luz do painel.' }],
+  'corsa':    [{ title:'Modulo de injeção', desc:'MPFI Corsa tem pino oxidando no conector do módulo. Causa pane elétrica.' }],
+  'corolla':  [{ title:'Consumo de óleo entre trocas', desc:'Motores 1ZZ e 2ZR podem consumir óleo — verificar nível a cada 2.000km nos primeiros meses.' }],
+  'hilux':    [{ title:'Bomba de combustível a diesel', desc:'Bomba CP3 pode falhar com diesel de má qualidade. Verificar qualidade do combustível usado.' }],
+  'civic':    [{ title:'Motor 1.8 — tensionador de corrente', desc:'Corrente pode alongar após 100.000km causando ruído a frio. Verificar som ao ligar o motor.' }],
+  'fit':      [{ title:'Câmbio automático — fluido', desc:'Honda Fit CVT é sensível — fluido deve ser trocado a cada 40.000km.' }],
+  'hb20':     [{ title:'Câmbio automático 4AT', desc:'Câmbio automático trepida em primeira marcha quando frio. Verificar se há reclamações registradas.' },
+               { title:'Borracha do porta-malas', desc:'Vedação inferior pode soltar permitindo entrada de umidade.' }],
+  'ka':       [{ title:'Radiador plástico', desc:'Tanque do radiador é plástico e trinca com o tempo. Verificar estado e histórico de trocas.' }],
+  'fiesta':   [{ title:'Câmbio PowerShift', desc:'Câmbio de dupla embreagem tem problemas documentados. Verificar se há recall ou troca registrada.' }],
+  'tracker':  [{ title:'Sistema de injeção turbo', desc:'Motor 1.0 turbo requer óleo 5W30 sintético. Verificar especificação usada nas trocas.' }],
+  'compass':  [{ title:'Suspensão dianteira', desc:'Rolamento de roda dianteiro pode dar sinal de falha (ruído em curva) após 60.000km.' }],
+  'sandero':  [{ title:'Módulo ESP/ABS', desc:'Sensor de roda com falha intermitente. Verificar luz amarela no painel.' }],
+};
+
+// Alertas baseados em km
+function _getKmWarnings(v) {
+  var warnings = [];
+  var km = parseInt(v.km) || 0;
+  var ano = parseInt(v.ano) || 2015;
+  var idadeAnos = new Date().getFullYear() - ano;
+
+  if (km > 80000)  warnings.push({ icon:'⚙️', title:'Correia dentada / corrente', desc:'Com ' + km.toLocaleString('pt-BR') + ' km, verificar se a correia foi trocada. Ruptura causa dano total no motor.' });
+  if (km > 60000)  warnings.push({ icon:'🔴', title:'Revisão de freios completa', desc:'Pastilhas, discos e fluido de freio devem ser avaliados. Fluido absorve umidade e perde eficiência.' });
+  if (km > 100000) warnings.push({ icon:'💧', title:'Fluidos de transmissão e direção', desc:'Acima de 100.000km, fluidos de câmbio e direção hidráulica precisam de atenção.' });
+  if (km > 40000)  warnings.push({ icon:'🔋', title:'Verificar bateria', desc:'Baterias duram em média 3–4 anos. Com o tempo de uso, verificar tensão em carga.' });
+  if (idadeAnos > 8) warnings.push({ icon:'🪟', title:'Borrachas de vedação', desc:'Veículo com ' + idadeAnos + ' anos pode ter borrachas ressecadas — portas, para-brisa e tampão do motor.' });
+  if (km > 50000)  warnings.push({ icon:'🛞', title:'Alinhamento e balanceamento', desc:'Verificar desgaste irregular dos pneus — indica necessidade de geometria.' });
+  return warnings;
+}
+
+var _diagVehicleId = null;
+
+function abrirDiagnostico(vehicleId) {
+  _haptic('light');
+  _diagVehicleId = vehicleId;
+  var v = state.vehicles.find(function(x){ return x.id === vehicleId; });
+  if (!v) return;
+
+  document.getElementById('diag-titulo').textContent = '🩺 DIAGNÓSTICO';
+  document.getElementById('diag-subtitulo').textContent = v.marca + ' ' + v.modelo + ' ' + v.ano + ' · ' + v.km.toLocaleString('pt-BR') + ' km';
+
+  _renderDiagnostico(vehicleId);
+
+  var overlay = document.getElementById('diag-overlay');
+  var sheet   = document.getElementById('diag-sheet');
+  overlay.classList.add('active');
+  setTimeout(function(){ sheet.classList.add('open'); }, 10);
+}
+
+function fecharDiagnostico() {
+  var overlay = document.getElementById('diag-overlay');
+  var sheet   = document.getElementById('diag-sheet');
+  sheet.classList.remove('open');
+  setTimeout(function(){ overlay.classList.remove('active'); }, 320);
+  _diagVehicleId = null;
+}
+
+function _renderDiagnostico(vehicleId) {
+  var v      = state.vehicles.find(function(x){ return x.id === vehicleId; });
+  if (!v) return;
+  var checks = (state.docs[vehicleId] && state.docs[vehicleId].checklist) || {};
+  var total  = CHECKLIST_ITEMS.length;
+  var done   = CHECKLIST_ITEMS.filter(function(it){ return checks[it.id] && checks[it.id].done; }).length;
+  var pct    = total > 0 ? Math.round((done / total) * 100) : 0;
+
+  // Model issues lookup (by first word of modelo, lowercase)
+  var modelKey = (v.modelo || '').split(' ')[0].toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  var modelIssues = _MODEL_ISSUES[modelKey] || [];
+
+  var kmWarnings = _getKmWarnings(v);
+
+  var html = '';
+
+  // ── Progress bar ─────────────────────────────────────────────
+  html += '<div class="diag-progress">';
+  html += '<div><div style="font-size:13px;font-weight:700;color:var(--text);">' + done + '/' + total + ' itens verificados</div>';
+  html += '<div style="font-size:11px;color:var(--text3);margin-top:2px;">' + (pct === 100 ? '✅ Diagnóstico completo!' : 'Preencha para alertas mais precisos') + '</div></div>';
+  html += '<div style="min-width:80px;">';
+  html += '<div class="diag-progress-bar"><div class="diag-progress-fill" style="width:' + pct + '%"></div></div>';
+  html += '<div style="font-size:10px;color:var(--text3);text-align:right;margin-top:3px;">' + pct + '%</div>';
+  html += '</div></div>';
+
+  // ── Seção 1: Alertas por KM ───────────────────────────────────
+  if (kmWarnings.length) {
+    html += '<div class="diag-section-title"><span style="font-size:14px;">📍</span> Atenção para o seu KM</div>';
+    kmWarnings.forEach(function(w) {
+      html += '<div class="diag-alert">';
+      html += '<div class="diag-alert-icon">' + w.icon + '</div>';
+      html += '<div><div class="diag-alert-title">' + w.title + '</div><div class="diag-alert-desc">' + w.desc + '</div></div>';
+      html += '</div>';
+    });
+  }
+
+  // ── Seção 2: Problemas conhecidos do modelo ───────────────────
+  if (modelIssues.length) {
+    html += '<div class="diag-section-title"><span style="font-size:14px;">⚠️</span> Histórico desse modelo</div>';
+    modelIssues.forEach(function(iss) {
+      html += '<div class="diag-alert" style="background:rgba(237,137,54,.07);border-color:rgba(237,137,54,.25);">';
+      html += '<div class="diag-alert-icon">🔍</div>';
+      html += '<div><div class="diag-alert-title" style="color:var(--text);">' + iss.title + '</div><div class="diag-alert-desc">' + iss.desc + '</div></div>';
+      html += '</div>';
+    });
+  }
+
+  // ── Seção 3: Cuidados básicos (checklist interativo) ──────────
+  html += '<div class="diag-section-title"><span style="font-size:14px;">✅</span> Cuidados básicos — marque o que já foi feito</div>';
+  CHECKLIST_ITEMS.forEach(function(item) {
+    var prev  = checks[item.id] || {};
+    var isDone = !!(prev.done);
+    html += '<div class="diag-item' + (isDone ? ' done-item' : '') + '" onclick="_toggleDiagItem(\'' + vehicleId + '\',\'' + item.id + '\')">';
+    html += '<input class="diag-cb" type="checkbox" id="dcb-' + item.id + '" ' + (isDone ? 'checked' : '') + ' onclick="event.stopPropagation();_toggleDiagItem(\'' + vehicleId + '\',\'' + item.id + '\')">';
+    html += '<div class="diag-item-body">';
+    html += '<div class="diag-item-title">' + item.icon + ' ' + item.title + '</div>';
+    html += '<div class="diag-item-sub">' + item.sub + '</div>';
+    if (prev.done && prev.km) html += '<div style="font-size:10px;color:var(--accent);margin-top:3px;">✓ ' + parseInt(prev.km).toLocaleString('pt-BR') + ' km · ' + (prev.data || '') + '</div>';
+    html += '</div></div>';
+  });
+
+  // ── Botão de manutenção ───────────────────────────────────────
+  html += '<button class="btn-primary" style="width:100%;margin-top:18px;padding:13px;" onclick="fecharDiagnostico();showPage(\'manutencao\')">🔧 Registrar manutenção</button>';
+
+  document.getElementById('diag-content').innerHTML = html;
+}
+
+function _toggleDiagItem(vehicleId, itemId) {
+  _haptic('light');
+  var vid = parseInt(vehicleId) || vehicleId;
+  if (!state.docs[vid]) state.docs[vid] = {};
+  if (!state.docs[vid].checklist) state.docs[vid].checklist = {};
+  var current = state.docs[vid].checklist[itemId];
+  var isDone  = !(current && current.done);
+  if (isDone) {
+    var v = state.vehicles.find(function(x){ return x.id === vid; });
+    state.docs[vid].checklist[itemId] = {
+      done: true, data: new Date().toISOString().split('T')[0],
+      km: v ? v.km : 0
+    };
+  } else {
+    delete state.docs[vid].checklist[itemId];
+  }
+  saveState();
+  _renderDiagnostico(vid);
+}
+
+
+
 var CHECKLIST_ITEMS = [
-  { id:'oleo',     title:'Troca de óleo em dia',         sub:'Informe se fez troca recentemente',     icon:'🛢️' },
-  { id:'filtroar', title:'Filtro de ar trocado',          sub:'Filtro limpo melhora desempenho',        icon:'🌬️' },
-  { id:'filtroc',  title:'Filtro de combustível trocado', sub:'Importante para injeção eletrônica',     icon:'⛽' },
-  { id:'velas',    title:'Velas de ignição OK',           sub:'Velas gastas causam falhas na ignição',  icon:'⚡' },
-  { id:'freios',   title:'Freios revisados',              sub:'Pastilhas e discos em bom estado',       icon:'🔴' },
-  { id:'pneus',    title:'Pneus calibrados e bons',       sub:'Verificar desgaste e calibragem',        icon:'🔵' },
-  { id:'correia',  title:'Correia dentada / corrente OK', sub:'Item crítico — consultar km no manual',  icon:'⚙️' },
-  { id:'fluidos',  title:'Fluidos em nível correto',      sub:'Arrefecimento, direção, freio',          icon:'💧' },
-  { id:'bateria',  title:'Bateria em bom estado',         sub:'Verificar tensão e terminais',           icon:'🔋' },
-  { id:'revisao',  title:'Última revisão na concessionária', sub:'Revisão programada em dia',           icon:'📋' },
+  { id:'oleo',     title:'Troca de óleo em dia',            sub:'Informe se fez troca recentemente',     icon:'🛢️' },
+  { id:'filtroar', title:'Filtro de ar trocado',             sub:'Filtro limpo melhora desempenho',        icon:'🌬️' },
+  { id:'filtroc',  title:'Filtro de combustível trocado',    sub:'Importante para injeção eletrônica',     icon:'⛽' },
+  { id:'velas',    title:'Velas de ignição OK',              sub:'Velas gastas causam falhas na ignição',  icon:'⚡' },
+  { id:'freios',   title:'Freios revisados',                 sub:'Pastilhas e discos em bom estado',       icon:'🔴' },
+  { id:'pneus',    title:'Pneus calibrados e bons',          sub:'Verificar desgaste e calibragem',        icon:'🔵' },
+  { id:'correia',  title:'Correia dentada / corrente OK',    sub:'Item crítico — consultar km no manual',  icon:'⚙️' },
+  { id:'fluidos',  title:'Fluidos em nível correto',         sub:'Arrefecimento, direção, freio',          icon:'💧' },
+  { id:'bateria',  title:'Bateria em bom estado',            sub:'Verificar tensão e terminais',           icon:'🔋' },
+  { id:'revisao',  title:'Última revisão na concessionária', sub:'Revisão programada em dia',              icon:'📋' },
 ];
 var _checklistVehicleId = null;
 
@@ -15336,8 +15841,13 @@ function renderConfigPage() {
   // Perfil
   var nomeEl  = document.getElementById('cfg-nome');
   var emailEl = document.getElementById('cfg-email');
+  var cepEl   = document.getElementById('cfg-cep');
   if (nomeEl && state.user)  nomeEl.value  = state.user.name  || '';
   if (emailEl && state.user) emailEl.value = state.user.email || '';
+  if (cepEl && state.user && state.user.cep) {
+    var cep = state.user.cep.replace(/\D/g,'');
+    cepEl.value = cep.length === 8 ? cep.slice(0,5) + '-' + cep.slice(5) : cep;
+  }
 
   // Tema
   var icon  = document.getElementById('cfg-theme-icon');
@@ -15395,14 +15905,16 @@ function salvarPerfil() {
   _haptic('success');
   var nomeEl  = document.getElementById('cfg-nome');
   var emailEl = document.getElementById('cfg-email');
+  var cepEl   = document.getElementById('cfg-cep');
   var nome  = nomeEl  ? nomeEl.value.trim()  : '';
   var email = emailEl ? emailEl.value.trim() : '';
+  var cep   = cepEl   ? cepEl.value.replace(/\D/g,'') : '';
   if (!nome) { showToast('Informe seu nome', 'error'); return; }
   if (!state.user) state.user = {};
   state.user.name  = nome;
   state.user.email = email;
+  if (cep) state.user.cep = cep;
   saveState();
-  // Update header labels
   var firstName = nome.split(' ')[0];
   var dn = document.getElementById('dash-name');
   _syncSidebarAvatar();
@@ -15498,19 +16010,17 @@ function importarBackupCompleto() {
 // ============================================================
 
 // ── Variáveis de modo ──────────────────────────────────────
-var _appMode = localStorage.getItem('manycars_mode') || 'normal'; // 'normal'|'teste'|'empresa'|'admin'
+var _appMode = localStorage.getItem('manycars_mode') || 'normal'; // 'normal'|'teste'|'admin'
 var _stateTeste = JSON.parse(localStorage.getItem('manycars_teste') || '{"vehicles":[],"history":[],"fuel":[],"docs":{}}');
-var _empresaData = JSON.parse(localStorage.getItem('manycars_empresa') || 'null');
 
 function _syncModoUI() {
   var badge = document.getElementById('modo-badge');
   var banner = document.getElementById('teste-floating-banner');
   var navTeste = document.getElementById('nav-teste');
-  var navEmp = document.getElementById('nav-empresa');
   var navAdmin = document.getElementById('nav-admin');
 
-  // Admin sempre visível — só esconde teste e empresa por padrão
-  [navTeste, navEmp].forEach(function(n){ if(n) n.style.display = 'none'; });
+  // Admin sempre visível — só esconde teste por padrão
+  [navTeste].forEach(function(n){ if(n) n.style.display = 'none'; });
   if (navAdmin) navAdmin.style.display = 'flex'; // sempre mostra
   if (badge) { badge.style.display = 'none'; }
   if (banner) { banner.style.display = 'none'; }
@@ -15525,9 +16035,6 @@ function _syncModoUI() {
     state.history  = _stateTeste.history  || [];
     state.fuel     = _stateTeste.fuel     || [];
     state.docs     = _stateTeste.docs     || {};
-  } else if (_appMode === 'empresa') {
-    if (navEmp) navEmp.style.display = 'flex';
-    if (badge) { badge.style.display='block'; badge.style.background='rgba(96,165,250,0.12)'; badge.style.color='#60a5fa'; badge.style.border='1px solid rgba(96,165,250,0.25)'; badge.textContent='🏢 CONTA EMPRESA'; }
   }
 }
 
@@ -15633,74 +16140,6 @@ function selecionarPlano(plano) {
         '<div style="padding:10px;background:var(--surface2);border-radius:8px;"><div style="font-size:10px;color:var(--text3);">Veículos</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-top:2px;">' + (p.veiculos === 999 ? 'Ilimitado' : 'Até ' + p.veiculos) + '</div></div>' +
         '<div style="padding:10px;background:var(--surface2);border-radius:8px;"><div style="font-size:10px;color:var(--text3);">Usuários</div><div style="font-size:13px;font-weight:700;color:var(--text);margin-top:2px;">' + (p.usuarios === 999 ? 'Ilimitado' : 'Até ' + p.usuarios) + '</div></div>' +
       '</div>';
-  }
-}
-
-function salvarEmpresa() {
-  var razao = document.getElementById('emp-razao') ? document.getElementById('emp-razao').value.trim() : '';
-  var cnpj  = document.getElementById('emp-cnpj')  ? document.getElementById('emp-cnpj').value.trim()  : '';
-  var resp  = document.getElementById('emp-responsavel') ? document.getElementById('emp-responsavel').value.trim() : '';
-  var email = document.getElementById('emp-email') ? document.getElementById('emp-email').value.trim() : '';
-  if (!razao) { showToast('Informe a Razão Social', 'error'); return; }
-  if (cnpj.replace(/\D/g,'').length < 14) { showToast('CNPJ inválido', 'error'); return; }
-  if (!resp)  { showToast('Informe o responsável', 'error'); return; }
-  if (!email) { showToast('Informe o e-mail corporativo', 'error'); return; }
-  if (!_planoSelecionado) { showToast('Selecione um plano', 'error'); return; }
-
-  _empresaData = {
-    razao: razao, cnpj: cnpj, responsavel: resp, email: email,
-    tel: document.getElementById('emp-tel') ? document.getElementById('emp-tel').value : '',
-    segmento: document.getElementById('emp-segmento') ? document.getElementById('emp-segmento').value : '',
-    frotaSize: document.getElementById('emp-frota-size') ? document.getElementById('emp-frota-size').value : '',
-    plano: _planoSelecionado, cadastradoEm: new Date().toISOString(), status: 'pendente'
-  };
-  try { localStorage.setItem('manycars_empresa', JSON.stringify(_empresaData)); } catch(e) {}
-  showToast('Solicitação enviada! Entraremos em contato em até 24h. ✅', 'success');
-  renderModoEmpresaPage();
-}
-
-function editarEmpresa() {
-  _empresaData = null;
-  try { localStorage.removeItem('manycars_empresa'); } catch(e) {}
-  renderModoEmpresaPage();
-}
-
-function renderModoEmpresaPage() {
-  var formCard  = document.getElementById('empresa-form-card');
-  var planCard  = formCard ? formCard.nextElementSibling : null;
-  var dadosCard = document.getElementById('emp-dados-card');
-  _empresaData = JSON.parse(localStorage.getItem('manycars_empresa') || 'null');
-
-  if (_empresaData) {
-    // Mostra dados cadastrados
-    if (formCard) formCard.style.display = 'none';
-    if (dadosCard) {
-      dadosCard.style.display = 'block';
-      var p = _PLANOS[_empresaData.plano] || {};
-      var statusColors = { pendente:'#7B80C1', ativo:'#38a169', cancelado:'#e53e3e' };
-      var sc = statusColors[_empresaData.status] || '#aaa';
-      document.getElementById('emp-dados-content').innerHTML =
-        '<div style="display:flex;flex-direction:column;gap:8px;">' +
-          '<div style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--surface2);border-radius:8px;">' +
-            '<div style="flex:1;"><div style="font-size:12px;color:var(--text3);">Razão Social</div><div style="font-size:13px;font-weight:700;color:var(--text);">' + _empresaData.razao + '</div></div>' +
-            '<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;background:' + sc + '22;color:' + sc + ';border:1px solid ' + sc + '44;">' + (_empresaData.status || 'pendente').toUpperCase() + '</span>' +
-          '</div>' +
-          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">' +
-            '<div style="padding:10px;background:var(--surface2);border-radius:8px;"><div style="font-size:10px;color:var(--text3);">CNPJ</div><div style="font-size:12px;font-weight:700;color:var(--text);font-family:\'JetBrains Mono\',monospace;">' + _empresaData.cnpj + '</div></div>' +
-            '<div style="padding:10px;background:var(--surface2);border-radius:8px;"><div style="font-size:10px;color:var(--text3);">Plano</div><div style="font-size:13px;font-weight:700;color:var(--accent);">' + (p.nome||'—') + '</div></div>' +
-            '<div style="padding:10px;background:var(--surface2);border-radius:8px;"><div style="font-size:10px;color:var(--text3);">Responsável</div><div style="font-size:12px;font-weight:700;color:var(--text);">' + _empresaData.responsavel + '</div></div>' +
-            '<div style="padding:10px;background:var(--surface2);border-radius:8px;"><div style="font-size:10px;color:var(--text3);">Mensalidade</div><div style="font-family:\'Bebas Neue\',sans-serif;font-size:16px;color:var(--accent);">' + (p.preco ? 'R$'+p.preco+'/mês' : 'Consulta') + '</div></div>' +
-          '</div>' +
-        '</div>';
-    }
-    // Oculta todos os cards de form/plano exceto dados-card
-    document.querySelectorAll('#page-modo-empresa .card').forEach(function(c){ if(c !== dadosCard) c.style.display = 'none'; });
-  } else {
-    // Mostra formulário
-    document.querySelectorAll('#page-modo-empresa .card').forEach(function(c){ c.style.display = 'block'; });
-    if (dadosCard) dadosCard.style.display = 'none';
-    // Seleciona plano Pro por padrão
-    if (!_planoSelecionado) selecionarPlano('pro');
   }
 }
 
@@ -17043,6 +17482,12 @@ function _admBiAlertas(d) {
   }).join('');
 }
 
+// Alias — abre o registro rápido e navega direto para a página correta
+function abrirRegistroRapido(page) {
+  fecharRegistroRapido();
+  if (page) showPage(page);
+}
+
 function openRegistroRapido() {
   _haptic('heavy');
   var overlay = document.getElementById('registro-rapido-overlay');
@@ -17068,6 +17513,20 @@ function fecharRegistroRapido() {
 })();
 
 </script>
+
+
+  <!-- ===== DIAGNÓSTICO DO VEÍCULO ===== -->
+  <div class="diag-overlay" id="diag-overlay" onclick="if(event.target===this)fecharDiagnostico()">
+    <div class="diag-sheet" id="diag-sheet">
+      <div class="diag-handle"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;" id="diag-titulo">🩺 DIAGNÓSTICO</div>
+        <button onclick="fecharDiagnostico()" style="background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;padding:4px;">✕</button>
+      </div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:16px;" id="diag-subtitulo">Verificação inicial do veículo</div>
+      <div id="diag-content"><!-- renderizado por JS --></div>
+    </div>
+  </div>
 
   <!-- ===== TOUR INTERATIVO ===== -->
   <div id="tour-overlay" style="display:none;position:fixed;inset:0;z-index:8000;pointer-events:none;">
