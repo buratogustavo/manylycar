@@ -148,7 +148,6 @@ body {
 /* On mobile: back to block layout — no flex-row nonsense */
 @media (max-width: 768px) {
   #screen-app {
-    display: block !important;
     position: relative;
   }
 }
@@ -472,6 +471,8 @@ body.app-active #screen-app { overflow-y: auto; }
   overflow-x: hidden;
   background: var(--bg);
   min-height: 100vh;
+  position: relative;
+  isolation: isolate;
 }
 
 .page {
@@ -479,6 +480,17 @@ body.app-active #screen-app { overflow-y: auto; }
   padding: 24px 28px;
   width: 100%;
   box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+.page:not(.active) {
+  height: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 .page.active { display: block; animation: fadeUp 0.3s ease both; }
 
@@ -3085,27 +3097,20 @@ select, textarea {
         </div>
       </div>
 
-      <!-- 3 benefícios rápidos -->
-      <div style="display:flex;flex-direction:column;gap:7px;">
-        <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.04);border-radius:10px;padding:9px 13px;">
-          <span style="font-size:18px;flex-shrink:0;">🛡️</span>
+      <!-- 2 benefícios — pills simétricas -->
+      <div style="display:flex;gap:8px;justify-content:center;">
+        <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:6px 14px;">
+          <span style="font-size:14px;">🛡️</span>
           <div>
-            <div style="font-size:12px;font-weight:700;color:var(--white);line-height:1.2;">Passaporte verificado</div>
-            <div style="font-size:11px;color:var(--text3);margin-top:1px;">Venda seu carro pelo preço justo com histórico comprovado</div>
+            <div style="font-size:11px;font-weight:700;color:var(--white);line-height:1.2;">Passaporte</div>
+            <div style="font-size:10px;color:var(--text3);">Histórico verificado</div>
           </div>
         </div>
-        <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.04);border-radius:10px;padding:9px 13px;">
-          <span style="font-size:18px;flex-shrink:0;">🔔</span>
+        <div style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:6px 14px;">
+          <span style="font-size:14px;">🔔</span>
           <div>
-            <div style="font-size:12px;font-weight:700;color:var(--white);line-height:1.2;">Alertas inteligentes por km</div>
-            <div style="font-size:11px;color:var(--text3);margin-top:1px;">Nunca perca uma manutenção e economize em reparos</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.04);border-radius:10px;padding:9px 13px;">
-          <span style="font-size:18px;flex-shrink:0;">💰</span>
-          <div>
-            <div style="font-size:12px;font-weight:700;color:var(--white);line-height:1.2;">Grátis para sempre no básico</div>
-            <div style="font-size:11px;color:var(--text3);margin-top:1px;">Sem cartão. Sem compromisso. Cancele quando quiser.</div>
+            <div style="font-size:11px;font-weight:700;color:var(--white);line-height:1.2;">Alertas por km</div>
+            <div style="font-size:10px;color:var(--text3);">Nunca perca revisões</div>
           </div>
         </div>
       </div>
@@ -3731,9 +3736,11 @@ select, textarea {
       </div>
 
       <!-- Tabs -->
-      <div style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:16px;">
-        <button id="vtab-carros" onclick="_veiculosTab('carros')" style="flex:1;padding:10px 0;background:none;border:none;font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--accent);border-bottom:2px solid var(--accent);margin-bottom:-2px;cursor:pointer;transition:all .2s;">🚗 Meus Carros</button>
-        <button id="vtab-saude"  onclick="_veiculosTab('saude')"  style="flex:1;padding:10px 0;background:none;border:none;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all .2s;">❤️ Saúde</button>
+      <div style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:16px;overflow-x:auto;scrollbar-width:none;">
+        <button id="vtab-carros"    onclick="_veiculosTab('carros')"    style="flex:1;min-width:80px;padding:10px 6px;background:none;border:none;font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--accent);border-bottom:2px solid var(--accent);margin-bottom:-2px;cursor:pointer;transition:all .2s;white-space:nowrap;">🚗 Carros</button>
+        <button id="vtab-saude"     onclick="_veiculosTab('saude')"     style="flex:1;min-width:80px;padding:10px 6px;background:none;border:none;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all .2s;white-space:nowrap;">❤️ Saúde</button>
+        <button id="vtab-historico" onclick="_veiculosTab('historico')" style="flex:1;min-width:80px;padding:10px 6px;background:none;border:none;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all .2s;white-space:nowrap;">📋 Histórico</button>
+        <button id="vtab-documentos" onclick="_veiculosTab('documentos')" style="flex:1;min-width:80px;padding:10px 6px;background:none;border:none;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all .2s;white-space:nowrap;">📅 Docs</button>
       </div>
 
       <!-- Tab: Meus Carros -->
@@ -3821,8 +3828,17 @@ select, textarea {
 
       <!-- Tab: Saúde -->
       <div id="vtab-saude-content" style="display:none;">
-        <!-- conteúdo injetado por renderSaudePage() via _veiculosTab() -->
         <div id="saude-inline-wrap"></div>
+      </div>
+
+      <!-- Tab: Histórico -->
+      <div id="vtab-historico-content" style="display:none;">
+        <div id="historico-inline-wrap"></div>
+      </div>
+
+      <!-- Tab: Documentos -->
+      <div id="vtab-documentos-content" style="display:none;">
+        <div id="documentos-inline-wrap"></div>
       </div>
 
     </div>
@@ -7449,24 +7465,37 @@ function _tourRender() {
     'width:'  + (rect.width  + pad*2) + 'px;' +
     'height:' + (rect.height + pad*2) + 'px;';
 
-  // Tooltip position
-  var ttW  = 280;
-  var ttH  = 160; // estimate
-  var vw   = window.innerWidth;
-  var vh   = window.innerHeight;
-  var cx   = rect.left + rect.width / 2;
-  var left = Math.max(16, Math.min(cx - ttW/2, vw - ttW - 16));
+  // Tooltip position — respects bottom nav (64px) + safe area (34px) + margin
+  var ttW    = Math.min(280, window.innerWidth - 32);
+  var ttH    = 180; // estimate with padding
+  var vw     = window.innerWidth;
+  var vh     = window.innerHeight;
+  var safeB  = 64 + 34 + 16; // bottom-nav + safe-area + margin
+  var safeT  = 56 + 16;      // topbar + margin
+  var usableH = vh - safeB - safeT;
+  var cx     = rect.left + rect.width / 2;
+  var left   = Math.max(16, Math.min(cx - ttW / 2, vw - ttW - 16));
   var top, arrowClass;
 
   if (step.pos === 'below') {
     top        = rect.bottom + pad + 12;
     arrowClass = 'arrow-top';
-    if (top + ttH > vh) { top = rect.top - ttH - pad - 12; arrowClass = 'arrow-bottom'; }
+    // Flip above if tooltip would go below usable area
+    if (top + ttH > vh - safeB) {
+      top = rect.top - ttH - pad - 12;
+      arrowClass = 'arrow-bottom';
+    }
   } else {
     top        = rect.top - ttH - pad - 12;
     arrowClass = 'arrow-bottom';
-    if (top < 16) { top = rect.bottom + pad + 12; arrowClass = 'arrow-top'; }
+    // Flip below if tooltip would go above topbar
+    if (top < safeT) {
+      top = rect.bottom + pad + 12;
+      arrowClass = 'arrow-top';
+    }
   }
+  // Hard clamp — never overlap bottom nav or topbar
+  top = Math.max(safeT, Math.min(top, vh - safeB - ttH));
 
   tooltip.className = arrowClass;
   tooltip.style.cssText =
@@ -7779,10 +7808,10 @@ function renderScore(vehicle) {
     detailsHtml += '<div class="score-bar-val">' + c.val + '</div>';
     detailsHtml += '</div>';
   });
-  document.getElementById('score-details').innerHTML = detailsHtml;
+  var _sd = document.getElementById('score-details'); if (_sd) _sd.innerHTML = detailsHtml;
 
   var verdict = getScoreVerdict(score);
-  document.getElementById('health-verdict').innerHTML = '<span>' + verdict.icon + '</span><span>' + verdict.text + '</span>';
+  var _hv = document.getElementById('health-verdict'); if (_hv) _hv.innerHTML = '<span>' + verdict.icon + '</span><span>' + verdict.text + '</span>';
   document.getElementById('health-verdict').style.cssText = 'background:' + verdict.bg + ';color:' + verdict.color + ';margin-top:12px;padding:10px 14px;border-radius:7px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px;';
 }
 
@@ -8154,7 +8183,7 @@ function renderChart() {
     html += '</div>';
   });
 
-  document.getElementById('chart-bars').innerHTML = html;
+  var _cb = document.getElementById('chart-bars'); if (_cb) _cb.innerHTML = html;
 
   // Total label
   var totalLabel = document.getElementById('chart-total-label');
@@ -8415,11 +8444,15 @@ async function doForgotPassword() {
 
 // ── LOGOUT ─────────────────────────────────────────────────
 async function doLogout() {
-  if (_supabaseReady && _sb) {
-    await _sb.auth.signOut();
+  try {
+    if (_supabaseReady && _sb) {
+      await _sb.auth.signOut();
+    }
+    _clearAppSession();
+    showToast('Sessão encerrada. Até logo! 👋', 'success');
+  } catch(e) {
+    _clearAppSession(); // sempre limpa sessão local mesmo se Supabase falhar
   }
-  _clearAppSession();
-  showToast('Sessão encerrada. Até logo! 👋', 'success');
 }
 
 function _clearAppSession() {
@@ -9451,7 +9484,7 @@ function openPriceModal(partIdx, catId) {
     html += '<button class="btn-ver" style="margin-top:4px;" onclick="showToast(\'Abrindo loja... (simulação)\',\'success\')">Comprar</button>';
     html += '</div></div>';
   });
-  document.getElementById('modal-stores').innerHTML = html;
+  var _ms = document.getElementById('modal-stores'); if (_ms) _ms.innerHTML = html;
   document.getElementById('price-modal').classList.add('active');
 }
 
@@ -10437,7 +10470,7 @@ function abrirRelatorioMensal() {
 
   var active = state.vehicles.filter(function(v){ return !v.archived; });
   if (!active.length) {
-    document.getElementById('relatorio-content').innerHTML = '<div style="text-align:center;color:var(--text3);padding:20px;">Nenhum veículo ativo</div>';
+    var _rc = document.getElementById('relatorio-content'); if (_rc) _rc.innerHTML = '<div style="text-align:center;color:var(--text3);padding:20px;">Nenhum veículo ativo</div>';
     document.getElementById('relatorio-overlay').classList.add('active');
     return;
   }
@@ -10498,7 +10531,7 @@ function abrirRelatorioMensal() {
   html += '<div><span style="font-size:13px;color:var(--text3);">Total geral: </span><span style="font-weight:700;color:var(--accent);">R$' + (totalManut+totalFuel).toLocaleString('pt-BR',{minimumFractionDigits:2}) + '</span></div>';
   html += '</div></div>';
 
-  document.getElementById('relatorio-content').innerHTML = html;
+  var _rc2 = document.getElementById('relatorio-content'); if (_rc2) _rc2.innerHTML = html;
   document.getElementById('relatorio-overlay').classList.add('active');
 }
 
@@ -10878,7 +10911,7 @@ function renderPizzaChart(totalManut, totalFuel) {
     ctx.fillStyle = 'rgba(255,255,255,0.05)';
     ctx.beginPath(); ctx.arc(140,140,110,0,2*Math.PI); ctx.fill();
     document.getElementById('pizza-center-val').textContent = 'R$0';
-    document.getElementById('pizza-legend').innerHTML = '<div style="font-size:12px;color:var(--text3);">Nenhum gasto registrado</div>';
+    var _pl = document.getElementById('pizza-legend'); if (_pl) _pl.innerHTML = '<div style="font-size:12px;color:var(--text3);">Nenhum gasto registrado</div>';
     return;
   }
 
@@ -11471,6 +11504,9 @@ function pagarDocumento(vehicleId, key) {
 // 🧮 CALCULADORA DE MONETIZAÇÃO COM VALUATION
 // ============================================================
 function recalcMono() {
+  // Guard: only run when monetizacao page is visible
+  var monoPage = document.getElementById('page-monetizacao');
+  if (!monoPage || !monoPage.classList.contains('active')) return;
   var g  = function(id){ return parseFloat(document.getElementById(id) && document.getElementById(id).value) || 0; };
   var users      = g('calc-users');
   var conv       = g('calc-conv') / 100;
@@ -14688,6 +14724,7 @@ var _modeloInfoTab = 'manut';
 // OPINIÕES — publicação e carregamento da nuvem
 // ============================================================
 async function publicarOpiniao() {
+  try {
   var marca  = (document.getElementById('op-marca')  ||{}).value || '';
   var modelo = (document.getElementById('op-modelo') ||{}).value || '';
   var ano    = (document.getElementById('op-ano')    ||{}).value || '';
@@ -14730,9 +14767,12 @@ async function publicarOpiniao() {
   // Atualiza lista
   renderOpinioesCloud();
   renderOpiniaoStats();
+
+  } catch(e) { if (typeof showToast === "function") showToast("Erro de conexão. Tente novamente.", "error"); }
 }
 
 async function renderOpinioesCloud() {
+  try {
   // Tenta carregar da nuvem primeiro
   var selEl  = document.getElementById('opiniao-filter-sel');
   var filtro = selEl ? selEl.value : '';
@@ -14769,12 +14809,15 @@ async function renderOpinioesCloud() {
   }
   // Renderiza com dados atualizados
   renderOpinioes();
+
+  } catch(e) { if (typeof showToast === "function") showToast("Erro de conexão. Tente novamente.", "error"); }
 }
 
 // ============================================================
 // INFO DO MODELO — busca manual técnico da nuvem
 // ============================================================
 async function renderModeloInfoVehicleCloud(vehicleId, tabEl) {
+  try {
   // Renderiza primeiro com dados locais (imediato)
   renderModeloInfoVehicle(vehicleId, tabEl);
 
@@ -14842,6 +14885,8 @@ async function renderModeloInfoVehicleCloud(vehicleId, tabEl) {
       container.innerHTML += extra;
     }
   }
+
+  } catch(e) { if (typeof showToast === "function") showToast("Erro de conexão", "error"); }
 }
 
 
@@ -14960,7 +15005,7 @@ function renderModeloInfoVehicle(vehicleId, tabEl) {
   }
   opinioesHtml += '</div>';
 
-  document.getElementById('modelo-info-vehicle-content').innerHTML = html + opinioesHtml;
+  var _mi = document.getElementById('modelo-info-vehicle-content'); if (_mi) _mi.innerHTML = html + opinioesHtml;
 }
 
 function _renderOpiniaoCard(o) {
@@ -14981,7 +15026,7 @@ function _renderOpiniaoCard(o) {
 }
 // ── Tab switcher — página Veículos ──────────────────────────
 function _veiculosTab(tab) {
-  var tabs   = ['carros', 'saude'];
+  var tabs   = ['carros', 'saude', 'historico', 'documentos'];
   var accent = 'var(--accent)';
   var muted  = 'var(--text3)';
 
@@ -14997,8 +15042,124 @@ function _veiculosTab(tab) {
     if (content) content.style.display = active ? 'block' : 'none';
   });
 
-  if (tab === 'saude') _renderSaudeInline();
+  if (tab === 'saude')      _renderSaudeInline();
+  if (tab === 'historico')  _renderHistoricoInline();
+  if (tab === 'documentos') _renderDocumentosInline();
 }
+
+function _vTabVehicleSelector(wrapId, selId, onChangeFn) {
+  var wrap   = document.getElementById(wrapId);
+  if (!wrap) return null;
+  var active = state.vehicles.filter(function(v){ return !v.archived; });
+  if (!active.length) {
+    wrap.innerHTML =
+      '<div class="empty-state">' +
+        '<div class="empty-icon">🚗</div>' +
+        '<div class="empty-title">Adicione seu primeiro carro</div>' +
+        '<div class="empty-desc">Cadastre um veículo para ver esta seção.</div>' +
+      '</div>';
+    return null;
+  }
+  var opts = active.map(function(v){
+    return '<option value="' + v.id + '">' + v.marca + ' ' + v.modelo.split(' ')[0] + ' ' + v.ano + '</option>';
+  }).join('');
+  return { active: active, opts: opts };
+}
+
+function _renderHistoricoInline() {
+  var wrap = document.getElementById('historico-inline-wrap');
+  if (!wrap) return;
+  var active = state.vehicles.filter(function(v){ return !v.archived; });
+  if (!active.length) {
+    wrap.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">Histórico vazio = carro sem valor</div><div class="empty-desc">Cadastre um veículo e registre manutenções para ver o histórico aqui.</div></div>';
+    return;
+  }
+  var opts = active.map(function(v){
+    return '<option value="' + v.id + '">' + v.marca + ' ' + v.modelo.split(' ')[0] + '</option>';
+  }).join('');
+  wrap.innerHTML =
+    '<div class="card" style="margin-bottom:8px;">' +
+      '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">' +
+        '<select class="field-select" id="hist-inline-sel" style="flex:1;max-width:260px;" onchange="_renderHistoricoInline()">' + opts + '</select>' +
+        '<button class="btn-secondary" style="padding:9px 14px;font-size:12px;" onclick="showPage(\'historico\')">Ver tudo →</button>' +
+      '</div>' +
+    '</div>' +
+    '<div id="hist-inline-list"></div>';
+
+  var sel = document.getElementById('hist-inline-sel');
+  var vid = sel ? (parseInt(sel.value) || active[0].id) : active[0].id;
+  var items = state.history.filter(function(h){ return h.veiculoId === vid; })
+    .sort(function(a,b){ return new Date(b.data) - new Date(a.data); })
+    .slice(0, 8);
+  var listEl = document.getElementById('hist-inline-list');
+  if (!listEl) return;
+  if (!items.length) {
+    listEl.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-title">Histórico vazio = carro sem valor</div><div class="empty-desc">Carros com histórico documentado valem até 15% mais na revenda.</div><button class="empty-cta" onclick="showPage(\'manutencao\')">🔩 Registrar primeira manutenção</button></div>';
+    return;
+  }
+  listEl.innerHTML = items.map(function(h) {
+    var custo = h.custo > 0 ? '<span style="font-size:11px;color:var(--accent);font-family:\'JetBrains Mono\',monospace;margin-left:auto;">R$' + h.custo.toLocaleString('pt-BR') + '</span>' : '';
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);">' +
+      '<div style="width:36px;height:36px;border-radius:8px;background:rgba(123,128,193,0.1);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🔧</div>' +
+      '<div style="flex:1;min-width:0;">' +
+        '<div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + h.tipo + '</div>' +
+        '<div style="font-size:11px;color:var(--text3);">' + h.data + (h.km ? ' · ' + parseInt(h.km).toLocaleString('pt-BR') + ' km' : '') + '</div>' +
+      '</div>' + custo +
+    '</div>';
+  }).join('') +
+  (state.history.filter(function(h){ return h.veiculoId === vid; }).length > 8
+    ? '<button class="btn-secondary" style="width:100%;margin-top:10px;padding:10px;font-size:12px;" onclick="showPage(\'historico\')">Ver histórico completo →</button>'
+    : '');
+}
+
+function _renderDocumentosInline() {
+  var wrap = document.getElementById('documentos-inline-wrap');
+  if (!wrap) return;
+  var active = state.vehicles.filter(function(v){ return !v.archived; });
+  if (!active.length) {
+    wrap.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><div class="empty-title">Nunca mais pague multa por atraso</div><div class="empty-desc">Cadastre seu carro e receba alertas antes do IPVA, seguro e licenciamento vencerem.</div></div>';
+    return;
+  }
+  var opts = active.map(function(v){
+    return '<option value="' + v.id + '">' + v.marca + ' ' + v.modelo.split(' ')[0] + '</option>';
+  }).join('');
+  wrap.innerHTML =
+    '<div class="card" style="margin-bottom:8px;">' +
+      '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">' +
+        '<select class="field-select" id="docs-inline-sel" style="flex:1;max-width:260px;" onchange="_renderDocumentosInline()">' + opts + '</select>' +
+        '<button class="btn-secondary" style="padding:9px 14px;font-size:12px;" onclick="showPage(\'documentos\')">Editar →</button>' +
+      '</div>' +
+    '</div>' +
+    '<div id="docs-inline-body"></div>';
+
+  var sel = document.getElementById('docs-inline-sel');
+  var vid = sel ? (parseInt(sel.value) || active[0].id) : active[0].id;
+  var vDocs = (state.docs[vid]) || {};
+  var body  = document.getElementById('docs-inline-body');
+  if (!body) return;
+
+  var DOC_DEFS = [
+    { key:'ipva',          label:'IPVA',               icon:'🏛️' },
+    { key:'seguro',        label:'Seguro obrigatório',  icon:'🛡️' },
+    { key:'licenciamento', label:'Licenciamento',       icon:'📋' },
+    { key:'revisao_next',  label:'Próxima revisão',     icon:'🔧' },
+  ];
+  var today = new Date(); today.setHours(0,0,0,0);
+  var html = DOC_DEFS.map(function(doc) {
+    var dateStr = vDocs[doc.key];
+    var diff    = dateStr ? Math.round((new Date(dateStr + 'T12:00:00') - today) / 86400000) : null;
+    var statusColor = diff === null ? 'var(--text3)' : diff < 0 ? '#fc8181' : diff <= 30 ? '#f6ad55' : '#68d391';
+    var statusTxt   = diff === null ? 'Não informado' : diff < 0 ? 'Vencido há ' + Math.abs(diff) + 'd' : diff === 0 ? 'Vence hoje!' : diff <= 30 ? 'Vence em ' + diff + 'd' : dateStr;
+    return '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);">' +
+      '<span style="font-size:20px;">' + doc.icon + '</span>' +
+      '<div style="flex:1;"><div style="font-size:13px;font-weight:600;color:var(--text);">' + doc.label + '</div></div>' +
+      '<span style="font-size:11px;font-weight:600;color:' + statusColor + ';">' + statusTxt + '</span>' +
+    '</div>';
+  }).join('');
+  body.innerHTML = '<div class="card">' + html + '</div>';
+}
+
+
 
 function _renderSaudeInline() {
   var wrap   = document.getElementById('saude-inline-wrap');
@@ -15209,7 +15370,7 @@ function _renderDiagnostico(vehicleId) {
   // ── Botão de manutenção ───────────────────────────────────────
   html += '<button class="btn-primary" style="width:100%;margin-top:18px;padding:13px;" onclick="fecharDiagnostico();showPage(\'manutencao\')">🔧 Registrar manutenção</button>';
 
-  document.getElementById('diag-content').innerHTML = html;
+  var _dc = document.getElementById('diag-content'); if (_dc) _dc.innerHTML = html;
 }
 
 function _toggleDiagItem(vehicleId, itemId) {
@@ -15366,7 +15527,7 @@ function showChecklist(vehicleId) {
       '</div>' +
     '</div>';
   }).join('');
-  document.getElementById('checklist-items').innerHTML = html;
+  var _ci = document.getElementById('checklist-items'); if (_ci) _ci.innerHTML = html;
   document.getElementById('checklist-overlay').classList.add('active');
 }
 
@@ -16555,7 +16716,7 @@ function verAnuncio(id) {
       ) +
     '</div>';
 
-  document.getElementById('mkt-detalhe-content').innerHTML = html;
+  var _mdc = document.getElementById('mkt-detalhe-content'); if (_mdc) _mdc.innerHTML = html;
 
   // Wire up buttons after render
   var btnPass = document.getElementById('btn-ver-passaporte');
@@ -16618,6 +16779,7 @@ function mktAtualizarFIPE() {
 }
 
 async function publicarAnuncio() {
+  try {
   if (!state.user) { showToast('Faça login para publicar', 'error'); return; }
 
   var preco = parseInt(document.getElementById('anunciar-preco').value);
@@ -16668,6 +16830,8 @@ async function publicarAnuncio() {
   showToast('🎉 Anúncio publicado com sucesso!', 'success');
   showPage('marketplace');
   renderMarketplace();
+
+  } catch(e) { if (typeof showToast === "function") showToast("Erro de conexão. Tente novamente.", "error"); }
 }
 
 // Preenche o select de veículos ao abrir a página de anunciar
@@ -16805,7 +16969,7 @@ async function _confirmarSenha(destino) {
   try {
     var hashInput = await _sha256(senha);
 
-    // Hash local da senha atual (troxgroup123!) — fallback enquanto Supabase não está configurado
+    // Hash SHA-256 da senha admin — fallback local
     // Para mudar a senha: gere novo hash em https://emn178.github.io/online-tools/sha256.html
     var _HASH_LOCAL = '0858821bea46b64828cc5faa2bae0b5dcf9b1cc282f8047febc552b675d16230';
 
@@ -16848,8 +17012,11 @@ async function _confirmarSenha(destino) {
 
 // SHA-256 via Web Crypto API nativa do browser
 async function _sha256(str) {
+  try {
   var buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
   return Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+
+  } catch(e) { if (typeof showToast === "function") showToast("Erro de conexão", "error"); }
 }
 
 
@@ -17041,25 +17208,25 @@ async function _registrarAlertasNuvem(urgentes) {
 // PAINEL ADMINISTRADOR — BI COMPLETO DA PLATAFORMA
 // ============================================================
 
-// Base de dados simulada da plataforma inteira (MVP — substituir por API real)
+// Base de dados simulada da plataforma (MVP — substituir por query Supabase real)
 var _BI = {
-  totalUsuarios: 1842, usuariosAtivos30d: 1240, usuariosOnlineAgora: 47, picoSimultaneo: 84,
-  novosUsuariosMes: [82,95,108,118,118,134], mesesLabels: ['Out','Nov','Dez','Jan','Fev','Mar'],
-  veiculosCadastrados: 3219, veiculosVendidos: 287,
-  totalManutencoes: 18420, totalAbastecimentos: 9840,
-  totalLitros: 287500, totalKmFrota: 89400000,
-  mrr: 46688, mrrMesAnt: 43120, arr: 560256, ticketMedio: 14.90, ltv: 186,
-  churnPct: 3.2, retencao30: 67, conversaoPct: 16.9,
+  totalUsuarios: 0, usuariosAtivos30d: 0, usuariosOnlineAgora: 0, picoSimultaneo: 0,
+  novosUsuariosMes: [0,0,0,0,0,0], mesesLabels: ['Out','Nov','Dez','Jan','Fev','Mar'],
+  veiculosCadastrados: 0, veiculosVendidos: 0,
+  totalManutencoes: 0, totalAbastecimentos: 0,
+  totalLitros: 0, totalKmFrota: 0,
+  mrr: 0, mrrMesAnt: 0, arr: 0, ticketMedio: 14.90, ltv: 0,
+  churnPct: 0, retencao30: 0, conversaoPct: 0,
   canais: [
-    { nome:'Assinaturas Premium', val:28460, pct:61, cor:'var(--accent)' },
-    { nome:'Afiliados de peças',  val:11320, pct:24, cor:'#60a5fa' },
-    { nome:'Parcerias oficinas',  val:4980,  pct:11, cor:'#68d391' },
-    { nome:'Dados B2B',           val:1928,  pct:4,  cor:'#a78bfa' },
+    { nome:'Assinaturas Premium', val:0, pct:61, cor:'var(--accent)' },
+    { nome:'Afiliados de peças',  val:0, pct:24, cor:'#60a5fa' },
+    { nome:'Parcerias oficinas',  val:0, pct:11, cor:'#68d391' },
+    { nome:'Dados B2B',           val:0, pct:4,  cor:'#a78bfa' },
   ],
   planos: [
-    { nome:'Free',    count:1530, cor:'#60a5fa', pct:83 },
-    { nome:'Premium', count:289,  cor:'var(--accent)', pct:16 },
-    { nome:'Empresa', count:23,   cor:'#a78bfa', pct:1  },
+    { nome:'Free',    count:0, cor:'#60a5fa',      pct:84 },
+    { nome:'Plus',    count:0, cor:'var(--accent)', pct:12 },
+    { nome:'Pro',     count:0, cor:'#a78bfa',       pct:4  },
   ],
   modelos: [
     { modelo:'Onix',    marca:'Chevrolet', usuarios:284, receita:4260, manut:1840, pct:100 },
