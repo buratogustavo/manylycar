@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#7B80C1">
+<meta name="theme-color" content="#3B82F6">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ManyCars">
@@ -46,60 +46,62 @@
   </script>
   <title>ManyCars — Seu carro, seu controle</title>
   <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#7B80C1">
+  <meta name="theme-color" content="#3B82F6">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ===== RESET & BASE ===== */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #0e0d14;
-  --surface: #15141f;
-  --surface2: #1d1c2a;
-  --border: #2c2b3a;
-  --border2: #3d3c4f;
-  --accent: #7B80C1;
-  --accent2: #5860A8;
-  --accent3: #a0a4d6;
-  --gold: #e8b84b;
-  --red: #e53e3e;
-  --green: #38a169;
-  --text: #eae9f0;
-  --text2: #9895a8;
-  --text3: #5a5868;
-  --white: #ffffff;
-  --radius: 10px;
-  --shadow: 0 4px 24px rgba(0,0,0,0.45);
-  --blue: #60a5fa;
-  --green-light: #68d391;
-  --red-light: #fc8181;
-  --purple: #a78bfa;
-  --orange: #f6ad55;
-  --cyan: #76e4f7;
-  --bronze: #cd7f32;
+  /* ── MIDNIGHT TECH — dark mode (default) ── */
+  --bg:       #080D1A;
+  --surface:  #0F172A;
+  --surface2: #1E293B;
+  --border:   #1E3A5F;
+  --border2:  #2D5A8E;
+  --accent:   #3B82F6;
+  --accent2:  #1D4ED8;
+  --accent3:  #60A5FA;
+  --gold:     #FBBF24;
+  --red:      #EF4444;
+  --green:    #22C55E;
+  --text:     #F1F5F9;
+  --text2:    #94A3B8;
+  --text3:    #475569;
+  --white:    #ffffff;
+  --radius:   10px;
+  --shadow:   0 4px 24px rgba(0,0,0,0.5);
+  --blue:     #60A5FA;
+  --green-light: #4ADE80;
+  --red-light:   #FCA5A5;
+  --purple:   #A78BFA;
+  --orange:   #FB923C;
+  --cyan:     #22D3EE;
+  --bronze:   #D97706;
 }
 
 /* ===== LIGHT MODE ===== */
 body.light-mode {
-  --bg: #f2f1f8;
-  --surface: #ffffff;
-  --surface2: #eae9f2;
-  --border: #d8d6e8;
-  --border2: #c4c2d8;
-  --accent: #5860A8;
-  --accent2: #3d4590;
-  --accent3: #7B80C1;
-  --gold: #c8860a;
-  --red: #c53030;
-  --green: #276749;
-  --text: #1a1820;
-  --text2: #4a485a;
-  --text3: #8a88a0;
-  --white: #1a1820;
-  --shadow: 0 4px 24px rgba(123,128,193,0.12);
+  /* ── MIDNIGHT TECH — light mode ── */
+  --bg:       #F0F9FF;
+  --surface:  #FFFFFF;
+  --surface2: #E0F2FE;
+  --border:   #BAE6FD;
+  --border2:  #7DD3FC;
+  --accent:   #1E3A8A;
+  --accent2:  #1E40AF;
+  --accent3:  #3B82F6;
+  --gold:     #B45309;
+  --red:      #DC2626;
+  --green:    #16A34A;
+  --text:     #0F172A;
+  --text2:    #334155;
+  --text3:    #64748B;
+  --white:    #0F172A;
+  --shadow:   0 4px 24px rgba(30,58,138,0.12);
 }
 body.light-mode .sidebar { border-right: 1px solid var(--border); }
-body.light-mode .mobile-topbar { background: var(--surface); border-bottom: 1px solid var(--border); }
+body.light-mode 
 body.light-mode .bottom-nav { background: var(--surface); border-top: 1px solid var(--border); }
 body.light-mode .score-ring-bg { stroke: var(--border); }
 body.light-mode .dash-hero-card { background: linear-gradient(135deg, var(--surface2) 0%, var(--surface) 100%); }
@@ -126,6 +128,10 @@ body.light-mode input, body.light-mode select { color: var(--text); background: 
 .theme-toggle .tt-icon { font-size: 16px; transition: transform 0.4s; }
 body.light-mode .theme-toggle .tt-icon { transform: rotate(180deg); }
 
+html {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
 body {
   background: var(--bg);
   color: var(--text);
@@ -133,6 +139,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 /* ===== SCREENS ===== */
@@ -140,15 +148,15 @@ body {
 .screen.active { display: flex; }
 
 /* App screen overrides to row for desktop sidebar layout */
-#screen-app {
-  flex-direction: row;
-  align-items: stretch;
-}
+/* #screen-app flex layout handled per breakpoint */
 
 /* On mobile: back to block layout — no flex-row nonsense */
 @media (max-width: 768px) {
   #screen-app {
+    display: block !important; /* mobile: stack vertically, no flex-row */
     position: relative;
+    width: 100%;
+    overflow-x: hidden;
   }
 }
 
@@ -167,13 +175,13 @@ body {
 
 /* Quando tela de login some, libera o scroll do app */
 body.app-active { overflow: hidden; }
-body.app-active #screen-app { overflow-y: auto; }
+body.app-active 
 
 .welcome-bg {
   position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse 800px 600px at 60% 20%, rgba(123,128,193,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 500px 400px at 10% 80%, rgba(123,128,193,0.04) 0%, transparent 60%);
+    radial-gradient(ellipse 800px 600px at 60% 20%, rgba(59,130,246,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 500px 400px at 10% 80%, rgba(59,130,246,0.04) 0%, transparent 60%);
   pointer-events: none;
 }
 
@@ -221,7 +229,10 @@ body.app-active #screen-app { overflow-y: auto; }
   color: var(--white);
   line-height: 1;
 }
-.logo-text span { color: var(--accent); }
+.logo-text span { 
+  color: var(--accent); 
+  text-shadow: 0 0 20px rgba(59,130,246,0.4);
+}
 
 .auth-card {
   background: var(--surface);
@@ -348,7 +359,7 @@ body.app-active #screen-app { overflow-y: auto; }
 }
 #auth-loading-overlay.active { display: flex; }
 #auth-loading-overlay .spinner {
-  width: 40px; height: 40px; border: 3px solid rgba(123,128,193,0.2);
+  width: 40px; height: 40px; border: 3px solid rgba(59,130,246,0.2);
   border-top-color: var(--accent); border-radius: 50%;
   animation: spin 0.7s linear infinite;
 }
@@ -408,7 +419,7 @@ body.app-active #screen-app { overflow-y: auto; }
 .nav-item:hover { background: var(--surface2); color: var(--text); }
 
 .nav-item.active {
-  background: rgba(123,128,193,0.12);
+  background: rgba(59,130,246,0.12);
   color: var(--accent);
 }
 
@@ -485,6 +496,7 @@ body.app-active #screen-app { overflow-y: auto; }
   box-sizing: border-box;
   position: relative;
   overflow: hidden;
+  overflow-x: hidden;
 }
 .page:not(.active) {
   height: 0 !important;
@@ -495,7 +507,7 @@ body.app-active #screen-app { overflow-y: auto; }
   visibility: hidden !important;
   pointer-events: none !important;
 }
-.page.active { display: block; animation: fadeUp 0.3s ease both; }
+
 
 .page-header {
   margin-bottom: 20px;
@@ -597,7 +609,7 @@ body.app-active #screen-app { overflow-y: auto; }
 
 .vehicle-card:hover { border-color: var(--border2); }
 .vehicle-card:hover::before { opacity: 1; }
-.vehicle-card.selected { border-color: var(--accent); background: rgba(123,128,193,0.05); }
+.vehicle-card.selected { border-color: var(--accent); background: rgba(59,130,246,0.05); }
 .vehicle-card.selected::before { opacity: 1; }
 
 .vehicle-icon {
@@ -626,7 +638,7 @@ body.app-active #screen-app { overflow-y: auto; }
 
 .vehicle-badge {
   padding: 4px 10px;
-  background: rgba(123,128,193,0.12);
+  background: rgba(59,130,246,0.12);
   color: var(--accent);
   border-radius: 6px;
   font-size: 11px;
@@ -684,13 +696,13 @@ body.app-active #screen-app { overflow-y: auto; }
 
 .part-category:hover {
   border-color: var(--accent);
-  background: rgba(123,128,193,0.05);
+  background: rgba(59,130,246,0.05);
   transform: translateY(-2px);
 }
 
 .part-category.selected {
   border-color: var(--accent);
-  background: rgba(123,128,193,0.08);
+  background: rgba(59,130,246,0.08);
 }
 
 .part-cat-icon { font-size: 28px; margin-bottom: 8px; }
@@ -770,9 +782,9 @@ body.app-active #screen-app { overflow-y: auto; }
 
 .btn-ver {
   padding: 7px 14px;
-  background: rgba(123,128,193,0.12);
+  background: rgba(59,130,246,0.12);
   color: var(--accent);
-  border: 1px solid rgba(123,128,193,0.2);
+  border: 1px solid rgba(59,130,246,0.2);
   border-radius: 6px;
   font-size: 12px;
   font-weight: 600;
@@ -781,7 +793,7 @@ body.app-active #screen-app { overflow-y: auto; }
   font-family: 'Sora', sans-serif;
 }
 
-.btn-ver:hover { background: rgba(123,128,193,0.2); }
+.btn-ver:hover { background: rgba(59,130,246,0.2); }
 
 /* PRICE MODAL */
 .modal-overlay {
@@ -842,7 +854,7 @@ body.app-active #screen-app { overflow-y: auto; }
 }
 
 .store-item:hover { border-color: var(--border2); }
-.store-item.best { border-color: var(--accent); background: rgba(123,128,193,0.06); }
+.store-item.best { border-color: var(--accent); background: rgba(59,130,246,0.06); }
 
 .store-name { font-size: 13px; font-weight: 600; color: var(--text); }
 .store-price { font-family: 'JetBrains Mono', monospace; font-size: 15px; color: var(--accent); font-weight: 500; }
@@ -925,7 +937,7 @@ body.app-active #screen-app { overflow-y: auto; }
 }
 
 .urgency-high { background: rgba(229,62,62,0.15); color: var(--red); }
-.urgency-med  { background: rgba(123,128,193,0.15); color: var(--accent); }
+.urgency-med  { background: rgba(59,130,246,0.15); color: var(--accent); }
 .urgency-low  { background: rgba(56,161,105,0.15); color: var(--green); }
 
 /* ===== TOAST ===== */
@@ -1009,7 +1021,7 @@ body.app-active #screen-app { overflow-y: auto; }
 .vehicle-img-wrap {
   position: relative;
   height: 80px;
-  background: linear-gradient(135deg, var(--surface2) 0%, rgba(123,128,193,0.04) 100%);
+  background: linear-gradient(135deg, var(--surface2) 0%, rgba(59,130,246,0.04) 100%);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -1017,7 +1029,7 @@ body.app-active #screen-app { overflow-y: auto; }
   font-family: 'Bebas Neue', sans-serif;
   font-size: 44px;
   letter-spacing: 2px;
-  color: rgba(123,128,193,0.15);
+  color: rgba(59,130,246,0.15);
   user-select: none;
 }
 
@@ -1239,8 +1251,8 @@ body.app-active #screen-app { overflow-y: auto; }
 .km-update-bar {
   display: flex; align-items: center; gap: 12px;
   padding: 14px 16px;
-  background: rgba(123,128,193,0.06);
-  border: 1px solid rgba(123,128,193,0.15);
+  background: rgba(59,130,246,0.06);
+  border: 1px solid rgba(59,130,246,0.15);
   border-radius: 8px;
   margin-bottom: 16px;
   flex-wrap: wrap;
@@ -1294,7 +1306,7 @@ body.app-active #screen-app { overflow-y: auto; }
 .score-v-tab.active {
   border-color: var(--accent);
   color: var(--accent);
-  background: rgba(123,128,193,0.08);
+  background: rgba(59,130,246,0.08);
 }
 
 /* ===== ADMIN DASHBOARD ===== */
@@ -1349,7 +1361,7 @@ body.app-active #screen-app { overflow-y: auto; }
   padding: 3px 8px; border-radius: 4px; font-size: 10px; font-weight: 700;
   letter-spacing: 0.5px; white-space: nowrap; align-self: flex-start;
 }
-.tier-top    { background: rgba(123,128,193,0.15); color: var(--accent); }
+.tier-top    { background: rgba(59,130,246,0.15); color: var(--accent); }
 .tier-mid    { background: rgba(56,161,105,0.12); color: #38a169; }
 .tier-future { background: rgba(90,88,84,0.3);    color: var(--text3); }
 
@@ -1373,7 +1385,7 @@ body.app-active #screen-app { overflow-y: auto; }
   font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px;
 }
 .pt-free  { background: rgba(56,161,105,0.12); color: #38a169; }
-.pt-paid  { background: rgba(123,128,193,0.12); color: var(--accent); }
+.pt-paid  { background: rgba(59,130,246,0.12); color: var(--accent); }
 .pt-lock  { background: rgba(90,88,84,0.3); color: var(--text3); }
 
 .price-compare-row {
@@ -1397,8 +1409,8 @@ body.app-active #screen-app { overflow-y: auto; }
 .oficina-comm { font-size: 10px; color: #38a169; }
 
 .ad-banner {
-  background: linear-gradient(90deg, rgba(123,128,193,0.1), rgba(123,128,193,0.05));
-  border: 1px solid rgba(123,128,193,0.2); border-radius: 6px;
+  background: linear-gradient(90deg, rgba(59,130,246,0.1), rgba(59,130,246,0.05));
+  border: 1px solid rgba(59,130,246,0.2); border-radius: 6px;
   padding: 10px 12px; display: flex; align-items: center; gap: 10px;
   margin-bottom: 6px;
 }
@@ -1447,7 +1459,7 @@ body.app-active #screen-app { overflow-y: auto; }
 .op-name { font-size: 12px; color: var(--text); font-weight: 600; }
 .op-price { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-size: 12px; }
 .op-tag { font-size: 10px; padding: 2px 6px; border-radius: 3px; }
-.op-featured { background: rgba(123,128,193,0.12); color: var(--accent); }
+.op-featured { background: rgba(59,130,246,0.12); color: var(--accent); }
 
 .seguro-item {
   display: flex; align-items: center; justify-content: space-between;
@@ -1490,7 +1502,7 @@ body.app-active #screen-app { overflow-y: auto; }
 .sp-rank { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text3); width: 16px; }
 .sp-name { flex: 1; color: var(--text); }
 .sp-badge { font-size: 10px; padding: 2px 6px; border-radius: 3px; }
-.sp-patrocinado { background: rgba(123,128,193,0.12); color: var(--accent); }
+.sp-patrocinado { background: rgba(59,130,246,0.12); color: var(--accent); }
 .sp-organico   { background: rgba(90,88,84,0.2); color: var(--text3); }
 .sp-price { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); }
 
@@ -1504,7 +1516,7 @@ body.app-active #screen-app { overflow-y: auto; }
 }
 .lead-item:last-child { border-bottom: none; }
 .lead-name { color: var(--text); }
-.lead-intent { font-size: 10px; padding: 2px 6px; border-radius: 3px; background: rgba(123,128,193,0.1); color: var(--accent); }
+.lead-intent { font-size: 10px; padding: 2px 6px; border-radius: 3px; background: rgba(59,130,246,0.1); color: var(--accent); }
 .lead-price { font-family: 'JetBrains Mono', monospace; color: #38a169; font-size: 12px; }
 
 .exit-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
@@ -1541,16 +1553,18 @@ body.app-active #screen-app { overflow-y: auto; }
 
 /* ── Topbar mobile ─────────────────────────────────────────── */
 .mobile-topbar {
-  display: none;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 16px;
-  height: 56px;
+  display: none; /* shown in mobile @media */
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; z-index: 100;
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  height: 56px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  gap: 8px;
+  flex-shrink: 0;
 }
 .mobile-logo {
   font-family: 'Bebas Neue', sans-serif;
@@ -1617,7 +1631,7 @@ body.app-active #screen-app { overflow-y: auto; }
 /* ── Hero dashboard ────────────────────────────────────────── */
 .dash-hero-card {
   background: linear-gradient(135deg, var(--surface2) 0%, var(--surface) 100%);
-  border: 1px solid rgba(123,128,193,0.18);
+  border: 1px solid rgba(59,130,246,0.18);
   border-radius: var(--radius);
   padding: 20px;
   margin-bottom: 16px;
@@ -1626,7 +1640,7 @@ body.app-active #screen-app { overflow-y: auto; }
 .dash-hero-card::before {
   content: ''; position: absolute; top: -60px; right: -60px;
   width: 180px; height: 180px;
-  background: radial-gradient(circle, rgba(123,128,193,0.06) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%);
   pointer-events: none;
 }
 .dash-hero-title { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 1px; color: var(--white); line-height: 1.1; margin-bottom: 6px; }
@@ -1679,6 +1693,13 @@ body.app-active #screen-app { overflow-y: auto; }
    TABLET  768px
    ================================================================ */
 @media (min-width: 769px) {
+  /* Tablet & desktop: flex-row layout with sidebar */
+  #screen-app {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch;
+    overflow-y: auto;
+  }
   /* Tablet & desktop: sidebar becomes visible inline */
   .sidebar {
     display: flex !important; /* show sidebar at 769px+ */
@@ -1724,10 +1745,12 @@ body.app-active #screen-app { overflow-y: auto; }
 
   /* Main content fills 100% — screen-app is display:block so this is natural */
   .main-content {
-    width: 100%;
-    min-width: 0;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
     min-height: 0;
     padding-bottom: 70px;
+    overflow-x: hidden;
   }
 
   .page { padding: 12px 16px 24px; }
@@ -1774,7 +1797,7 @@ body.app-active #screen-app { overflow-y: auto; }
   border: none;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(123,128,193,0.5);
+  box-shadow: 0 6px 20px rgba(59,130,246,0.5);
   transition: transform 0.18s, box-shadow 0.18s;
   -webkit-tap-highlight-color: transparent;
   position: relative;
@@ -1782,7 +1805,7 @@ body.app-active #screen-app { overflow-y: auto; }
 }
 .bn-fab:active {
   transform: scale(0.92);
-  box-shadow: 0 2px 8px rgba(123,128,193,0.3);
+  box-shadow: 0 2px 8px rgba(59,130,246,0.3);
 }
 .bn-fab-plus {
   font-size: 30px; font-weight: 300;
@@ -1946,7 +1969,7 @@ body.app-active #screen-app { overflow-y: auto; }
 }
 
 /* Previne overflow horizontal global */
-.main-content, .page { overflow-x: hidden; }
+.main-content, 
 
 /* Campos de formulário — sem zoom no iOS */
 input[type="text"],
@@ -1976,21 +1999,21 @@ select, textarea {
 }
 
 /* ===== INFO DO MODELO ===== */
-.model-info-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-.model-info-tab  { padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--border2); color: var(--text2); background: var(--surface2); transition: all 0.2s; min-height: 36px; }
-.model-info-tab.active { border-color: var(--accent); color: var(--accent); background: rgba(123,128,193,0.08); }
-.maint-rec-item  { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
-.maint-rec-item:last-child { border-bottom: none; }
-.maint-rec-icon  { font-size: 22px; flex-shrink: 0; }
-.maint-rec-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
-.maint-rec-desc  { font-size: 12px; color: var(--text2); line-height: 1.55; }
-.maint-rec-km    { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); margin-top: 4px; font-weight: 600; }
-.problem-item    { background: rgba(229,62,62,0.04); border: 1px solid rgba(229,62,62,0.15); border-radius: 8px; padding: 12px 14px; margin-bottom: 10px; }
-.problem-title   { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
-.problem-desc    { font-size: 12px; color: var(--text2); line-height: 1.55; }
-.problem-freq    { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-top: 6px; display: inline-block; }
+
+
+
+
+
+
+
+
+
+
+
+
+
 .freq-high { background: rgba(229,62,62,0.1); color: var(--red); }
-.freq-med  { background: rgba(123,128,193,0.1); color: var(--accent); }
+.freq-med  { background: rgba(59,130,246,0.1); color: var(--accent); }
 .freq-low  { background: rgba(56,161,105,0.1); color: #38a169; }
 
 /* ===== CHECKLIST ===== */
@@ -2129,11 +2152,11 @@ select, textarea {
 .sell-check-sub   { font-size: 11px; color: var(--text3); margin-top: 2px; }
 .sell-check-badge { font-size: 10px; padding: 3px 8px; border-radius: 4px; font-weight: 700; white-space: nowrap; }
 .sell-ok  { background: rgba(56,161,105,0.12); color: #38a169; }
-.sell-warn{ background: rgba(123,128,193,0.12); color: var(--accent); }
+.sell-warn{ background: rgba(59,130,246,0.12); color: var(--accent); }
 .sell-no  { background: rgba(229,62,62,0.10); color: var(--red); }
 .sell-price-estimate {
-  background: rgba(123,128,193,0.07);
-  border: 1px solid rgba(123,128,193,0.2);
+  background: rgba(59,130,246,0.07);
+  border: 1px solid rgba(59,130,246,0.2);
   border-radius: 10px;
   padding: 18px 20px;
   display: flex; align-items: center; justify-content: space-between;
@@ -2148,7 +2171,7 @@ select, textarea {
   cursor: pointer; border: 1px solid var(--border2); color: var(--text2);
   background: var(--surface2); transition: all 0.2s;
 }
-.sell-v-tab.active { border-color: var(--accent); color: var(--accent); background: rgba(123,128,193,0.08); }
+.sell-v-tab.active { border-color: var(--accent); color: var(--accent); background: rgba(59,130,246,0.08); }
 
 /* ===== FORM VALIDATION ===== */
 .field-input.error, .field-select.error { border-color: var(--red) !important; }
@@ -2244,7 +2267,7 @@ select, textarea {
   flex-shrink: 0;
 }
 .chart-v-tab.active { border-color: currentColor; }
-.chart-v-tab.active[data-color="0"] { color: #7B80C1; background: rgba(123,128,193,0.08); border-color: #7B80C1; }
+.chart-v-tab.active[data-color="0"] { color: #3B82F6; background: rgba(59,130,246,0.08); border-color: #3B82F6; }
 .chart-v-tab.active[data-color="1"] { color: #60a5fa; background: rgba(96,165,250,0.08); border-color: #60a5fa; }
 .chart-v-tab.active[data-color="2"] { color: #68d391; background: rgba(104,211,145,0.08); border-color: #68d391; }
 .chart-v-tab.active[data-color="3"] { color: #fc8181; background: rgba(252,129,129,0.08); border-color: #fc8181; }
@@ -2295,7 +2318,7 @@ select, textarea {
   border-radius: 4px; margin-left: auto; white-space: nowrap;
 }
 .doc-ok      { background: rgba(56,161,105,0.12); color: #38a169; }
-.doc-warn    { background: rgba(123,128,193,0.12); color: var(--accent); }
+.doc-warn    { background: rgba(59,130,246,0.12); color: var(--accent); }
 .doc-expired { background: rgba(229,62,62,0.10); color: var(--red); }
 .doc-empty   { background: rgba(90,88,84,0.2); color: var(--text3); }
 .doc-date    { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text); margin-bottom: 6px; }
@@ -2343,8 +2366,8 @@ select, textarea {
 
 /* ===== INSIGHTS IA ===== */
 .insight-card {
-  background: linear-gradient(135deg, rgba(123,128,193,0.06), rgba(123,128,193,0.02));
-  border: 1px solid rgba(123,128,193,0.15);
+  background: linear-gradient(135deg, rgba(59,130,246,0.06), rgba(59,130,246,0.02));
+  border: 1px solid rgba(59,130,246,0.15);
   border-radius: 10px; padding: 14px 16px;
   margin-bottom: 10px; display: flex; gap: 12px; align-items: flex-start;
 }
@@ -2354,7 +2377,7 @@ select, textarea {
 .insight-tag   { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 3px; margin-top: 6px; }
 .tag-economy   { background: rgba(56,161,105,0.12); color: #38a169; }
 .tag-alert     { background: rgba(229,62,62,0.10); color: var(--red); }
-.tag-tip       { background: rgba(123,128,193,0.12); color: var(--accent); }
+.tag-tip       { background: rgba(59,130,246,0.12); color: var(--accent); }
 
 /* ===== SERVIÇOS PRÓXIMOS ===== */
 .nearby-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -2384,8 +2407,8 @@ select, textarea {
 
 /* ===== QUERO SONHAR ===== */
 .sonhar-hero {
-  background: linear-gradient(135deg, rgba(123,128,193,0.08), rgba(96,165,250,0.05));
-  border: 1px solid rgba(123,128,193,0.2);
+  background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(96,165,250,0.05));
+  border: 1px solid rgba(59,130,246,0.2);
   border-radius: 14px; padding: 24px; margin-bottom: 16px;
   display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
 }
@@ -2396,7 +2419,7 @@ select, textarea {
 .sonhar-cost-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
 .sonhar-cost-val   { font-family: 'Bebas Neue', sans-serif; font-size: 20px; }
 .sonhar-cost-sub   { font-size: 10px; color: var(--text3); margin-top: 2px; }
-.sonhar-total-bar  { background: rgba(123,128,193,0.08); border: 1px solid rgba(123,128,193,0.2); border-radius: 10px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
+.sonhar-total-bar  { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px; }
 
 /* ===== VIAGENS / CHECK-IN ===== */
 .viagem-map-wrap {
@@ -2475,7 +2498,7 @@ select, textarea {
   border-radius: 4px; white-space: nowrap;
 }
 .viagem-hist-badge.ida { background: rgba(96,165,250,0.1); color: #60a5fa; }
-.viagem-hist-badge.ida-volta { background: rgba(123,128,193,0.1); color: var(--accent); }
+.viagem-hist-badge.ida-volta { background: rgba(59,130,246,0.1); color: var(--accent); }
 
 .viagem-tipo-toggle {
   display: flex; gap: 8px; margin-bottom: 4px;
@@ -2488,7 +2511,7 @@ select, textarea {
   transition: all 0.15s; text-align: center;
 }
 .viagem-tipo-btn.active {
-  background: rgba(123,128,193,0.1); border-color: var(--accent);
+  background: rgba(59,130,246,0.1); border-color: var(--accent);
   color: var(--accent);
 }
 
@@ -2549,7 +2572,7 @@ select, textarea {
 .wish-card:hover { border-color: var(--border2); transform: translateY(-2px); box-shadow: var(--shadow); }
 .wish-card.selected-compare {
   border-color: var(--accent);
-  background: rgba(123,128,193,0.04);
+  background: rgba(59,130,246,0.04);
 }
 .wish-card-rank {
   position: absolute; top: -10px; left: 12px;
@@ -2588,7 +2611,7 @@ select, textarea {
   color: var(--text2); font-family: 'Sora', sans-serif;
   transition: all 0.15s;
 }
-.wish-btn-compare.active { background: rgba(123,128,193,0.12); border-color: var(--accent); color: var(--accent); }
+.wish-btn-compare.active { background: rgba(59,130,246,0.12); border-color: var(--accent); color: var(--accent); }
 .wish-btn-detail {
   padding: 7px 12px; border-radius: 6px;
   font-size: 11px; font-weight: 700; cursor: pointer;
@@ -2913,7 +2936,7 @@ select, textarea {
   transition:background .15s; margin-bottom:4px;
   background:var(--surface2);
 }
-.diag-item:hover { background:rgba(123,128,193,.08); }
+.diag-item:hover { background:rgba(59,130,246,.08); }
 .diag-item.done-item { opacity:.65; }
 .diag-cb {
   width:20px; height:20px; accent-color:var(--accent);
@@ -2976,7 +2999,7 @@ select, textarea {
   overflow: hidden;
   transition: all 0.3s;
 }
-.compare-card.rank-1 { border-color: #7B80C1; background: rgba(123,128,193,0.04); }
+.compare-card.rank-1 { border-color: #3B82F6; background: rgba(59,130,246,0.04); }
 .compare-card.rank-2 { border-color: #9e9e9e; background: rgba(158,158,158,0.04); }
 .compare-card.rank-3 { border-color: #cd7f32; background: rgba(205,127,50,0.04); }
 .compare-medal {
@@ -2986,7 +3009,7 @@ select, textarea {
   font-size: 11px; font-weight: 800; letter-spacing: 1px;
   text-transform: uppercase;
 }
-.compare-medal.rank-1 { background: linear-gradient(135deg,#7B80C1,#5860A8); color: #000; }
+.compare-medal.rank-1 { background: linear-gradient(135deg,#3B82F6,#1D4ED8); color: #000; }
 .compare-medal.rank-2 { background: linear-gradient(135deg,#bdbdbd,#757575); color: #000; }
 .compare-medal.rank-3 { background: linear-gradient(135deg,#cd7f32,#8d5524); color: #fff; }
 .compare-name {
@@ -3020,7 +3043,7 @@ select, textarea {
   font-size: 11px; font-weight: 700;
   margin-top: 12px;
 }
-.compare-score-badge.winner { background: rgba(123,128,193,0.12); color: var(--accent); border: 1px solid rgba(123,128,193,0.3); }
+.compare-score-badge.winner { background: rgba(59,130,246,0.12); color: var(--accent); border: 1px solid rgba(59,130,246,0.3); }
 .compare-score-badge.runner { background: rgba(158,158,158,0.1); color: #9e9e9e; border: 1px solid rgba(158,158,158,0.2); }
 .compare-score-badge.third { background: rgba(205,127,50,0.1); color: #cd7f32; border: 1px solid rgba(205,127,50,0.2); }
 
@@ -3035,7 +3058,7 @@ select, textarea {
 /* ===== INFO DO MODELO ===== */
 .model-info-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
 .model-info-tab  { padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--border2); color: var(--text2); background: var(--surface2); transition: all 0.2s; }
-.model-info-tab.active { border-color: var(--accent); color: var(--accent); background: rgba(123,128,193,0.08); }
+.model-info-tab.active { border-color: var(--accent); color: var(--accent); background: rgba(59,130,246,0.08); }
 .maint-rec-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
 .maint-rec-item:last-child { border-bottom: none; }
 .maint-rec-icon  { font-size: 22px; flex-shrink: 0; }
@@ -3047,7 +3070,7 @@ select, textarea {
 .problem-desc    { font-size: 12px; color: var(--text2); line-height: 1.55; }
 .problem-freq    { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-top: 6px; display: inline-block; }
 .freq-high { background: rgba(229,62,62,0.1); color: var(--red); }
-.freq-med  { background: rgba(123,128,193,0.1); color: var(--accent); }
+.freq-med  { background: rgba(59,130,246,0.1); color: var(--accent); }
 .freq-low  { background: rgba(56,161,105,0.1); color: #38a169; }
 
 /* ===== CHECKLIST ===== */
@@ -3088,7 +3111,6 @@ select, textarea {
    ================================================================ */
 @media (min-width: 1024px) {
   /* Theme toggle always visible on desktop sidebar */
-  #sidebar-theme-btn { display: block !important; }
   /* Bottom nav hidden on desktop (user uses sidebar) */
   .bottom-nav { display: none !important; }
   /* Mobile topbar hidden */
@@ -3138,26 +3160,12 @@ select, textarea {
 
     <!-- Logo -->
     <div class="logo">
-      <div class="logo-icon" style="background:transparent;padding:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="52" height="52" style="display:inline-block;vertical-align:middle;">
-  <!-- Anel externo com abertura -->
-  <path d="M50 8
-    A42 42 0 1 1 11.5 65
-    L19 61
-    A34 34 0 1 0 50 16 Z" fill="#7B80C1"/>
-  <!-- Ponto de abertura superior direito -->
-  <circle cx="72" cy="16" r="4.5" fill="#7B80C1"/>
-  <!-- Ponto de abertura direito -->
-  <circle cx="89" cy="50" r="4.5" fill="#7B80C1"/>
-  <!-- Disco central -->
-  <circle cx="50" cy="50" r="22" fill="#7B80C1"/>
-  <!-- Raios da roda — 4 raios com espaço entre eles -->
-  <rect x="47" y="28" width="6" height="16" rx="3" fill="white"/>
-  <rect x="47" y="56" width="6" height="16" rx="3" fill="white"/>
-  <rect x="28" y="47" width="16" height="6" rx="3" fill="white"/>
-  <rect x="56" y="47" width="16" height="6" rx="3" fill="white"/>
-  <!-- Hub central -->
-  <circle cx="50" cy="50" r="8" fill="white"/>
-  <circle cx="50" cy="50" r="4.5" fill="#7B80C1"/>
+      <div class="logo-icon" style="background:transparent;padding:0;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="52" height="52" style="display:inline-block;vertical-align:middle;flex-shrink:0;">
+  <circle cx="80" cy="80" r="76" fill="#1D4ED8"/>
+  <polygon points="80,30 132,114 120,114 80,56 40,114 28,114" fill="white" opacity="0.95"/>
+  <polygon points="80,66 120,126 108,126 80,90 52,126 40,126" fill="white" opacity="0.65"/>
+  <rect x="52" y="130" width="56" height="20" rx="10" fill="rgba(255,255,255,0.2)"/>
+  <path d="M 65 140 L 75 150 L 96 130" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 </svg></div>
       <div>
         <div class="logo-text">MANY<span>CARS</span></div>
@@ -3166,7 +3174,7 @@ select, textarea {
     </div>
 
     <!-- Modo demo (sem Supabase ou sem conexão) -->
-    <div id="auth-demo-banner" style="display:none;background:rgba(123,128,193,0.08);border:1px solid rgba(123,128,193,0.3);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:11px;color:var(--accent);text-align:center;line-height:1.6;">
+    <div id="auth-demo-banner" style="display:none;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.3);border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:11px;color:var(--accent);text-align:center;line-height:1.6;">
       ⚠️ <strong>Modo local</strong> — sem conexão com o servidor.<br>Seus dados ficam salvos apenas neste dispositivo.
     </div>
 
@@ -3201,7 +3209,7 @@ select, textarea {
       </div>
 
       <!-- Depoimento rotativo -->
-      <div id="auth-testimonial" style="margin-top:14px;background:rgba(123,128,193,0.1);border:1px solid rgba(123,128,193,0.2);border-radius:10px;padding:10px 13px;position:relative;min-height:52px;">
+      <div id="auth-testimonial" style="margin-top:14px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);border-radius:10px;padding:10px 13px;position:relative;min-height:52px;">
         <div style="font-size:11px;color:var(--text2);line-height:1.6;font-style:italic;" id="auth-testimonial-text">"Vendi meu Corolla R$8.000 mais caro porque tinha o histórico completo no ManyCars."</div>
         <div style="font-size:10px;color:var(--text3);margin-top:4px;" id="auth-testimonial-author">— Rafael M., São Paulo</div>
       </div>
@@ -3341,22 +3349,16 @@ select, textarea {
 
     <!-- Logo CENTRO -->
     <div class="mobile-logo" style="display:flex;align-items:center;gap:6px;flex:1;justify-content:center;">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="28" height="28" style="display:inline-block;vertical-align:middle;">
-        <path d="M50 8 A42 42 0 1 1 11.5 65 L19 61 A34 34 0 1 0 50 16 Z" fill="#7B80C1"/>
-        <circle cx="72" cy="16" r="4.5" fill="#7B80C1"/>
-        <circle cx="89" cy="50" r="4.5" fill="#7B80C1"/>
-        <circle cx="50" cy="50" r="22" fill="#7B80C1"/>
-        <rect x="47" y="28" width="6" height="16" rx="3" fill="white"/>
-        <rect x="47" y="56" width="6" height="16" rx="3" fill="white"/>
-        <rect x="28" y="47" width="16" height="6" rx="3" fill="white"/>
-        <rect x="56" y="47" width="16" height="6" rx="3" fill="white"/>
-        <circle cx="50" cy="50" r="8" fill="white"/>
-        <circle cx="50" cy="50" r="4.5" fill="#7B80C1"/>
-      </svg>
-      <!-- Logo + badge de plano empilhados -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="28" height="28" style="display:inline-block;vertical-align:middle;flex-shrink:0;">
+  <circle cx="80" cy="80" r="76" fill="#1D4ED8"/>
+  <polygon points="80,30 132,114 120,114 80,56 40,114 28,114" fill="white" opacity="0.95"/>
+  <polygon points="80,66 120,126 108,126 80,90 52,126 40,126" fill="white" opacity="0.65"/>
+  <rect x="52" y="130" width="56" height="20" rx="10" fill="rgba(255,255,255,0.2)"/>
+  <path d="M 65 140 L 75 150 L 96 130" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
       <div style="display:flex;flex-direction:column;align-items:center;line-height:1;">
         <div>MANY<span>CARS</span></div>
-        <div id="topbar-plan-badge" style="font-size:9px;font-weight:700;letter-spacing:1px;padding:1px 7px;border-radius:20px;margin-top:2px;background:rgba(123,128,193,0.12);color:var(--text3);font-family:'Sora',sans-serif;display:none;"></div>
+        <div id="topbar-plan-badge" style="font-size:9px;font-weight:700;letter-spacing:1px;padding:1px 7px;border-radius:20px;margin-top:2px;background:rgba(59,130,246,0.12);color:var(--text3);font-family:'Sora',sans-serif;display:none;"></div>
       </div>
     </div>
 
@@ -3377,33 +3379,19 @@ select, textarea {
   <!-- SIDEBAR -->
   <div class="sidebar" id="sidebar">
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:32px;">
-      <div class="sidebar-logo" style="margin-bottom:0;display:flex;align-items:center;gap:8px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="32" height="32" style="display:inline-block;vertical-align:middle;margin-right:0;">
-  <!-- Anel externo com abertura -->
-  <path d="M50 8
-    A42 42 0 1 1 11.5 65
-    L19 61
-    A34 34 0 1 0 50 16 Z" fill="#7B80C1"/>
-  <!-- Ponto de abertura superior direito -->
-  <circle cx="72" cy="16" r="4.5" fill="#7B80C1"/>
-  <!-- Ponto de abertura direito -->
-  <circle cx="89" cy="50" r="4.5" fill="#7B80C1"/>
-  <!-- Disco central -->
-  <circle cx="50" cy="50" r="22" fill="#7B80C1"/>
-  <!-- Raios da roda — 4 raios com espaço entre eles -->
-  <rect x="47" y="28" width="6" height="16" rx="3" fill="white"/>
-  <rect x="47" y="56" width="6" height="16" rx="3" fill="white"/>
-  <rect x="28" y="47" width="16" height="6" rx="3" fill="white"/>
-  <rect x="56" y="47" width="16" height="6" rx="3" fill="white"/>
-  <!-- Hub central -->
-  <circle cx="50" cy="50" r="8" fill="white"/>
-  <circle cx="50" cy="50" r="4.5" fill="#7B80C1"/>
+      <div class="sidebar-logo" style="margin-bottom:0;display:flex;align-items:center;gap:8px;"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="32" height="32" style="display:inline-block;vertical-align:middle;flex-shrink:0;">
+  <circle cx="80" cy="80" r="76" fill="#1D4ED8"/>
+  <polygon points="80,30 132,114 120,114 80,56 40,114 28,114" fill="white" opacity="0.95"/>
+  <polygon points="80,66 120,126 108,126 80,90 52,126 40,126" fill="white" opacity="0.65"/>
+  <rect x="52" y="130" width="56" height="20" rx="10" fill="rgba(255,255,255,0.2)"/>
+  <path d="M 65 140 L 75 150 L 96 130" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 </svg>MANY<span>CARS</span></div>
-      <button onclick="closeSidebar()" style="display:none; background:none; border:none; color:var(--text3); font-size:18px; cursor:pointer; padding:4px;" id="sidebar-close">✕</button>
+      <button onclick="closeSidebar()" style="display:none;background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:4px;" id="sidebar-close">✕</button>
     </div>
     <div id="nav-admin" class="nav-item" onclick="_pedirSenhaMenu('admin')" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);margin-bottom:2px;">
       <span class="nav-icon">🛡️</span> <span style="color:#a78bfa;font-weight:700;letter-spacing:0.5px;">Administrador</span>
     </div>
-    <div class="nav-item" onclick="_pedirSenhaMenu('monetizacao')" style="background:rgba(123,128,193,0.07);border:1px solid rgba(123,128,193,0.2);margin-bottom:4px;">
+    <div class="nav-item" onclick="_pedirSenhaMenu('monetizacao')" style="background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.2);margin-bottom:4px;">
       <span class="nav-icon">💰</span> <span style="color:var(--accent);font-weight:600;">Monetização</span>
       <span style="margin-left:auto;font-size:10px;">🔒</span>
     </div>
@@ -3446,13 +3434,13 @@ select, textarea {
     </div>
     <div class="nav-item" data-unlock="record3" onclick="showPage('sonhar')">
       <span class="nav-icon">🌟</span> Lista de Desejos
-      <span id="wishlist-badge" style="margin-left:auto;background:rgba(123,128,193,0.15);color:var(--accent);font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;display:none;"></span>
+      <span id="wishlist-badge" style="margin-left:auto;background:rgba(59,130,246,0.15);color:var(--accent);font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;display:none;"></span>
     </div>
 
 
     <!-- Info do Modelo e Opiniões acessíveis via Garagem -->
-    <div class="nav-item" onclick="showPage('premium')" class="nav-premium" style="background:linear-gradient(135deg,rgba(123,128,193,0.1),rgba(167,139,250,0.1));border:1px solid rgba(123,128,193,0.25);">
-      <span class="nav-icon">👑</span> <span style="background:linear-gradient(90deg,#7B80C1,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;">✦ Fazer Upgrade</span>
+    <div class="nav-item" onclick="showPage('premium')" class="nav-premium" style="background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(167,139,250,0.1));border:1px solid rgba(59,130,246,0.25);">
+      <span class="nav-icon">👑</span> <span style="background:linear-gradient(90deg,#3B82F6,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;">✦ Fazer Upgrade</span>
     </div>
 
     <!-- Modos ocultos (acesso via v1.0 MVP × 5) -->
@@ -3462,9 +3450,7 @@ select, textarea {
       <!-- Indicador de modo ativo -->
       <div id="modo-badge" style="display:none;margin-bottom:8px;text-align:center;padding:6px 10px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:1px;"></div>
 
-      <div style="display:flex;gap:6px;margin-bottom:8px;">
-        <button onclick="toggleTheme()" style="flex:1;padding:7px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:11px;font-weight:600;color:var(--text2);cursor:pointer;font-family:'Sora',sans-serif;" id="sidebar-theme-btn">🌙 Tema</button>
-      </div>
+
       <div style="font-size:10px; color:var(--text3); text-align:center; margin-bottom:10px; padding:6px 8px; background:rgba(56,161,105,0.08); border-radius:6px; border:1px solid rgba(56,161,105,0.15);">
         <span style="color:#38a169;">💾</span> Dados salvos localmente
         <div id="saved-at" style="margin-top:2px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text3);"></div>
@@ -3486,14 +3472,14 @@ select, textarea {
       </div>
       <button class="logout-btn" onclick="doLogout()" aria-label="Sair da conta">Sair da conta</button>
       <button class="logout-btn" style="margin-top:6px; background:rgba(229,62,62,0.08); color:var(--red); border-color:rgba(229,62,62,0.2);" onclick="confirmarLimparDados()">🗑 Limpar todos os dados</button>
-      <button class="logout-btn" style="margin-top:6px;color:var(--accent);border-color:rgba(123,128,193,0.3);background:rgba(123,128,193,0.06);" onclick="closeSidebar();setTimeout(function(){localStorage.removeItem('mc_tour_done');iniciarTour();},300);">🗺️ Ver tour do app</button>
+      <button class="logout-btn" style="margin-top:6px;color:var(--accent);border-color:rgba(59,130,246,0.3);background:rgba(59,130,246,0.06);" onclick="closeSidebar();setTimeout(function(){localStorage.removeItem('mc_tour_done');iniciarTour();},300);">🗺️ Ver tour do app</button>
       <div style="text-align:center;margin-top:8px;font-size:9px;color:var(--text3);padding:4px;">v1.0 MVP</div>
     </div>
   </div>
 
   <!-- MAIN -->
   <!-- Banner de modo teste — aparece no topo quando ativo -->
-  <div id="teste-floating-banner" style="display:none;position:sticky;top:0;z-index:100;background:rgba(123,128,193,0.95);backdrop-filter:blur(4px);padding:8px 16px;display:none;align-items:center;justify-content:center;gap:8px;">
+  <div id="teste-floating-banner" style="display:none;position:sticky;top:0;z-index:100;background:rgba(59,130,246,0.95);backdrop-filter:blur(4px);padding:8px 16px;display:none;align-items:center;justify-content:center;gap:8px;">
     <span style="font-size:14px;">🧪</span>
     <span style="font-size:12px;font-weight:800;color:#0c0d0f;letter-spacing:1px;">MODO TESTE ATIVO — dados não afetam estatísticas reais</span>
     <button onclick="toggleModoTeste()" style="margin-left:8px;background:rgba(0,0,0,0.15);border:none;border-radius:4px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;color:#0c0d0f;">Desativar</button>
@@ -3582,7 +3568,7 @@ select, textarea {
         <!-- Seletor de veículo compacto -->
         <div id="dash-vehicle-selector" style="display:none;align-items:center;gap:6px;">
           <button onclick="dashVehicleNav(-1)" style="width:28px;height:28px;border-radius:50%;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">‹</button>
-          <div style="background:rgba(123,128,193,0.08);border:1px solid var(--accent);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--accent);min-width:120px;text-align:center;" id="dash-active-vehicle-label">—</div>
+          <div style="background:rgba(59,130,246,0.08);border:1px solid var(--accent);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--accent);min-width:120px;text-align:center;" id="dash-active-vehicle-label">—</div>
           <button onclick="dashVehicleNav(1)"  style="width:28px;height:28px;border-radius:50%;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">›</button>
         </div>
       </div>
@@ -3719,7 +3705,7 @@ select, textarea {
           <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">
             <div style="width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0;"></div>
             <span style="font-size:13px; color:var(--text2); font-weight:600;">Confirme ou edite os dados do veículo</span>
-            <span id="placa-badge" style="font-family:'JetBrains Mono'; font-size:12px; color:var(--accent); background:rgba(123,128,193,0.1); padding:3px 10px; border-radius:4px; margin-left:auto;"></span>
+            <span id="placa-badge" style="font-family:'JetBrains Mono'; font-size:12px; color:var(--accent); background:rgba(59,130,246,0.1); padding:3px 10px; border-radius:4px; margin-left:auto;"></span>
           </div>
           <div class="form-grid">
             <div class="form-group">
@@ -3736,11 +3722,11 @@ select, textarea {
             </div>
             <div class="form-group">
               <div class="field-label">Cor</div>
-              <input class="field-input" id="v-cor" readonly style="background:rgba(123,128,193,0.05); border-color:rgba(123,128,193,0.2); cursor:default;">
+              <input class="field-input" id="v-cor" readonly style="background:rgba(59,130,246,0.05); border-color:rgba(59,130,246,0.2); cursor:default;">
             </div>
             <div class="form-group">
               <div class="field-label">Combustível</div>
-              <input class="field-input" id="v-combustivel" readonly style="background:rgba(123,128,193,0.05); border-color:rgba(123,128,193,0.2); cursor:default;">
+              <input class="field-input" id="v-combustivel" readonly style="background:rgba(59,130,246,0.05); border-color:rgba(59,130,246,0.2); cursor:default;">
             </div>
             <div class="form-group">
               <div class="field-label">Quilometragem atual</div>
@@ -3817,7 +3803,7 @@ select, textarea {
             <div style="font-size:13px;font-weight:600;color:var(--text);">Notificações push</div>
           <div style="font-size:11px;color:var(--text3);margin-top:2px;">Receba alertas de manutenção no celular</div>
         </div>
-        <button id="btn-ativar-push" onclick="_solicitarPush()" style="background:rgba(123,128,193,0.08);border:1px solid rgba(123,128,193,0.3);border-radius:8px;padding:8px 14px;color:var(--accent);font-family:'Sora',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">🔔 Ativar notificações</button>
+        <button id="btn-ativar-push" onclick="_solicitarPush()" style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.3);border-radius:8px;padding:8px 14px;color:var(--accent);font-family:'Sora',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">🔔 Ativar notificações</button>
       </div>
     </div>
     <!-- Aparência -->
@@ -3828,7 +3814,7 @@ select, textarea {
         <div style="font-size:13px;font-weight:600;color:var(--text);">Tema do aplicativo</div>
             <div style="font-size:11px;color:var(--text3);margin-top:2px;">ManyCars usa modo claro como padrão</div>
           </div>
-          <span style="font-size:11px;padding:6px 14px;background:rgba(123,128,193,0.1);border:1px solid rgba(123,128,193,0.3);border-radius:8px;color:var(--accent);font-weight:600;">☀️ Modo Claro</span>
+          <span style="font-size:11px;padding:6px 14px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);border-radius:8px;color:var(--accent);font-weight:600;">☀️ Modo Claro</span>
         </div>
       </div>
 
@@ -5326,7 +5312,7 @@ select, textarea {
 
         <!-- Passaporte automático -->
         <div id="anunciar-passaporte-info"
-          style="background:rgba(123,128,193,0.08);border:1px solid rgba(123,128,193,0.25);border-radius:10px;padding:12px 14px;margin-bottom:16px;">
+          style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.25);border-radius:10px;padding:12px 14px;margin-bottom:16px;">
           <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:4px;">🛡️ Passaporte verificado incluso</div>
           <div style="font-size:11px;color:var(--text2);line-height:1.6;">Seu anúncio exibirá automaticamente o histórico de manutenções e o score do veículo. Isso aumenta a confiança do comprador e acelera a venda.</div>
         </div>
@@ -5457,7 +5443,7 @@ select, textarea {
               oninput="sugerirCidades(this,'sug-origem-base-list')" onblur="setTimeout(function(){fecharSugestoes('sug-origem-base-list')},200)" autocomplete="off" style="font-size:13px;">
             <div class="city-suggestions" id="sug-origem-base-list" style="display:none;"></div>
           </div>
-          <button onclick="renderViagemSugestoes()" style="background:rgba(123,128,193,0.08);border:1px solid var(--accent);border-radius:8px;color:var(--accent);font-size:12px;font-weight:700;padding:10px 16px;cursor:pointer;font-family:'Sora',sans-serif;white-space:nowrap;">↻ Novas sugestões</button>
+          <button onclick="renderViagemSugestoes()" style="background:rgba(59,130,246,0.08);border:1px solid var(--accent);border-radius:8px;color:var(--accent);font-size:12px;font-weight:700;padding:10px 16px;cursor:pointer;font-family:'Sora',sans-serif;white-space:nowrap;">↻ Novas sugestões</button>
         </div>
         <div id="viagem-sugestoes-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;"></div>
       </div>
@@ -5500,7 +5486,7 @@ select, textarea {
             <input class="field-input" id="sim-preco" type="number" inputmode="decimal" step="0.01" placeholder="5.89" oninput="calcSimViagem()">
           </div>
         </div>
-        <div id="sim-resultado" style="display:none;background:rgba(123,128,193,0.05);border:1px solid rgba(123,128,193,0.2);border-radius:10px;padding:14px 16px;">
+        <div id="sim-resultado" style="display:none;background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.2);border-radius:10px;padding:14px 16px;">
           <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;">📊 Estimativa da viagem</div>
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;">
             <div style="text-align:center;"><div id="sim-res-litros" style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#60a5fa;">—</div><div style="font-size:10px;color:var(--text3);">Litros necessários</div></div>
@@ -5576,7 +5562,7 @@ select, textarea {
         </div>
 
         <!-- Preview de consumo em tempo real -->
-        <div id="viagem-preview" style="display:none;background:rgba(123,128,193,0.06);border:1px solid rgba(123,128,193,0.2);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;">
+        <div id="viagem-preview" style="display:none;background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);border-radius:8px;padding:10px 14px;margin-bottom:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;text-align:center;">
           <div><div id="prev-kml" style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--accent);">—</div><div style="font-size:10px;color:var(--text3);">km/L</div></div>
           <div><div id="prev-custo" style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fc8181;">—</div><div style="font-size:10px;color:var(--text3);">Custo total</div></div>
           <div><div id="prev-tempo" style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#60a5fa;">—</div><div style="font-size:10px;color:var(--text3);">Tempo estimado</div></div>
@@ -5636,7 +5622,7 @@ select, textarea {
         </div>
       </div>
       <!-- CTA rápido para o vitrine -->
-      <div style="background:rgba(123,128,193,0.07);border:1px solid rgba(123,128,193,0.2);border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px;">
+      <div style="background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.2);border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px;">
         <span style="font-size:28px;flex-shrink:0;">🏪</span>
         <div style="flex:1;">
           <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;">Já quer anunciar?</div>
@@ -5846,7 +5832,7 @@ select, textarea {
               <div id="plus-economia" style="font-size:10px;color:#276749;font-weight:700;"></div>
             </div>
           </div>
-          <div style="height:1px;background:rgba(123,128,193,0.15);margin:12px 0;"></div>
+          <div style="height:1px;background:rgba(59,130,246,0.15);margin:12px 0;"></div>
           <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px;">
             <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text2);">✅ <span><strong>Até 3 veículos</strong></span></div>
             <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text2);">✅ <span>Manuais técnicos dos 20 modelos</span></div>
@@ -5863,7 +5849,7 @@ select, textarea {
         </div>
 
         <!-- PRO -->
-        <div class="card" style="border-color:rgba(123,128,193,0.3);" id="plano-pro-card">
+        <div class="card" style="border-color:rgba(59,130,246,0.3);" id="plano-pro-card">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
             <div>
               <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--text);">Pro</div>
@@ -5938,19 +5924,19 @@ select, textarea {
 
 <div id="page-modo-teste" class="page">
   <div class="page-header">
-    <div class="page-title" style="color:#7B80C1;">🧪 MODO TESTE</div>
+    <div class="page-title" style="color:#3B82F6;">🧪 MODO TESTE</div>
     <div class="page-sub">Sandbox isolado — nada afeta suas estatísticas reais</div>
   </div>
 
   <!-- Status banner -->
-  <div id="teste-status-banner" style="margin-bottom:16px;padding:14px 16px;border-radius:10px;background:rgba(123,128,193,0.08);border:1px solid rgba(123,128,193,0.3);">
+  <div id="teste-status-banner" style="margin-bottom:16px;padding:14px 16px;border-radius:10px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.3);">
     <div style="display:flex;align-items:center;gap:10px;">
       <div id="teste-dot" style="width:10px;height:10px;border-radius:50%;background:#aaa;flex-shrink:0;"></div>
       <div>
         <div id="teste-status-label" style="font-size:13px;font-weight:700;color:var(--text);">Modo Teste desativado</div>
         <div style="font-size:11px;color:var(--text3);margin-top:2px;">Ative para usar um ambiente isolado sem afetar seus dados reais.</div>
       </div>
-      <button onclick="toggleModoTeste()" id="btn-toggle-teste" style="margin-left:auto;padding:8px 18px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;background:rgba(123,128,193,0.15);border:1px solid rgba(123,128,193,0.4);color:var(--accent);">Ativar</button>
+      <button onclick="toggleModoTeste()" id="btn-toggle-teste" style="margin-left:auto;padding:8px 18px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.4);color:var(--accent);">Ativar</button>
     </div>
   </div>
 
@@ -6143,7 +6129,7 @@ select, textarea {
       </div>
 
       <!-- Hero do usuário -->
-      <div class="card" id="perfil-hero" style="background:linear-gradient(135deg,rgba(123,128,193,0.07),rgba(96,165,250,0.05));border-color:rgba(123,128,193,0.15);"></div>
+      <div class="card" id="perfil-hero" style="background:linear-gradient(135deg,rgba(59,130,246,0.07),rgba(96,165,250,0.05));border-color:rgba(59,130,246,0.15);"></div>
 
       <!-- Stats gerais -->
       <div id="perfil-stats-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;"></div>
@@ -6514,7 +6500,7 @@ select, textarea {
       </div>
       <div id="passaporte-export-info" style="font-size:12px;color:var(--text2);margin-bottom:12px;padding:8px 12px;background:var(--surface2);border-radius:8px;"></div>
       <button class="btn-primary" style="width:100%;padding:13px;" onclick="exportarPassaporte()">📥 Baixar Passaporte (.json)</button>
-      <button onclick="compartilharPassaporte()" style="width:100%;padding:13px;margin-top:10px;background:rgba(123,128,193,0.1);border:1.5px solid var(--accent);border-radius:10px;color:var(--accent);font-size:14px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <button onclick="compartilharPassaporte()" style="width:100%;padding:13px;margin-top:10px;background:rgba(59,130,246,0.1);border:1.5px solid var(--accent);border-radius:10px;color:var(--accent);font-size:14px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;">
         <span>🔗</span><span id="btn-compartilhar-passaporte-txt">Compartilhar link do Passaporte</span>
       </button>
     </div>
@@ -6547,7 +6533,7 @@ select, textarea {
     <div id="icon-picker-colors" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;"></div>
     <!-- Preview + confirmar -->
     <div style="display:flex;align-items:center;gap:16px;">
-      <div id="icon-picker-preview" style="width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;font-size:30px;border:3px solid #7B80C1;box-shadow:0 0 16px #7B80C144;flex-shrink:0;"></div>
+      <div id="icon-picker-preview" style="width:64px;height:64px;border-radius:50%;background:rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;font-size:30px;border:3px solid #3B82F6;box-shadow:0 0 16px #3B82F644;flex-shrink:0;"></div>
       <button class="btn-primary" style="flex:1;padding:14px;" onclick="salvarIconPicker()">✓ Confirmar</button>
     </div>
   </div>
@@ -6845,9 +6831,9 @@ function _updatePlanBadge() {
   var plano = (state.user && state.user.plano) || 'free';
 
   var configs = {
-    free:  { label: 'FREE',  bg: 'rgba(123,128,193,0.1)',  color: 'var(--text3)',          show: true  },
-    plus:  { label: 'PLUS',  bg: 'rgba(123,128,193,0.18)', color: 'var(--accent)',          show: true  },
-    pro:   { label: 'PRO',   bg: 'linear-gradient(90deg,rgba(123,128,193,0.25),rgba(167,139,250,0.25))', color: '#a78bfa', show: true },
+    free:  { label: 'FREE',  bg: 'rgba(59,130,246,0.1)',  color: 'var(--text3)',          show: true  },
+    plus:  { label: 'PLUS',  bg: 'rgba(59,130,246,0.18)', color: 'var(--accent)',          show: true  },
+    pro:   { label: 'PRO',   bg: 'linear-gradient(90deg,rgba(59,130,246,0.25),rgba(167,139,250,0.25))', color: '#a78bfa', show: true },
   };
 
   var cfg = configs[plano] || configs.free;
@@ -6862,6 +6848,21 @@ function _updatePlanBadge() {
     : 'none';
 }
 
+
+// ── Logo theme swap ──────────────────────────────────────────
+var _LOGO_INNER_DARK  = '<circle cx=\'80\' cy=\'80\' r=\'76\' fill=\'#1D4ED8\'/><polygon points=\'80,30 132,114 120,114 80,56 40,114 28,114\' fill=\'white\' opacity=\'0.95\'/><polygon points=\'80,66 120,126 108,126 80,90 52,126 40,126\' fill=\'white\' opacity=\'0.65\'/><rect x=\'52\' y=\'130\' width=\'56\' height=\'20\' rx=\'10\' fill=\'rgba(255,255,255,0.2)\'/><path d=\'M 65 140 L 75 150 L 96 130\' stroke=\'white\' stroke-width=\'3.5\' stroke-linecap=\'round\' stroke-linejoin=\'round\' fill=\'none\'/>';
+var _LOGO_INNER_LIGHT = '<circle cx=\'80\' cy=\'80\' r=\'76\' fill=\'#1E3A8A\'/><polygon points=\'80,30 132,114 120,114 80,56 40,114 28,114\' fill=\'white\' opacity=\'0.95\'/><polygon points=\'80,66 120,126 108,126 80,90 52,126 40,126\' fill=\'white\' opacity=\'0.65\'/><rect x=\'52\' y=\'130\' width=\'56\' height=\'20\' rx=\'10\' fill=\'rgba(255,255,255,0.25)\'/><path d=\'M 65 140 L 75 150 L 96 130\' stroke=\'white\' stroke-width=\'3.5\' stroke-linecap=\'round\' stroke-linejoin=\'round\' fill=\'none\'/>';
+
+function _updateLogosTheme(isLight) {
+  var inner = isLight ? _LOGO_INNER_LIGHT : _LOGO_INNER_DARK;
+  // All SVGs that contain the logo (identified by the chevron polygon)
+  document.querySelectorAll('svg').forEach(function(svg) {
+    if (svg.querySelector && svg.querySelector('polygon[points="80,30 132,114 120,114 80,56 40,114 28,114"]')) {
+      svg.innerHTML = inner;
+    }
+  });
+}
+
 function toggleTheme() {
   var isLight = document.body.classList.toggle('light-mode');
   localStorage.setItem('manycars_theme', isLight ? 'light' : 'dark');
@@ -6869,6 +6870,8 @@ function toggleTheme() {
 }
 
 function updateThemeUI(isLight) {
+  // Update logos
+  _updateLogosTheme(isLight);
   // Desktop sidebar button (se existir)
   var icon  = document.getElementById('theme-icon');
   var label = document.getElementById('theme-label');
@@ -6890,16 +6893,12 @@ function updateThemeUI(isLight) {
 }
 
 function loadTheme() {
-  // ManyCars sempre inicia em modo claro
-  document.body.classList.add('light-mode');
-  localStorage.setItem('manycars_theme', 'light');
   var saved = localStorage.getItem('manycars_theme');
   var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  var isLight = saved === 'light' || (saved === null && !prefersDark);
-  // Default to dark (app's native theme) — only apply light if explicitly saved or system is light
   var applyLight = saved === 'light';
   if (applyLight) document.body.classList.add('light-mode');
   updateThemeUI(applyLight);
+  setTimeout(function(){ _updateLogosTheme(applyLight); }, 80);
 }
 
 function syncBottomNav(page) {
@@ -7166,7 +7165,7 @@ async function _doSyncToCloud(data) {
         email:      data.user.email || '',
         cidade:     data.user.cidade || null,
         perf_icon:  data.user.perfilIcon || null,
-        perf_color: data.user.perfilColor || '#7B80C1',
+        perf_color: data.user.perfilColor || '#3B82F6',
         updated_at: new Date().toISOString()
       }, { onConflict: 'id' });
     }
@@ -7251,7 +7250,7 @@ async function _loadFromCloud(userId) {
     if (pData && state.user) {
       state.user.cidade     = pData.cidade     || state.user.cidade || '';
       state.user.perfilIcon = pData.perf_icon  || state.user.perfilIcon || '';
-      state.user.perfilColor= pData.perf_color || state.user.perfilColor || '#7B80C1';
+      state.user.perfilColor= pData.perf_color || state.user.perfilColor || '#3B82F6';
     }
 
     // Carrega documentos (IPVA, seguro, licenciamento)
@@ -7790,13 +7789,13 @@ function calcScore(vehicle) {
 
 function getScoreColor(score) {
   if (score >= 80) return '#38a169'; // green
-  if (score >= 55) return '#7B80C1'; // yellow
+  if (score >= 55) return '#3B82F6'; // yellow
   return '#e53e3e'; // red
 }
 
 function getScoreVerdict(score) {
   if (score >= 80) return { icon: '✅', text: 'Veículo em ótimo estado! Continue com as manutenções em dia.', bg: 'rgba(56,161,105,0.1)', color: '#38a169' };
-  if (score >= 55) return { icon: '⚠️', text: 'Atenção necessária. Alguns itens precisam de manutenção em breve.', bg: 'rgba(123,128,193,0.1)', color: '#7B80C1' };
+  if (score >= 55) return { icon: '⚠️', text: 'Atenção necessária. Alguns itens precisam de manutenção em breve.', bg: 'rgba(59,130,246,0.1)', color: '#3B82F6' };
   return { icon: '🚨', text: 'Cuidado! Manutenções urgentes pendentes. Agende uma revisão logo.', bg: 'rgba(229,62,62,0.1)', color: '#e53e3e' };
 }
 
@@ -7851,7 +7850,7 @@ function renderScore(vehicle) {
 
   var detailsHtml = '';
   criteria.forEach(function(c) {
-    var barColor = c.val >= 70 ? '#38a169' : c.val >= 40 ? '#7B80C1' : '#e53e3e';
+    var barColor = c.val >= 70 ? '#38a169' : c.val >= 40 ? '#3B82F6' : '#e53e3e';
     detailsHtml += '<div class="score-bar-row">';
     detailsHtml += '<div class="score-bar-label">' + c.label + '</div>';
     detailsHtml += '<div class="score-bar-track"><div class="score-bar-inner" style="width:' + c.val + '%;background:' + barColor + ';"></div></div>';
@@ -8068,7 +8067,7 @@ function renderAlerts() {
       ? 'Vencido há ' + Math.abs(a.kmLeft).toLocaleString('pt-BR') + ' km'
       : 'Faltam ' + a.kmLeft.toLocaleString('pt-BR') + ' km';
 
-    var barColor = a.urgency === 'high' ? '#e53e3e' : a.urgency === 'med' ? '#7B80C1' : '#38a169';
+    var barColor = a.urgency === 'high' ? '#e53e3e' : a.urgency === 'med' ? '#3B82F6' : '#38a169';
     var safeTitle = a.title.replace(/'/g, "\\'");
 
     html += '<div class="alert-item" style="flex-direction:column;align-items:stretch;gap:10px;">';
@@ -8080,7 +8079,7 @@ function renderAlerts() {
     html += '<div class="alert-urgency ' + urgencyClass[a.urgency] + '" style="white-space:nowrap;">' + a.label + '</div>';
     if (a.urgency !== 'low') {
       html += '<button onclick="marcarAlertaFeito(\'' + safeTitle + '\',' + vehicle.id + ')" title="Marcar como realizado" style="background:rgba(56,161,105,0.12);border:1px solid rgba(56,161,105,0.3);border-radius:6px;color:#38a169;font-size:11px;font-weight:700;padding:5px 10px;cursor:pointer;white-space:nowrap;font-family:\'Sora\',sans-serif;">✓ Feito</button>';
-      html += '<button onclick="adiarAlerta(\'' + safeTitle + '\',' + vehicle.id + ')" title="Adiar manutenção" style="background:rgba(123,128,193,0.08);border:1px solid rgba(123,128,193,0.25);border-radius:6px;color:var(--accent);font-size:11px;font-weight:700;padding:5px 10px;cursor:pointer;white-space:nowrap;font-family:\'Sora\',sans-serif;">⏰ Adiar</button>';
+      html += '<button onclick="adiarAlerta(\'' + safeTitle + '\',' + vehicle.id + ')" title="Adiar manutenção" style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.25);border-radius:6px;color:var(--accent);font-size:11px;font-weight:700;padding:5px 10px;cursor:pointer;white-space:nowrap;font-family:\'Sora\',sans-serif;">⏰ Adiar</button>';
     }
     html += '</div>';
     html += '</div>';
@@ -8178,7 +8177,7 @@ function _undoAction() {
 // GRÁFICO DE GASTOS
 // ============================================================
 // Paleta de cores para os veículos no gráfico
-var CHART_COLORS = ['#7B80C1', '#60a5fa', '#68d391', '#fc8181', '#a78bfa', '#f6ad55'];
+var CHART_COLORS = ['#3B82F6', '#60a5fa', '#68d391', '#fc8181', '#a78bfa', '#f6ad55'];
 // Veículo selecionado no gráfico (null = todos)
 var _chartVehicleFilter = null;
 
@@ -8358,7 +8357,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (/[A-Z]/.test(v)) score++;
     if (/[0-9]/.test(v)) score++;
     if (/[^A-Za-z0-9]/.test(v)) score++;
-    var colors = ['#e53e3e','#e53e3e','#7B80C1','#68d391','#38a169'];
+    var colors = ['#e53e3e','#e53e3e','#3B82F6','#68d391','#38a169'];
     var labels = ['','Fraca','Razoável','Boa','Forte'];
     var fill  = document.getElementById('pass-strength-fill');
     var label = document.getElementById('pass-strength-label');
@@ -8557,7 +8556,7 @@ function _syncSidebarAvatar() {
   var u = state.user || {};
   var firstName = (u.name || u.email || 'Usuário').split(' ')[0];
   var icon  = u.perfilIcon  || '';
-  var color = u.perfilColor || '#7B80C1';
+  var color = u.perfilColor || '#3B82F6';
   var av = document.getElementById('sidebar-avatar');
   var nm = document.getElementById('sidebar-name');
   if (av) {
@@ -8893,7 +8892,7 @@ async function buscarPlaca() {
     document.getElementById('v-combustivel').value = 'Flex';
 
     errEl.innerHTML = 'ℹ️ Não encontramos dados desta placa na nossa base. Preencha os dados do veículo abaixo — eles ficam salvos para consultas futuras.';
-    errEl.style.cssText = 'display:block;margin-top:14px;padding:12px 16px;background:rgba(123,128,193,0.07);border:1px solid rgba(123,128,193,0.2);border-radius:8px;font-size:13px;color:var(--accent);';
+    errEl.style.cssText = 'display:block;margin-top:14px;padding:12px 16px;background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.2);border-radius:8px;font-size:13px;color:var(--accent);';
 
     // Habilita autocomplete de marcas no campo
     _ativarAutocompleteMarca();
@@ -9076,7 +9075,7 @@ function _promptImportarHistorico(v) {
       var kmInfo = vInfo.km ? vInfo.km.toLocaleString('pt-BR') + ' km' : '—';
       previewEl.innerHTML =
         '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">' +
-          '<div style="width:40px;height:40px;border-radius:50%;background:rgba(123,128,193,0.12);border:2px solid rgba(123,128,193,0.3);display:flex;align-items:center;justify-content:center;font-family:\'Bebas Neue\',sans-serif;font-size:18px;color:var(--accent);">' + (vInfo.marca||'?').charAt(0) + '</div>' +
+          '<div style="width:40px;height:40px;border-radius:50%;background:rgba(59,130,246,0.12);border:2px solid rgba(59,130,246,0.3);display:flex;align-items:center;justify-content:center;font-family:\'Bebas Neue\',sans-serif;font-size:18px;color:var(--accent);">' + (vInfo.marca||'?').charAt(0) + '</div>' +
           '<div><div style="font-size:13px;font-weight:700;color:var(--text);">' + (vInfo.marca||'') + ' ' + (vInfo.modelo||'') + ' ' + (vInfo.ano||'') + '</div>' +
           '<div style="font-size:11px;color:var(--text3);">' + kmInfo + ' · ' + (vInfo.cor||'') + '</div></div>' +
         '</div>' +
@@ -9193,11 +9192,11 @@ function vehicleImgCard(v, i) {
   var scoreColor = getScoreColor(score);
   var colorDot = v.cor ? v.cor.toLowerCase() : '';
   // Map common colors to CSS
-  var dotColors = { 'preto':'#222', 'branco':'#f0f0f0', 'prata':'#aaa', 'cinza':'#888', 'vermelho':'#e53e3e', 'azul':'#3182ce', 'verde':'#38a169', 'amarelo':'#7B80C1', 'laranja':'#dd6b20', 'rosa':'#d53f8c', 'marrom':'#795548' };
+  var dotColors = { 'preto':'#222', 'branco':'#f0f0f0', 'prata':'#aaa', 'cinza':'#888', 'vermelho':'#e53e3e', 'azul':'#3182ce', 'verde':'#38a169', 'amarelo':'#3B82F6', 'laranja':'#dd6b20', 'rosa':'#d53f8c', 'marrom':'#795548' };
   var dotStyle = 'width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px;background:' + (dotColors[colorDot] || 'var(--border2)') + ';border:1px solid rgba(255,255,255,0.15);';
 
   var photoKey  = 'mc_photo_' + v.id;
-  var photoData = localStorage.getItem(photoKey);
+  var photoData = (v.photoUrl) ? v.photoUrl : localStorage.getItem(photoKey);
 
   var html = '<div class="vehicle-img-card' + (isArchived ? ' archived-card' : '') + '" id="vcard-' + v.id + '" style="' + (isArchived ? 'opacity:0.65;' : '') + '">';
 
@@ -9213,7 +9212,7 @@ function vehicleImgCard(v, i) {
   html += '</div>';
 
   // Header with brand initial and placa
-  html += '<div class="vehicle-img-wrap" style="display:flex;align-items:center;justify-content:center;font-family:\'Bebas Neue\',sans-serif;font-size:42px;letter-spacing:2px;color:rgba(123,128,193,0.18);user-select:none;">';
+  html += '<div class="vehicle-img-wrap" style="display:flex;align-items:center;justify-content:center;font-family:\'Bebas Neue\',sans-serif;font-size:42px;letter-spacing:2px;color:rgba(59,130,246,0.18);user-select:none;">';
   html += v.marca.charAt(0).toUpperCase();
   if (isArchived) html += '<div style="position:absolute;top:8px;left:8px;background:rgba(0,0,0,0.55);color:#ccc;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:1px;">VENDIDO</div>';
   // Badge de histórico pendente
@@ -9533,8 +9532,8 @@ function renderDashDocs() {
     html += '<div style="display:flex;flex-direction:column;gap:8px;">';
     urgent.forEach(function(item) {
       var isExpired = item.diff < 0;
-      var borderColor = isExpired ? 'rgba(229,62,62,0.35)' : 'rgba(123,128,193,0.35)';
-      var bgColor     = isExpired ? 'rgba(229,62,62,0.05)'  : 'rgba(123,128,193,0.05)';
+      var borderColor = isExpired ? 'rgba(229,62,62,0.35)' : 'rgba(59,130,246,0.35)';
+      var bgColor     = isExpired ? 'rgba(229,62,62,0.05)'  : 'rgba(59,130,246,0.05)';
       var tagColor    = isExpired ? 'var(--red)' : 'var(--accent)';
       var tagText     = isExpired
         ? '🔴 Vencido há ' + Math.abs(item.diff) + ' dia(s)'
@@ -9583,10 +9582,10 @@ function renderPecasPage() {
     state.vehicles.forEach(function(v, i) {
       var isSelected = sel && sel.id === v.id;
       var border = isSelected ? 'var(--accent)' : 'var(--border2)';
-      var bg     = isSelected ? 'rgba(123,128,193,0.07)' : 'var(--surface2)';
+      var bg     = isSelected ? 'rgba(59,130,246,0.07)' : 'var(--surface2)';
       var color  = isSelected ? 'var(--accent)' : 'var(--text)';
       html += '<div onclick="selectVehicleForParts(' + i + ')" style="display:flex;align-items:center;gap:10px;padding:8px 14px 8px 10px;border:1px solid ' + border + ';border-radius:8px;cursor:pointer;background:' + bg + ';transition:all 0.2s;flex-shrink:0;">';
-      html += '<div style="width:32px;height:32px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:\'Bebas Neue\',sans-serif;font-size:16px;color:rgba(123,128,193,0.5);flex-shrink:0;">' + v.marca.charAt(0).toUpperCase() + '</div>';
+      html += '<div style="width:32px;height:32px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:\'Bebas Neue\',sans-serif;font-size:16px;color:rgba(59,130,246,0.5);flex-shrink:0;">' + v.marca.charAt(0).toUpperCase() + '</div>';
       html += '<div>';
       html += '<div style="font-size:12px;font-weight:600;color:' + color + ';">' + v.marca + ' ' + v.modelo.split(' ')[0] + '</div>';
       html += '<div style="font-size:11px;color:var(--text3);font-family:\'JetBrains Mono\',monospace;">' + v.placa + '</div>';
@@ -9727,7 +9726,7 @@ function renderHistoricoList() {
   reversed.forEach(function(h) {
     var icon = iconMap[h.tipo] || '🔧';
     var dateStr = new Date(h.data + 'T12:00:00').toLocaleDateString('pt-BR');
-    var sourceBadge = h.fromAlert ? '<span style="font-size:11px;background:rgba(123,128,193,0.12);color:var(--accent);padding:1px 6px;border-radius:4px;margin-left:6px;">alerta</span>'
+    var sourceBadge = h.fromAlert ? '<span style="font-size:11px;background:rgba(59,130,246,0.12);color:var(--accent);padding:1px 6px;border-radius:4px;margin-left:6px;">alerta</span>'
       : h.fromChecklist ? '<span style="font-size:11px;background:rgba(96,165,250,0.12);color:var(--blue);padding:1px 6px;border-radius:4px;margin-left:6px;">checklist</span>' : '';
     var localStr = h.local ? '<span style="color:var(--text3);"> · 📍 ' + h.local + '</span>' : '';
     html += '<div class="history-item" style="display:flex;align-items:center;gap:12px;padding:12px 16px;">';
@@ -9776,7 +9775,7 @@ function excluirHistorico(id) {
     display: 'standalone',
     orientation: 'portrait-primary',
     background_color: '#f2f1f8',
-    theme_color: '#7B80C1',
+    theme_color: '#3B82F6',
     lang: 'pt-BR',
     icons: [
       { src: iconUri, sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
@@ -10192,7 +10191,7 @@ function onPartsSearch(input) {
     html += '<div class="part-item" style="animation:none;">';
     html += '<div class="part-icon">' + p.icon + '</div>';
     html += '<div class="part-info">';
-    html += '<div class="part-name">' + p.name.replace(new RegExp('(' + input.value + ')', 'gi'), '<mark style="background:rgba(123,128,193,0.3);color:var(--text);border-radius:2px;">$1</mark>') + '</div>';
+    html += '<div class="part-name">' + p.name.replace(new RegExp('(' + input.value + ')', 'gi'), '<mark style="background:rgba(59,130,246,0.3);color:var(--text);border-radius:2px;">$1</mark>') + '</div>';
     html += '<div class="part-ref">REF: ' + p.ref + '</div>';
     if (compatText) html += '<div class="part-compat">' + compatText + '</div>';
     html += '</div>';
@@ -10347,7 +10346,7 @@ function renderVenderPage(vehicleIdx) {
       '</div>' +
       '<div style="text-align:right;">' +
         '<div style="font-size:11px;color:var(--text3);margin-bottom:8px;">Score impacta até 15% no valor</div>' +
-        '<div style="font-size:11px;padding:6px 12px;background:rgba(123,128,193,0.08);border:1px solid rgba(123,128,193,0.2);border-radius:6px;color:var(--accent);">FIPE base: R$' + fipeBase.toLocaleString('pt-BR') + '</div>' +
+        '<div style="font-size:11px;padding:6px 12px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:6px;color:var(--accent);">FIPE base: R$' + fipeBase.toLocaleString('pt-BR') + '</div>' +
       '</div>' +
     '</div>' +
 
@@ -10687,7 +10686,7 @@ function abrirRelatorioMensal() {
     var alerts = getVehicleAlerts(v).filter(function(a){ return a.urgency!=='low'; });
 
     html += '<div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px;">';
-    html += '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:18px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">🚗 ' + v.marca + ' ' + v.modelo + ' <span style="font-family:\'JetBrains Mono\',monospace;font-size:12px;color:var(--accent);background:rgba(123,128,193,0.1);padding:2px 8px;border-radius:4px;">' + v.placa + '</span></div>';
+    html += '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:18px;margin-bottom:10px;display:flex;align-items:center;gap:8px;">🚗 ' + v.marca + ' ' + v.modelo + ' <span style="font-family:\'JetBrains Mono\',monospace;font-size:12px;color:var(--accent);background:rgba(59,130,246,0.1);padding:2px 8px;border-radius:4px;">' + v.placa + '</span></div>';
 
     html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">';
     html += '<div style="text-align:center;padding:10px;background:var(--surface);border-radius:8px;"><div style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;color:var(--red);">R$' + gastManut.toLocaleString('pt-BR',{minimumFractionDigits:0}) + '</div><div style="font-size:10px;color:var(--text3);">Manutenção</div></div>';
@@ -10711,7 +10710,7 @@ function abrirRelatorioMensal() {
   });
 
   // Totals
-  html += '<div style="background:rgba(123,128,193,0.06);border:1px solid rgba(123,128,193,0.2);border-radius:10px;padding:16px;">';
+  html += '<div style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);border-radius:10px;padding:16px;">';
   html += '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:16px;color:var(--accent);margin-bottom:10px;">📊 RESUMO TOTAL DO MÊS</div>';
   html += '<div style="display:flex;gap:16px;flex-wrap:wrap;">';
   html += '<div><span style="font-size:13px;color:var(--text3);">Total manutenção: </span><span style="font-weight:700;color:var(--text);">R$' + totalManut.toLocaleString('pt-BR',{minimumFractionDigits:2}) + '</span></div>';
@@ -10912,7 +10911,7 @@ function renderDocumentos() {
         }
       }
 
-      html += '<div class="doc-card '+cls+'" style="border-color:'+(cls==='doc-expired'?'rgba(229,62,62,0.3)':cls==='doc-warn'?'rgba(123,128,193,0.3)':cls==='doc-ok'?'rgba(56,161,105,0.2)':'var(--border)')+'">';
+      html += '<div class="doc-card '+cls+'" style="border-color:'+(cls==='doc-expired'?'rgba(229,62,62,0.3)':cls==='doc-warn'?'rgba(59,130,246,0.3)':cls==='doc-ok'?'rgba(56,161,105,0.2)':'var(--border)')+'">';
       html += '<div class="doc-card-header"><div class="doc-icon">'+dt.icon+'</div><div class="doc-name">'+dt.name+'</div>'+statusHtml+'</div>';
       html += '<div class="doc-date">'+(dateStr ? new Date(dateStr+'T12:00:00').toLocaleDateString('pt-BR') : '— Não informado')+'</div>';
       html += daysHtml;
@@ -11032,7 +11031,7 @@ function updateDocBadge() {
 // ============================================================
 // 📊 ANALYTICS — Resumo financeiro + gráficos
 // ============================================================
-var PIZZA_COLORS = ['#7B80C1','#60a5fa','#68d391','#fc8181','#a78bfa','#f6ad55','#76e4f7'];
+var PIZZA_COLORS = ['#3B82F6','#60a5fa','#68d391','#fc8181','#a78bfa','#f6ad55','#76e4f7'];
 var MAINT_CATS = { 'Troca de óleo':'Mecânica','Troca de filtro':'Mecânica','Revisão de freios':'Freios','Troca de pneus':'Pneus','Alinhamento/Balanceamento':'Pneus','Troca de correia':'Mecânica','Revisão geral':'Mecânica','Outro':'Outros' };
 
 
@@ -11519,7 +11518,7 @@ function renderCompatProds() {
   if (_compatProdIdx >= pages) _compatProdIdx = 0;
   var start = _compatProdIdx * 3;
   var slice = filtered.slice(start, start + 3);
-  var catColors = { oleo:'#f6ad55', filtro:'#68d391', freios:'#fc8181', eletrica:'#7B80C1', pneus:'#60a5fa', revisao:'#a78bfa', todos:'var(--text3)' };
+  var catColors = { oleo:'#f6ad55', filtro:'#68d391', freios:'#fc8181', eletrica:'#3B82F6', pneus:'#60a5fa', revisao:'#a78bfa', todos:'var(--text3)' };
 
   var html = '<div style="display:flex;gap:8px;flex-wrap:nowrap;align-items:stretch;">';
   slice.forEach(function(p) {
@@ -11564,8 +11563,8 @@ function renderDashHero() {
   var score = calcScore(v);
   var color = getScoreColor(score);
   var fipe  = estimarFipe(v);
-  var scoreColorMap = { '#38a169':'rgba(56,161,105,0.12)', '#5860A8':'rgba(224,123,0,0.12)', '#e53e3e':'rgba(229,62,62,0.12)' };
-  var scoreBg = scoreColorMap[color] || 'rgba(123,128,193,0.1)';
+  var scoreColorMap = { '#38a169':'rgba(56,161,105,0.12)', '#1D4ED8':'rgba(224,123,0,0.12)', '#e53e3e':'rgba(229,62,62,0.12)' };
+  var scoreBg = scoreColorMap[color] || 'rgba(59,130,246,0.1)';
   var vehicleAlerts = getVehicleAlerts(v).filter(function(a){ return a.urgency !== 'low'; }).length;
   var monthSpend = 0;
   state.history.filter(function(h){ return h.veiculoId===v.id && (h.data||'').slice(0,7)===thisMonth; })
@@ -11579,7 +11578,7 @@ function renderDashHero() {
   // Compatible products section — category filter + navigation
   var catTabsHtml = COMPAT_CATS.map(function(c) {
     var isActive = _compatProdCat === c.id;
-    return '<button onclick="setCompatCat(\'' + c.id + '\')" style="padding:5px 10px;border:1px solid ' + (isActive ? 'var(--accent)' : 'var(--border)') + ';border-radius:20px;background:' + (isActive ? 'rgba(123,128,193,0.12)' : 'transparent') + ';color:' + (isActive ? 'var(--accent)' : 'var(--text3)') + ';font-size:11px;font-weight:' + (isActive ? '700' : '400') + ';cursor:pointer;white-space:nowrap;font-family:\'Sora\',sans-serif;transition:all 0.15s;">' + c.icon + ' ' + c.label + '</button>';
+    return '<button onclick="setCompatCat(\'' + c.id + '\')" style="padding:5px 10px;border:1px solid ' + (isActive ? 'var(--accent)' : 'var(--border)') + ';border-radius:20px;background:' + (isActive ? 'rgba(59,130,246,0.12)' : 'transparent') + ';color:' + (isActive ? 'var(--accent)' : 'var(--text3)') + ';font-size:11px;font-weight:' + (isActive ? '700' : '400') + ';cursor:pointer;white-space:nowrap;font-family:\'Sora\',sans-serif;transition:all 0.15s;">' + c.icon + ' ' + c.label + '</button>';
   }).join('');
 
   var prodsHtml = '<div style="margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.06);">' +
@@ -11595,7 +11594,7 @@ function renderDashHero() {
       '<div class="dash-hero-meta">' +
         '<span>📍 ' + kmDisplay + kmEstHtml + '</span>' +
         '<span>🗓 ' + v.ano + '</span>' +
-        '<span style="font-family:\'JetBrains Mono\',monospace;background:rgba(123,128,193,0.1);color:var(--accent);padding:1px 8px;border-radius:4px;font-size:11px;">' + v.placa + '</span>' +
+        '<span style="font-family:\'JetBrains Mono\',monospace;background:rgba(59,130,246,0.1);color:var(--accent);padding:1px 8px;border-radius:4px;font-size:11px;">' + v.placa + '</span>' +
       '</div>' +
       '<div class="dash-hero-tags">' +
         '<span class="dash-hero-tag" style="background:rgba(56,161,105,0.1);color:#38a169;">FIPE ~R$' + fipe.toLocaleString('pt-BR') + '</span>' +
@@ -11680,7 +11679,7 @@ function abrirFotoVeiculo(vehicleId) {
   if (inp) inp.click();
 }
 
-function _salvarFotoVeiculo(vehicleId, input) {
+async function _salvarFotoVeiculo(vehicleId, input) {
   var file = input.files && input.files[0];
   if (!file) return;
   var reader = new FileReader();
@@ -11695,12 +11694,33 @@ function _salvarFotoVeiculo(vehicleId, input) {
       canvas.height = img.height * ratio;
       canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
       var compressed = canvas.toDataURL('image/jpeg', 0.75);
-      try {
-        localStorage.setItem('mc_photo_' + vehicleId, compressed);
-        renderVehicles(); // refresh cards
-        showToast('Foto salva! ✓', 'success');
-      } catch(e) {
-        showToast('Foto grande demais para salvar localmente.', 'error');
+      // Save locally first (instant feedback)
+      try { localStorage.setItem('mc_photo_' + vehicleId, compressed); } catch(e) {}
+      renderVehicles();
+      showToast('Foto salva! ✓', 'success');
+
+      // Also upload to Supabase Storage if available (async IIFE)
+      if (_supabaseReady && _sb && state.user) {
+        (async function() {
+          try {
+            var byteStr = atob(compressed.split(',')[1]);
+            var arr = new Uint8Array(byteStr.length);
+            for (var ii = 0; ii < byteStr.length; ii++) arr[ii] = byteStr.charCodeAt(ii);
+            var blob = new Blob([arr], { type: 'image/jpeg' });
+            var path = state.user.id + '/vehicle_' + vehicleId + '.jpg';
+            var res = await _sb.storage.from('vehicle-photos').upload(path, blob, {
+              upsert: true, contentType: 'image/jpeg'
+            });
+            if (!res.error) {
+              var urlRes = _sb.storage.from('vehicle-photos').getPublicUrl(path);
+              var url = urlRes.data && urlRes.data.publicUrl;
+              if (url) {
+                var v = state.vehicles.find(function(x){ return x.id === vehicleId; });
+                if (v) { v.photoUrl = url; saveState(); }
+              }
+            }
+          } catch(se) { /* Storage upload failed silently */ }
+        })();
       }
     };
     img.src = e.target.result;
@@ -11884,7 +11904,7 @@ function recalcMono() {
 
   var html =
     '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:20px;">' +
-      '<div style="background:rgba(123,128,193,0.08);border:1px solid rgba(123,128,193,0.2);border-radius:10px;padding:16px;text-align:center;">' +
+      '<div style="background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:10px;padding:16px;text-align:center;">' +
         '<div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">MRR Total</div>' +
         '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:32px;color:var(--accent);">' + fmt(mrrTotal) + '</div>' +
         '<div style="font-size:10px;color:var(--text3);">por mês</div>' +
@@ -11894,7 +11914,7 @@ function recalcMono() {
         '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:32px;color:#60a5fa;">' + fmt(arr) + '</div>' +
         '<div style="font-size:10px;color:var(--text3);">por ano</div>' +
       '</div>' +
-      '<div style="background:linear-gradient(135deg,rgba(123,128,193,0.1),rgba(96,165,250,0.08));border:1px solid rgba(123,128,193,0.25);border-radius:10px;padding:16px;text-align:center;">' +
+      '<div style="background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(96,165,250,0.08));border:1px solid rgba(59,130,246,0.25);border-radius:10px;padding:16px;text-align:center;">' +
         '<div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Valuation est. (' + multiplo + 'x ARR)</div>' +
         '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:28px;color:#68d391;">' + fmt(valuation) + '</div>' +
         '<div style="font-size:10px;color:var(--text3);">múltiplo SaaS</div>' +
@@ -12376,7 +12396,7 @@ function renderViagemMapa() {
     ctx.beginPath();
     ctx.moveTo(po.x, po.y);
     ctx.quadraticCurveTo(cx, cy, pd.x, pd.y);
-    ctx.strokeStyle = isAtiva ? '#7B80C1' : 'rgba(96,165,250,0.7)';
+    ctx.strokeStyle = isAtiva ? '#3B82F6' : 'rgba(96,165,250,0.7)';
     ctx.lineWidth = isAtiva ? 3 : 1.8;
     ctx.setLineDash(isAtiva ? [] : [6, 3]);
     ctx.stroke();
@@ -12395,7 +12415,7 @@ function renderViagemMapa() {
       ctx.beginPath();
       ctx.roundRect(lx - textW/2, ly - 9, textW, 14, 4);
       ctx.fill();
-      ctx.fillStyle = isAtiva ? '#7B80C1' : (isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)');
+      ctx.fillStyle = isAtiva ? '#3B82F6' : (isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)');
       ctx.fillText(v.km.toLocaleString('pt-BR') + ' km', lx, ly + 1);
     }
 
@@ -12410,7 +12430,7 @@ function renderViagemMapa() {
     ctx.rotate(angle);
     ctx.beginPath();
     ctx.moveTo(-6, -4); ctx.lineTo(0, 0); ctx.lineTo(-6, 4);
-    ctx.strokeStyle = isAtiva ? '#7B80C1' : 'rgba(96,165,250,0.9)';
+    ctx.strokeStyle = isAtiva ? '#3B82F6' : 'rgba(96,165,250,0.9)';
     ctx.lineWidth = isAtiva ? 2 : 1.5;
     ctx.stroke();
     ctx.restore();
@@ -12420,7 +12440,7 @@ function renderViagemMapa() {
       ctx.beginPath();
       ctx.moveTo(pd.x, pd.y);
       ctx.quadraticCurveTo(cx - 6, cy - 6, po.x, po.y);
-      ctx.strokeStyle = isAtiva ? 'rgba(123,128,193,0.4)' : 'rgba(96,165,250,0.3)';
+      ctx.strokeStyle = isAtiva ? 'rgba(59,130,246,0.4)' : 'rgba(96,165,250,0.3)';
       ctx.lineWidth = isAtiva ? 2 : 1;
       ctx.setLineDash([4, 4]);
       ctx.stroke();
@@ -12443,7 +12463,7 @@ function renderViagemMapa() {
     if (!drawnCities[dKey]) {
       drawnCities[dKey] = true;
       pinsHtml += '<div class="viagem-map-pin' + (isAtiva ? ' pin-animate' : '') + '" style="position:absolute;' + pinPct(pd) + 'transform:translate(-50%,-100%);">' +
-        '<div class="viagem-map-pin-dot" style="background:#7B80C1;"></div>' +
+        '<div class="viagem-map-pin-dot" style="background:#3B82F6;"></div>' +
         '<div class="viagem-map-pin-label">' + v.destCoord.nome + '</div>' +
       '</div>';
     }
@@ -12523,7 +12543,7 @@ function renderViagemHistorico() {
     var origemNome = v.origem.split(',')[0];
     var destNome   = v.dest.split(',')[0];
 
-    return '<div class="viagem-history-item' + (isAtiva ? '" style="background:rgba(123,128,193,0.04);border-left:3px solid var(--accent);' : '"') + '" onclick="selecionarViagemNoMapa(' + v.id + ')">' +
+    return '<div class="viagem-history-item' + (isAtiva ? '" style="background:rgba(59,130,246,0.04);border-left:3px solid var(--accent);' : '"') + '" onclick="selecionarViagemNoMapa(' + v.id + ')">' +
       '<div style="font-size:22px;">' + (v.tipo === 'ida-volta' ? '⇄' : '→') + '</div>' +
       '<div class="viagem-hist-route">' +
         '<div class="viagem-hist-cities">' +
@@ -12771,13 +12791,13 @@ function renderViagemSugestoes() {
   var tagColors = {
     'praia':'rgba(96,165,250,0.12):#60a5fa',
     'natureza':'rgba(56,161,105,0.12):#38a169',
-    'aventura':'rgba(123,128,193,0.12):var(--accent)',
+    'aventura':'rgba(59,130,246,0.12):var(--accent)',
     'turismo':'rgba(167,139,250,0.12):#a78bfa',
     'história':'rgba(246,173,85,0.12):#f6ad55',
     'cultura':'rgba(246,173,85,0.12):#f6ad55',
     'negócios':'rgba(158,158,158,0.12):#9e9e9e',
     'gastronomia':'rgba(252,129,129,0.12):#fc8181',
-    'fim de semana':'rgba(123,128,193,0.12):var(--accent)',
+    'fim de semana':'rgba(59,130,246,0.12):var(--accent)',
     'rápida':'rgba(96,165,250,0.12):#60a5fa',
     'urbano':'rgba(158,158,158,0.12):#9e9e9e',
     'verão':'rgba(252,129,129,0.12):#fc8181',
@@ -12824,7 +12844,7 @@ function renderViagemSugestoes() {
           '<div style="font-size:11px;color:var(--text3);margin-top:1px;">' + tempoIV + ' no total</div>' +
         '</div>' +
       '</div>' +
-      '<button onclick="preencherViagemComSugestao(\'' + r.de.replace(/'/g,"\\'") + '\',\'' + r.para.replace(/'/g,"\\'") + '\',' + r.km + ')" style="width:100%;padding:9px;border-radius:8px;border:1px solid var(--accent);background:rgba(123,128,193,0.08);color:var(--accent);font-size:12px;font-weight:700;cursor:pointer;font-family:\'Sora\',sans-serif;transition:all 0.15s;" onmouseover="this.style.background=\'rgba(123,128,193,0.16)\'" onmouseout="this.style.background=\'rgba(123,128,193,0.08)\'">' +
+      '<button onclick="preencherViagemComSugestao(\'' + r.de.replace(/'/g,"\\'") + '\',\'' + r.para.replace(/'/g,"\\'") + '\',' + r.km + ')" style="width:100%;padding:9px;border-radius:8px;border:1px solid var(--accent);background:rgba(59,130,246,0.08);color:var(--accent);font-size:12px;font-weight:700;cursor:pointer;font-family:\'Sora\',sans-serif;transition:all 0.15s;" onmouseover="this.style.background=\'rgba(59,130,246,0.16)\'" onmouseout="this.style.background=\'rgba(59,130,246,0.08)\'">' +
         '✈️ Fazer check-in nessa rota' +
       '</button>' +
     '</div>';
@@ -13000,14 +13020,14 @@ function renderManutGuia() {
     var pct = Math.max(kmPct, mesPct);
     var status, statusColor, statusBg;
     if (pct >= 100)       { status = 'VENCIDO';   statusColor = '#e53e3e'; statusBg = 'rgba(229,62,62,0.08)'; }
-    else if (pct >= 80)   { status = 'EM BREVE';  statusColor = '#7B80C1'; statusBg = 'rgba(123,128,193,0.08)'; }
+    else if (pct >= 80)   { status = 'EM BREVE';  statusColor = '#3B82F6'; statusBg = 'rgba(59,130,246,0.08)'; }
     else                  { status = 'OK';         statusColor = '#38a169'; statusBg = 'rgba(56,161,105,0.08)'; }
 
     var lastStr = lastDate ? new Date(lastDate+'T12:00:00').toLocaleDateString('pt-BR') + ' ('+lastKm.toLocaleString('pt-BR')+' km)' : 'Nunca registrado';
     var nextKm  = Math.max(0, lastKm + item.kmIntervalo);
     var nextMes = lastDate ? new Date(new Date(lastDate+'T12:00:00').setMonth(new Date(lastDate+'T12:00:00').getMonth() + item.mesesIntervalo)).toLocaleDateString('pt-BR', {month:'short',year:'numeric'}) : '—';
 
-    return '<div style="background:var(--surface);border:1px solid '+(pct>=100?'rgba(229,62,62,0.3)':pct>=80?'rgba(123,128,193,0.3)':'var(--border)')+';border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;background:'+statusBg+';">' +
+    return '<div style="background:var(--surface);border:1px solid '+(pct>=100?'rgba(229,62,62,0.3)':pct>=80?'rgba(59,130,246,0.3)':'var(--border)')+';border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;background:'+statusBg+';">' +
       '<div style="display:flex;align-items:center;justify-content:space-between;">' +
         '<div style="display:flex;align-items:center;gap:10px;">' +
           '<span style="font-size:22px;">'+item.icon+'</span>' +
@@ -13092,7 +13112,7 @@ function renderSaudePage() {
     { label: 'Abastecimentos log.',    val: Math.min(100, state.fuel.filter(function(f){return f.veiculoId===v.id;}).length * 25) },
   ];
   var detHtml = criteria.map(function(c) {
-    var bc = c.val >= 70 ? '#38a169' : c.val >= 40 ? '#7B80C1' : '#e53e3e';
+    var bc = c.val >= 70 ? '#38a169' : c.val >= 40 ? '#3B82F6' : '#e53e3e';
     return '<div class="score-bar-row"><div class="score-bar-label">'+c.label+'</div><div class="score-bar-track"><div class="score-bar-inner" style="width:'+c.val+'%;background:'+bc+';"></div></div><div class="score-bar-val">'+c.val+'</div></div>';
   }).join('');
   var detailsEl = document.getElementById('saude-score-details');
@@ -13108,7 +13128,7 @@ function renderSaudePage() {
     bkCard.style.display = 'block';
     var alertsList = getVehicleAlerts(v);
     bkList.innerHTML = alertsList.map(function(a) {
-      var c = a.urgency==='high'?'#e53e3e':a.urgency==='med'?'#7B80C1':'#38a169';
+      var c = a.urgency==='high'?'#e53e3e':a.urgency==='med'?'#3B82F6':'#38a169';
       var kmText = a.kmLeft <= 0 ? 'Vencido há '+Math.abs(a.kmLeft).toLocaleString('pt-BR')+' km' : 'Faltam '+a.kmLeft.toLocaleString('pt-BR')+' km';
       return '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);">' +
         '<div style="font-size:20px;">'+a.icon+'</div>' +
@@ -13145,11 +13165,11 @@ function renderSaudePage() {
       var vPct = Math.min(100, Math.round(b.voce / maxVal * 100));
       var mPct = Math.min(100, Math.round(b.media / maxVal * 100));
       var melhor = b.melhorMais ? b.voce > b.media : b.voce < b.media;
-      var vcColor = melhor ? '#38a169' : '#7B80C1';
+      var vcColor = melhor ? '#38a169' : '#3B82F6';
       return '<div style="padding:10px 0;border-bottom:1px solid var(--border);">' +
         '<div style="display:flex;justify-content:space-between;margin-bottom:6px;">' +
           '<span style="font-size:12px;font-weight:600;color:var(--text);">'+b.label+'</span>' +
-          '<span style="font-size:11px;color:var(--text3);">'+(melhor?'<span style="color:#38a169;">▲ melhor que a média</span>':'<span style="color:#7B80C1;">▼ abaixo da média</span>')+'</span>' +
+          '<span style="font-size:11px;color:var(--text3);">'+(melhor?'<span style="color:#38a169;">▲ melhor que a média</span>':'<span style="color:#3B82F6;">▼ abaixo da média</span>')+'</span>' +
         '</div>' +
         '<div style="display:flex;flex-direction:column;gap:4px;">' +
           '<div style="display:flex;align-items:center;gap:8px;">' +
@@ -13430,14 +13450,14 @@ function _renderPassaporteVehicle(v) {
       }).join('') +
     '</div></div>' +
     // Valor estimado
-    '<div class="card" style="border:1px solid rgba(123,128,193,0.2);">' +
+    '<div class="card" style="border:1px solid rgba(59,130,246,0.2);">' +
     '<div class="card-title">Valor estimado</div>' +
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">' +
       '<div style="text-align:center;padding:12px;background:var(--surface2);border-radius:10px;">' +
         '<div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">FIPE base' + (v.fipeReal ? ' ✓' : ' est.') + '</div>' +
         '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;color:var(--text);">' + fmt(fipe) + '</div>' +
       '</div>' +
-      '<div style="text-align:center;padding:12px;background:rgba(123,128,193,0.08);border:1px solid rgba(123,128,193,0.2);border-radius:10px;">' +
+      '<div style="text-align:center;padding:12px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:10px;">' +
         '<div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Com upgrades</div>' +
         '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;color:var(--accent);">' + fmt(valorSugerido) + '</div>' +
       '</div>' +
@@ -13539,7 +13559,7 @@ function _showStreakCelebration(emoji, msg, dias) {
   ov.id = 'streak-celebration';
   ov.style.cssText = 'position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);';
   ov.innerHTML =
-    '<div style="background:var(--surface);border:1px solid rgba(123,128,193,0.4);border-radius:24px;padding:36px 28px;max-width:320px;width:90%;text-align:center;animation:fadeUp 0.4s ease both;">' +
+    '<div style="background:var(--surface);border:1px solid rgba(59,130,246,0.4);border-radius:24px;padding:36px 28px;max-width:320px;width:90%;text-align:center;animation:fadeUp 0.4s ease both;">' +
       '<div style="font-size:56px;margin-bottom:16px;line-height:1;">' + emoji + '</div>' +
       '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:var(--accent);letter-spacing:1px;margin-bottom:8px;">' + dias + ' dias</div>' +
       '<div style="font-size:14px;color:var(--text);font-weight:600;margin-bottom:6px;">' + msg + '</div>' +
@@ -13564,7 +13584,7 @@ function _streakConfetti() {
       x: Math.random()*canvas.width, y: -20,
       vx: (Math.random()-0.5)*4, vy: Math.random()*4+2,
       r: Math.random()*6+3,
-      color: ['#7B80C1','#a78bfa','#60a5fa','#68d391','#f6ad55'][Math.floor(Math.random()*5)],
+      color: ['#3B82F6','#a78bfa','#60a5fa','#68d391','#f6ad55'][Math.floor(Math.random()*5)],
       rot: Math.random()*360, rotV: (Math.random()-0.5)*6
     };
   });
@@ -13728,7 +13748,7 @@ function _renderRankingInPerfil() {
   // Melhor score do usuário
   var bestScore = Math.max.apply(null, active.map(function(v){ return calcScore(v); }));
   var bestV     = active.find(function(v){ return calcScore(v) === bestScore; });
-  var tier = bestScore >= 90 ? { label:'Elite',    color:'#7B80C1' }
+  var tier = bestScore >= 90 ? { label:'Elite',    color:'#3B82F6' }
            : bestScore >= 75 ? { label:'Avançado', color:'#60a5fa' }
            : bestScore >= 55 ? { label:'Médio',    color:'#68d391' }
            :                   { label:'Iniciante', color:'#fc8181' };
@@ -13779,13 +13799,13 @@ function renderRankingPage() {
     return;
   }
 
-  var podiumColors  = ['#7B80C1','#adb5bd','#cd7f32'];
-  var podiumShadows = ['0 0 24px rgba(123,128,193,0.4)','0 0 12px rgba(173,181,189,0.2)','0 0 12px rgba(205,127,50,0.2)'];
+  var podiumColors  = ['#3B82F6','#adb5bd','#cd7f32'];
+  var podiumShadows = ['0 0 24px rgba(59,130,246,0.4)','0 0 12px rgba(173,181,189,0.2)','0 0 12px rgba(205,127,50,0.2)'];
   var podiumHeights = ['100px','78px','64px'];
   var podiumOrder   = [1,0,2]; // visual: 2º | 1º | 3º
 
   var tier = function(score) {
-    if (score >= 90) return { label:'Elite',    color:'#7B80C1', bg:'rgba(123,128,193,0.12)' };
+    if (score >= 90) return { label:'Elite',    color:'#3B82F6', bg:'rgba(59,130,246,0.12)' };
     if (score >= 75) return { label:'Avançado', color:'#60a5fa', bg:'rgba(96,165,250,0.12)' };
     if (score >= 55) return { label:'Médio',    color:'#68d391', bg:'rgba(104,211,145,0.12)' };
     return             { label:'Iniciante', color:'#fc8181', bg:'rgba(252,129,129,0.12)' };
@@ -13820,7 +13840,7 @@ function renderRankingPage() {
       html += '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;">';
       // Avatar
       html += '<div style="width:' + (rankIdx===0?'54':'44') + 'px;height:' + (rankIdx===0?'54':'44') + 'px;border-radius:50%;' +
-        'background:' + (isU?'linear-gradient(135deg,var(--accent),rgba(123,128,193,0.4))':'var(--surface2)') + ';' +
+        'background:' + (isU?'linear-gradient(135deg,var(--accent),rgba(59,130,246,0.4))':'var(--surface2)') + ';' +
         'border:2px solid ' + c + ';box-shadow:' + sh + ';' +
         'display:flex;align-items:center;justify-content:center;' +
         'font-family:\'Bebas Neue\',sans-serif;font-size:' + (rankIdx===0?'20':'16') + 'px;color:' + (isU?'#0c0d0f':'var(--text2)') + ';">' +
@@ -13832,20 +13852,20 @@ function renderRankingPage() {
       html += '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:16px;color:' + c + ';margin-top:2px;">' + scoreVal + '</div>';
       html += '</div>';
       // Plataforma
-      html += '<div style="width:100%;height:' + h + ';background:' + (isU?'rgba(123,128,193,0.1)':'var(--surface2)') + ';border:1px solid ' + c + ';border-bottom:none;border-radius:8px 8px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">';
+      html += '<div style="width:100%;height:' + h + ';background:' + (isU?'rgba(59,130,246,0.1)':'var(--surface2)') + ';border:1px solid ' + c + ';border-bottom:none;border-radius:8px 8px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">';
       html += '<div style="font-size:' + (rankIdx===0?'28':'22') + 'px;">' + medalEmoji + '</div>';
       html += '<div style="font-size:10px;color:' + c + ';font-weight:700;">#' + (rankIdx+1) + '</div>';
       html += '</div>';
       html += '</div>';
     });
     html += '</div>';
-    html += '<div style="height:4px;background:linear-gradient(90deg,rgba(205,127,50,0.4),rgba(123,128,193,0.7),rgba(173,181,189,0.4));border-radius:2px;margin-bottom:16px;"></div>';
+    html += '<div style="height:4px;background:linear-gradient(90deg,rgba(205,127,50,0.4),rgba(59,130,246,0.7),rgba(173,181,189,0.4));border-radius:2px;margin-bottom:16px;"></div>';
 
     // Posição do usuário se fora do pódio
     if (userPos > 3 && userEntry) {
       var ut = tier(userEntry.score !== undefined ? userEntry.score : userEntry.conquistas * 5);
       var pct = Math.round((1-(userPos-1)/total)*100);
-      html += '<div style="background:rgba(123,128,193,0.05);border:1px solid rgba(123,128,193,0.25);border-radius:10px;padding:12px 14px;">';
+      html += '<div style="background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.25);border-radius:10px;padding:12px 14px;">';
       html += '<div style="font-size:11px;color:var(--text3);margin-bottom:6px;">📍 Sua posição</div>';
       html += '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">';
       html += '<div style="display:flex;align-items:center;gap:10px;">';
@@ -13892,7 +13912,7 @@ function renderRankingPage() {
       html += '<div style="font-size:32px;margin-bottom:10px;">🔍</div>';
       html += '<div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;">Sem dados suficientes para este modelo</div>';
       html += '<div style="font-size:12px;color:var(--text3);">O ranking de <strong>' + v.marca + ' ' + v.modelo + '</strong> estará disponível conforme mais usuários deste modelo entrem na comunidade.</div>';
-      html += '<div style="margin-top:14px;background:rgba(123,128,193,0.07);border:1px solid rgba(123,128,193,0.2);border-radius:8px;padding:10px 14px;">';
+      html += '<div style="margin-top:14px;background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.2);border-radius:8px;padding:10px 14px;">';
       html += '<div style="font-size:12px;color:var(--text2);">Seu score atual: <strong style="color:var(--accent);font-size:16px;">' + userScore + '/100</strong></div>';
       html += '</div></div></div>';
       return;
@@ -13945,8 +13965,8 @@ function renderRankingPage() {
   var userPos  = allUsers.findIndex(function(e){ return e.isUser; }) + 1;
   var totalU   = allUsers.length;
   var podiumU  = allUsers.slice(0, 3);
-  var podiumColorsU  = ['#7B80C1','#adb5bd','#cd7f32'];
-  var podiumShadowsU = ['0 0 24px rgba(123,128,193,0.4)','0 0 12px rgba(173,181,189,0.2)','0 0 12px rgba(205,127,50,0.2)'];
+  var podiumColorsU  = ['#3B82F6','#adb5bd','#cd7f32'];
+  var podiumShadowsU = ['0 0 24px rgba(59,130,246,0.4)','0 0 12px rgba(173,181,189,0.2)','0 0 12px rgba(205,127,50,0.2)'];
   var podiumHeightsU = ['100px','78px','64px'];
   var podiumOrderU   = [1,0,2];
 
@@ -13971,7 +13991,7 @@ function renderRankingPage() {
     var medalEmoji = ['🥇','🥈','🥉'][rankIdx];
     html += '<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;">';
     html += '<div style="width:' + (rankIdx===0?'54':'44') + 'px;height:' + (rankIdx===0?'54':'44') + 'px;border-radius:50%;' +
-      'background:' + (isU?'linear-gradient(135deg,var(--accent),rgba(123,128,193,0.4))':'var(--surface2)') + ';' +
+      'background:' + (isU?'linear-gradient(135deg,var(--accent),rgba(59,130,246,0.4))':'var(--surface2)') + ';' +
       'border:2px solid ' + c + ';box-shadow:' + sh + ';' +
       'display:flex;align-items:center;justify-content:center;' +
       'font-family:\'Bebas Neue\',sans-serif;font-size:' + (rankIdx===0?'20':'16') + 'px;color:' + (isU?'#0c0d0f':'var(--text2)') + ';">' +
@@ -13980,14 +14000,14 @@ function renderRankingPage() {
     html += '<div style="font-size:11px;font-weight:' + (isU?'700':'500') + ';color:' + (isU?'var(--accent)':'var(--text2)') + ';max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + entry.nome + '</div>';
     html += '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:16px;color:' + c + ';margin-top:2px;">' + entry.scoreComposto + '</div>';
     html += '</div>';
-    html += '<div style="width:100%;height:' + h + ';background:' + (isU?'rgba(123,128,193,0.1)':'var(--surface2)') + ';border:1px solid ' + c + ';border-bottom:none;border-radius:8px 8px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">';
+    html += '<div style="width:100%;height:' + h + ';background:' + (isU?'rgba(59,130,246,0.1)':'var(--surface2)') + ';border:1px solid ' + c + ';border-bottom:none;border-radius:8px 8px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">';
     html += '<div style="font-size:' + (rankIdx===0?'28':'22') + 'px;">' + medalEmoji + '</div>';
     html += '<div style="font-size:10px;color:' + c + ';font-weight:700;">#' + (rankIdx+1) + '</div>';
     html += '</div>';
     html += '</div>';
   });
   html += '</div>';
-  html += '<div style="height:4px;background:linear-gradient(90deg,rgba(205,127,50,0.4),rgba(123,128,193,0.7),rgba(173,181,189,0.4));border-radius:2px;margin-bottom:16px;"></div>';
+  html += '<div style="height:4px;background:linear-gradient(90deg,rgba(205,127,50,0.4),rgba(59,130,246,0.7),rgba(173,181,189,0.4));border-radius:2px;margin-bottom:16px;"></div>';
 
   // Stats dos top 3 em cards detalhados
   html += '<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">';
@@ -13995,7 +14015,7 @@ function renderRankingPage() {
     var c = podiumColorsU[idx];
     var medalEmoji = ['🥇','🥈','🥉'][idx];
     var isU = entry.isUser;
-    html += '<div style="background:' + (isU?'rgba(123,128,193,0.05)':'var(--surface2)') + ';border:1px solid ' + (isU?'rgba(123,128,193,0.25)':'var(--border)') + ';border-radius:10px;padding:12px 14px;">';
+    html += '<div style="background:' + (isU?'rgba(59,130,246,0.05)':'var(--surface2)') + ';border:1px solid ' + (isU?'rgba(59,130,246,0.25)':'var(--border)') + ';border-radius:10px;padding:12px 14px;">';
     html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">';
     html += '<span style="font-size:18px;">' + medalEmoji + '</span>';
     html += '<span style="font-size:13px;font-weight:700;color:' + (isU?'var(--accent)':'var(--text)') + ';">' + entry.nome + '</span>';
@@ -14026,7 +14046,7 @@ function renderRankingPage() {
   // Posição do usuário se fora do pódio
   if (userPos > 3) {
     var pct = Math.round((1-(userPos-1)/totalU)*100);
-    html += '<div style="background:rgba(123,128,193,0.05);border:1px solid rgba(123,128,193,0.25);border-radius:10px;padding:14px;">';
+    html += '<div style="background:rgba(59,130,246,0.05);border:1px solid rgba(59,130,246,0.25);border-radius:10px;padding:14px;">';
     html += '<div style="font-size:11px;color:var(--text3);margin-bottom:8px;">📍 Sua posição</div>';
     html += '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">';
     html += '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:34px;color:var(--accent);">#' + userPos + '</div>';
@@ -14176,7 +14196,7 @@ function renderPerfilPage() {
   // Hero
   // Ícone do perfil salvo
   var perfilIcon  = (state.user && state.user.perfilIcon)  || '🚗';
-  var perfilColor = (state.user && state.user.perfilColor) || '#7B80C1';
+  var perfilColor = (state.user && state.user.perfilColor) || '#3B82F6';
 
   var heroEl = document.getElementById('perfil-hero');
   if (heroEl) {
@@ -14188,7 +14208,7 @@ function renderPerfilPage() {
           (email ? '<div style="font-size:11px;color:var(--text3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + email + '</div>' : '') +
           (diasUsando > 0 ? '<div style="font-size:11px;color:var(--text3);margin-top:5px;">⏱ Usando o app há <strong style="color:var(--accent);">' + diasUsando + ' dias</strong></div>' : '') +
         '</div>' +
-        '<div style="flex-shrink:0;text-align:center;padding:8px 14px;background:rgba(123,128,193,0.07);border:1px solid rgba(123,128,193,0.2);border-radius:10px;">' +
+        '<div style="flex-shrink:0;text-align:center;padding:8px 14px;background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.2);border-radius:10px;">' +
           '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:26px;color:var(--accent);line-height:1;">' + conquistadas + '/' + conquistas.length + '</div>' +
           '<div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:2px;">Conquistas</div>' +
         '</div>' +
@@ -14285,7 +14305,7 @@ function renderPerfilPage() {
       '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;">' +
       conquistas.map(function(c) {
         var ok = c.ok;
-        return '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:' + (ok ? 'rgba(123,128,193,0.05)' : 'var(--surface2)') + ';border:1px solid ' + (ok ? 'rgba(123,128,193,0.25)' : 'var(--border)') + ';border-radius:8px;opacity:' + (ok ? '1' : '0.5') + ';">' +
+        return '<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:' + (ok ? 'rgba(59,130,246,0.05)' : 'var(--surface2)') + ';border:1px solid ' + (ok ? 'rgba(59,130,246,0.25)' : 'var(--border)') + ';border-radius:8px;opacity:' + (ok ? '1' : '0.5') + ';">' +
           '<div style="font-size:22px;flex-shrink:0;">' + (ok ? c.icon : '🔒') + '</div>' +
           '<div>' +
             '<div style="font-size:12px;font-weight:700;color:' + (ok ? 'var(--text)' : 'var(--text3)') + ';">' + c.nome + '</div>' +
@@ -14346,7 +14366,7 @@ function _perfilRow(icon, label, val) {
 // ── Icon Picker ────────────────────────────────────────────
 var PERFIL_ICONS  = ['🚗','🚙','🏎','🚕','🛻','🚐','🏍','🚑','🚒','🚓','🚌','🚎','🚃','⚡','🔥','🌟'];
 var PERFIL_COLORS = [
-  '#7B80C1','#60a5fa','#68d391','#fc8181','#a78bfa',
+  '#3B82F6','#60a5fa','#68d391','#fc8181','#a78bfa',
   '#f6ad55','#e2e8f0','#81e6d9','#ed64a6','#667eea',
   '#48bb78','#ed8936','#4299e1','#e53e3e','#38b2ac','#9f7aea'
 ];
@@ -14356,7 +14376,7 @@ var _pickerSelColor = null;
 function abrirPerfilIconPicker() {
   var u = state.user || {};
   _pickerSelIcon  = u.perfilIcon  || '🚗';
-  _pickerSelColor = u.perfilColor || '#7B80C1';
+  _pickerSelColor = u.perfilColor || '#3B82F6';
 
   var modal = document.getElementById('icon-picker-modal');
   if (!modal) return;
@@ -14366,7 +14386,7 @@ function abrirPerfilIconPicker() {
   var iconsEl = document.getElementById('icon-picker-icons');
   iconsEl.innerHTML = PERFIL_ICONS.map(function(ic) {
     var sel = ic === _pickerSelIcon;
-    return '<div onclick="pickerSelectIcon(\''+ic+'\')" style="width:52px;height:52px;border-radius:12px;background:'+(sel?'rgba(123,128,193,0.12)':'var(--surface2)')+';border:2px solid '+(sel?'var(--accent)':'var(--border)')+';display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;transition:all 0.15s;" id="picon-'+ic.codePointAt(0)+'">' + ic + '</div>';
+    return '<div onclick="pickerSelectIcon(\''+ic+'\')" style="width:52px;height:52px;border-radius:12px;background:'+(sel?'rgba(59,130,246,0.12)':'var(--surface2)')+';border:2px solid '+(sel?'var(--accent)':'var(--border)')+';display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;transition:all 0.15s;" id="picon-'+ic.codePointAt(0)+'">' + ic + '</div>';
   }).join('');
 
   // Render colors
@@ -14386,7 +14406,7 @@ function pickerSelectIcon(ic) {
     var el = document.getElementById('picon-' + i.codePointAt(0));
     if (!el) return;
     el.style.border = i === ic ? '2px solid var(--accent)' : '2px solid var(--border)';
-    el.style.background = i === ic ? 'rgba(123,128,193,0.12)' : 'var(--surface2)';
+    el.style.background = i === ic ? 'rgba(59,130,246,0.12)' : 'var(--surface2)';
   });
   _updatePickerPreview();
 }
@@ -14406,14 +14426,14 @@ function _updatePickerPreview() {
   var prev = document.getElementById('icon-picker-preview');
   if (!prev) return;
   prev.textContent = _pickerSelIcon || '🚗';
-  prev.style.borderColor = _pickerSelColor || '#7B80C1';
-  prev.style.boxShadow = '0 0 16px ' + (_pickerSelColor||'#7B80C1') + '44';
+  prev.style.borderColor = _pickerSelColor || '#3B82F6';
+  prev.style.boxShadow = '0 0 16px ' + (_pickerSelColor||'#3B82F6') + '44';
 }
 
 function salvarIconPicker() {
   if (!state.user) state.user = {};
   state.user.perfilIcon  = _pickerSelIcon  || '🚗';
-  state.user.perfilColor = _pickerSelColor || '#7B80C1';
+  state.user.perfilColor = _pickerSelColor || '#3B82F6';
   saveState();
   _syncSidebarAvatar();
   _updatePlanBadge();
@@ -14645,11 +14665,11 @@ function renderOpinioes() {
 
   listEl.innerHTML = lista.map(function(op) {
     var stars = '';
-    for (var i = 1; i <= 5; i++) { stars += i <= op.nota ? '<span style="color:#7B80C1;">★</span>' : '<span style="color:var(--surface2);">★</span>'; }
+    for (var i = 1; i <= 5; i++) { stars += i <= op.nota ? '<span style="color:#3B82F6;">★</span>' : '<span style="color:var(--surface2);">★</span>'; }
     var dateStr = new Date(op.data + 'T12:00:00').toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' });
     var carroStr = op.marca === '_geral' ? 'Dica Geral' : op.marca + ' ' + op.modelo + (op.ano ? ' ' + op.ano : '');
     var initials = op.primeiroNome.charAt(0).toUpperCase();
-    var avatarColors = ['#7B80C1','#60a5fa','#68d391','#fc8181','#a78bfa','#f6ad55'];
+    var avatarColors = ['#3B82F6','#60a5fa','#68d391','#fc8181','#a78bfa','#f6ad55'];
     var avatarColor = avatarColors[op.id % avatarColors.length];
 
     return '<div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;">' +
@@ -14693,7 +14713,7 @@ function renderOpiniaoStats() {
       '<div style="font-size:10px;color:var(--text3);">Avaliações</div>' +
     '</div>' +
     '<div style="background:var(--surface2);border-radius:8px;padding:8px 14px;text-align:center;">' +
-      '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;color:#7B80C1;">' + mediaTotal.toFixed(1) + ' ★</div>' +
+      '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;color:#3B82F6;">' + mediaTotal.toFixed(1) + ' ★</div>' +
       '<div style="font-size:10px;color:var(--text3);">Nota média</div>' +
     '</div>' +
     '<div style="background:var(--surface2);border-radius:8px;padding:8px 14px;text-align:center;">' +
@@ -14829,7 +14849,7 @@ function renderWishlist() {
       '<div class="wish-card-fipe">' + fmt(w.fipe) + '</div>' +
       '<div class="wish-card-monthly">' + fmt(w.custoMensal) + '/mês de custo extra</div>' +
       '<div class="wish-card-pills">' +
-        '<span class="wish-pill" style="background:rgba(123,128,193,0.1);color:var(--accent);">💰 ' + fmt(w.custoAnual) + '/ano</span>' +
+        '<span class="wish-pill" style="background:rgba(59,130,246,0.1);color:var(--accent);">💰 ' + fmt(w.custoAnual) + '/ano</span>' +
         '<span class="wish-pill" style="background:rgba(96,165,250,0.1);color:#60a5fa;">🛡️ ' + seguroLabel + '</span>' +
       '</div>' +
       '<div class="wish-card-actions">' +
@@ -14913,7 +14933,7 @@ function renderWishlistPage() {
       '<div class="wish-card-fipe">' + fmt(w.fipe) + '</div>' +
       '<div class="wish-card-monthly">' + fmt(w.custoMensal) + '/mês além da parcela</div>' +
       '<div class="wish-card-pills">' +
-        '<span class="wish-pill" style="background:rgba(123,128,193,0.1);color:var(--accent);">💰 ' + fmt(w.custoAnual) + '/ano</span>' +
+        '<span class="wish-pill" style="background:rgba(59,130,246,0.1);color:var(--accent);">💰 ' + fmt(w.custoAnual) + '/ano</span>' +
         '<span class="wish-pill" style="background:rgba(252,129,129,0.1);color:#fc8181;">🛡️ ' + w.seguro + '% FIPE</span>' +
         '<span class="wish-pill" style="background:rgba(96,165,250,0.1);color:#60a5fa;">🔧 ' + fmt(w.manutAnual) + '/ano</span>' +
       '</div>' +
@@ -15132,7 +15152,7 @@ function renderComparativo() {
       : '⚠️ Custo de manutenção elevado';
 
     // Medal colors
-    var medalBg = i === 0 ? 'linear-gradient(135deg,#7B80C1,#5860A8)' :
+    var medalBg = i === 0 ? 'linear-gradient(135deg,#3B82F6,#1D4ED8)' :
                   i === 1 ? 'linear-gradient(135deg,#bdbdbd,#757575)' :
                             'linear-gradient(135deg,#cd7f32,#8d5524)';
     var medalTxt = i === 2 ? '#fff' : '#000';
@@ -15174,7 +15194,7 @@ function renderComparativo() {
 
       // Badge de resultado
       '<div style="padding:8px 12px;border-radius:8px;font-size:12px;font-weight:700;' +
-        (i === 0 ? 'background:rgba(123,128,193,0.1);color:var(--accent);border:1px solid rgba(123,128,193,0.25);' :
+        (i === 0 ? 'background:rgba(59,130,246,0.1);color:var(--accent);border:1px solid rgba(59,130,246,0.25);' :
          i === 1 ? 'background:rgba(158,158,158,0.1);color:#9e9e9e;border:1px solid rgba(158,158,158,0.2);' :
                    'background:rgba(205,127,50,0.08);color:#cd7f32;border:1px solid rgba(205,127,50,0.2);') +
       '">' + reason + '</div>' +
@@ -15250,7 +15270,7 @@ function pesquisarSonho() {
           '<div class="sonhar-price-sub">Preço FIPE estimado</div>' +
           '<button id="btn-add-wish" onclick="adicionarWishlist(\'' + modelLabel.replace(/'/g,"\\'") + '\',' + ano + ')" ' +
             'style="margin-top:10px;padding:8px 18px;border-radius:8px;font-size:12px;font-weight:700;font-family:\'Sora\',sans-serif;cursor:pointer;transition:all 0.2s;' +
-            (alreadySaved ? 'background:rgba(123,128,193,0.1);border:1px solid rgba(123,128,193,0.3);color:var(--accent);opacity:0.7;' : 'background:var(--accent);border:none;color:#000;') +
+            (alreadySaved ? 'background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);color:var(--accent);opacity:0.7;' : 'background:var(--accent);border:none;color:#000;') +
             '"' + (alreadySaved ? ' disabled' : '') + '>' +
             (alreadySaved ? '❤️ Na wishlist' : '♡ Salvar na wishlist') +
           '</button>' +
@@ -15298,8 +15318,8 @@ function pesquisarSonho() {
 }
 
 function renderViabilidadeItem(label, val, type) {
-  var colors = { red:'rgba(229,62,62,0.08)', yellow:'rgba(123,128,193,0.08)', tip:'rgba(56,161,105,0.08)' };
-  var borders = { red:'rgba(229,62,62,0.2)', yellow:'rgba(123,128,193,0.2)', tip:'rgba(56,161,105,0.2)' };
+  var colors = { red:'rgba(229,62,62,0.08)', yellow:'rgba(59,130,246,0.08)', tip:'rgba(56,161,105,0.08)' };
+  var borders = { red:'rgba(229,62,62,0.2)', yellow:'rgba(59,130,246,0.2)', tip:'rgba(56,161,105,0.2)' };
   var textC = { red:'var(--red)', yellow:'var(--accent)', tip:'#38a169' };
   return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:'+colors[type]+';border:1px solid '+borders[type]+';border-radius:8px;">' +
     '<span style="font-size:12px;color:var(--text2);">' + label + '</span>' +
@@ -15650,11 +15670,11 @@ function renderModeloInfoVehicle(vehicleId, tabEl) {
 
 function _renderOpiniaoCard(o) {
   var stars = '';
-  for (var i=1;i<=5;i++) stars += '<span style="color:'+(i<=(o.nota||0)?'#7B80C1':'#444')+';">★</span>';
+  for (var i=1;i<=5;i++) stars += '<span style="color:'+(i<=(o.nota||0)?'#3B82F6':'#444')+';">★</span>';
   return '<div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;">' +
     '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">' +
       '<div style="display:flex;align-items:center;gap:8px;">' +
-        '<div style="width:28px;height:28px;border-radius:50%;background:rgba(123,128,193,0.15);border:1px solid rgba(123,128,193,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--accent);">'+(o.autor||'?')[0].toUpperCase()+'</div>' +
+        '<div style="width:28px;height:28px;border-radius:50%;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--accent);">'+(o.autor||'?')[0].toUpperCase()+'</div>' +
         '<div><div style="font-size:12px;font-weight:600;color:var(--text);">'+(o.autor||'Anônimo')+'</div>' +
         '<div style="font-size:10px;color:var(--text3);">'+(o.modelo||'')+(o.ano?' · '+o.ano:'')+'</div></div>' +
       '</div>' +
@@ -15756,7 +15776,7 @@ function _renderHistoricoInline() {
   listEl.innerHTML = items.map(function(h) {
     var custo = h.custo > 0 ? '<span style="font-size:11px;color:var(--accent);font-family:\'JetBrains Mono\',monospace;margin-left:auto;">R$' + h.custo.toLocaleString('pt-BR') + '</span>' : '';
     return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);">' +
-      '<div style="width:36px;height:36px;border-radius:8px;background:rgba(123,128,193,0.1);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🔧</div>' +
+      '<div style="width:36px;height:36px;border-radius:8px;background:rgba(59,130,246,0.1);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🔧</div>' +
       '<div style="flex:1;min-width:0;">' +
         '<div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + h.tipo + '</div>' +
         '<div style="font-size:11px;color:var(--text3);">' + h.data + (h.km ? ' · ' + parseInt(h.km).toLocaleString('pt-BR') + ' km' : '') + '</div>' +
@@ -15881,7 +15901,7 @@ function _renderSaudeInline() {
   var fuel       = state.fuel.filter(function(f){ return f.veiculoId === v.id; });
 
   var t = score >= 80 ? { label:'Excelente', color:'#68d391' }
-        : score >= 60 ? { label:'Bom',       color:'#7B80C1' }
+        : score >= 60 ? { label:'Bom',       color:'#3B82F6' }
         : score >= 40 ? { label:'Regular',   color:'#f6ad55' }
         :               { label:'Atenção',   color:'#fc8181' };
 
@@ -16517,7 +16537,7 @@ function renderPizzaChartDetailed(allItems) {
   var keys = Object.keys(cats).filter(function(k){ return cats[k] > 0; });
   if (!keys.length) { ctx.clearRect(0,0,canvas.width,canvas.height); return; }
   var total = keys.reduce(function(s,k){ return s+cats[k]; },0);
-  var colors = ['#7B80C1','#60a5fa','#68d391','#fc8181','#a78bfa','#f6ad55','#76e4f7','#e9d8fd'];
+  var colors = ['#3B82F6','#60a5fa','#68d391','#fc8181','#a78bfa','#f6ad55','#76e4f7','#e9d8fd'];
   var cx=canvas.width/2, cy=canvas.height/2, r=Math.min(cx,cy)-10;
   ctx.clearRect(0,0,canvas.width,canvas.height);
   var start = -Math.PI/2;
@@ -16568,7 +16588,7 @@ function renderDetailedList(items, total) {
     '<div style="font-size:12px;color:var(--text3);margin-bottom:12px;">Total filtrado: <strong style="color:var(--accent);">'+fmt(total)+'</strong> · '+sorted.length+' lançamentos</div>' +
     '<div style="max-height:380px;overflow-y:auto;">' +
       (sorted.length ? sorted.map(function(item) {
-        var catColors = { 'Combustível':'#60a5fa', 'Documentos':'#a78bfa', 'Óleo':'#7B80C1', 'Freios':'#fc8181', 'Pneus':'#68d391', 'Filtros':'#f6ad55', 'Motor':'#76e4f7', 'Revisão':'#e9d8fd', 'Outros':'var(--text3)' };
+        var catColors = { 'Combustível':'#60a5fa', 'Documentos':'#a78bfa', 'Óleo':'#3B82F6', 'Freios':'#fc8181', 'Pneus':'#68d391', 'Filtros':'#f6ad55', 'Motor':'#76e4f7', 'Revisão':'#e9d8fd', 'Outros':'var(--text3)' };
         var col = catColors[item.cat] || 'var(--text3)';
         return '<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--border);">' +
           '<div style="width:8px;height:8px;border-radius:50%;background:'+col+';flex-shrink:0;"></div>' +
@@ -16865,7 +16885,7 @@ function _syncModoUI() {
 
   if (_appMode === 'teste') {
     if (navTeste) navTeste.style.display = 'flex';
-    if (badge) { badge.style.display='block'; badge.style.background='rgba(123,128,193,0.15)'; badge.style.color='#7B80C1'; badge.style.border='1px solid rgba(123,128,193,0.3)'; badge.textContent='🧪 MODO TESTE'; }
+    if (badge) { badge.style.display='block'; badge.style.background='rgba(59,130,246,0.15)'; badge.style.color='#3B82F6'; badge.style.border='1px solid rgba(59,130,246,0.3)'; badge.textContent='🧪 MODO TESTE'; }
     if (banner) banner.style.display = 'flex';
     // Swap state para o sandbox
     _stateTeste = JSON.parse(localStorage.getItem('manycars_teste') || '{"vehicles":[],"history":[],"fuel":[],"docs":{}}');
@@ -17092,7 +17112,7 @@ function _showPagamentoConfig(plano, periodo) {
           '<div>1️⃣ Acesse <strong>mercadopago.com.br/developers</strong></div>' +
           '<div>2️⃣ Crie um <strong>Link de Pagamento</strong> de R$' + (plano==='plus'?'14,90':'29,90') + '/mês</div>' +
           '<div>3️⃣ Copie o link gerado (ex: mpago.la/xxx)</div>' +
-          '<div>4️⃣ Cole em <code style="background:rgba(123,128,193,0.1);padding:1px 5px;border-radius:3px;">_MP_LINKS.' + plano + '_mensal</code></div>' +
+          '<div>4️⃣ Cole em <code style="background:rgba(59,130,246,0.1);padding:1px 5px;border-radius:3px;">_MP_LINKS.' + plano + '_mensal</code></div>' +
         '</div>' +
       '</div>' +
       '<button onclick="window.open(\'https://www.mercadopago.com.br/cobrar/link-pagamento/link\',\'_blank\')" style="width:100%;padding:11px;background:var(--accent);color:var(--bg);border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:\'Sora\',sans-serif;margin-bottom:8px;">Criar link no Mercado Pago →</button>' +
@@ -17145,6 +17165,21 @@ async function _loadAnuncios() {
     _mktAnuncios = _mktDemoData();
   }
   renderMarketplace();
+  // Subscribe to real-time new announcements
+  if (_supabaseReady && _sb && !window._mktSubscribed) {
+    window._mktSubscribed = true;
+    _sb.channel('anuncios-changes')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'anuncios' },
+        function(payload) {
+          if (payload.new && payload.new.status === 'ativo') {
+            _mktAnuncios.unshift(payload.new);
+            renderMarketplace();
+            _renderDashNewCars();
+            showToast('🆕 Novo anúncio na Vitrine!', 'info');
+          }
+        })
+      .subscribe();
+  }
 }
 
 function _mktDemoData() {
@@ -17376,7 +17411,7 @@ function verAnuncio(id) {
     (a.descricao ? '<div class="card" style="margin-bottom:12px;"><div class="card-title">📝 Descrição</div><div style="font-size:13px;color:var(--text2);line-height:1.7;">' + a.descricao + '</div></div>' : '') +
 
     (a.tem_passaporte ?
-      '<div class="card" style="margin-bottom:12px;background:rgba(123,128,193,0.05);border-color:rgba(123,128,193,0.25);">' +
+      '<div class="card" style="margin-bottom:12px;background:rgba(59,130,246,0.05);border-color:rgba(59,130,246,0.25);">' +
         '<div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:6px;">🛡️ Passaporte ManyCars verificado</div>' +
         '<div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px;">Histórico real de manutenções. Clique para consultar.</div>' +
         '<button id="btn-ver-passaporte" class="btn-primary" style="width:100%;padding:9px;font-size:12px;">Ver passaporte completo →</button>' +
@@ -17581,7 +17616,7 @@ function renderPremiumPage() {
   if (planoAtual === 'free') {
     freeCta.innerHTML = '<div style="text-align:center;padding:10px;border-radius:8px;background:var(--surface2);font-size:12px;color:var(--text3);font-weight:600;">✅ Seu plano atual</div>';
   } else {
-    freeCta.innerHTML = '<div style="text-align:center;padding:10px;border-radius:8px;background:rgba(123,128,193,0.07);font-size:12px;color:var(--accent);font-weight:600;">Você está no ' + planoAtual.toUpperCase() + ' 👑</div>';
+    freeCta.innerHTML = '<div style="text-align:center;padding:10px;border-radius:8px;background:rgba(59,130,246,0.07);font-size:12px;color:var(--accent);font-weight:600;">Você está no ' + planoAtual.toUpperCase() + ' 👑</div>';
   }
 
   // Destaca card do plano atual
@@ -17589,7 +17624,7 @@ function renderPremiumPage() {
     var card = document.getElementById('plano-' + p + '-card');
     if (!card) return;
     if (planoAtual === p) {
-      card.style.background = 'rgba(123,128,193,0.04)';
+      card.style.background = 'rgba(59,130,246,0.04)';
     }
   });
 
@@ -17946,7 +17981,7 @@ var _BI = {
     { nome:'Troca de pneus',      count:620,  receita:2100 },
   ],
   combustiveis: [
-    { tipo:'Gasolina', pct:48, cor:'#7B80C1' },
+    { tipo:'Gasolina', pct:48, cor:'#3B82F6' },
     { tipo:'Etanol',   pct:29, cor:'#68d391' },
     { tipo:'Flex',     pct:14, cor:'#60a5fa' },
     { tipo:'Diesel',   pct:7,  cor:'#a78bfa' },
@@ -17984,8 +18019,8 @@ var _BI = {
   funil: [
     { etapa:'App instalado',          n:4820, pct:100, cor:'#60a5fa' },
     { etapa:'Cadastro concluído',      n:3210, pct:67,  cor:'#68d391' },
-    { etapa:'1º veículo cadastrado',   n:2180, pct:45,  cor:'#7B80C1' },
-    { etapa:'1ª manutenção registrada',n:1442, pct:30,  cor:'#7B80C1' },
+    { etapa:'1º veículo cadastrado',   n:2180, pct:45,  cor:'#3B82F6' },
+    { etapa:'1ª manutenção registrada',n:1442, pct:30,  cor:'#3B82F6' },
     { etapa:'Ativo 30 dias',           n:840,  pct:17,  cor:'#e53e3e' },
     { etapa:'Convertido Premium',      n:312,  pct:7,   cor:'#a78bfa' },
   ],
@@ -18082,7 +18117,7 @@ function _admBiKPIs(d) {
     { icon:'⭐', val:fmt(d.planos[1].count),     label:'Usuários Premium',       sub:d.conversaoPct+'% de conversão',               col:'var(--accent)' },
     { icon:'🔧', val:fmt(d.totalManutencoes),    label:'Manutenções totais',     sub:'na plataforma',                               col:'#a78bfa' },
     { icon:'⛽', val:fmt(d.totalAbastecimentos), label:'Abastecimentos',         sub:fmt(Math.round(d.totalLitros))+'L total',       col:'#68d391' },
-    { icon:'📉', val:d.churnPct+'%',             label:'Churn mensal',           sub:'meta: <3%',                                   col:d.churnPct<3?'#38a169':'#7B80C1' },
+    { icon:'📉', val:d.churnPct+'%',             label:'Churn mensal',           sub:'meta: <3%',                                   col:d.churnPct<3?'#38a169':'#3B82F6' },
   ];
   el.innerHTML = kpis.map(function(k){
     return '<div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;">' +
@@ -18121,8 +18156,8 @@ function _admBiGrowthChart(d) {
     var y  = pad.t + chartH - bh;
     var isLast = i === values.length - 1;
     var grad = ctx.createLinearGradient(0, y, 0, y+bh);
-    grad.addColorStop(0, isLast ? '#7B80C1' : '#a78bfa');
-    grad.addColorStop(1, isLast ? '#7B80C166' : '#a78bfa66');
+    grad.addColorStop(0, isLast ? '#3B82F6' : '#a78bfa');
+    grad.addColorStop(1, isLast ? '#3B82F666' : '#a78bfa66');
     ctx.fillStyle = grad;
     ctx.beginPath();
     if (ctx.roundRect) ctx.roundRect(x, y, barW, bh, 3);
@@ -18145,7 +18180,7 @@ function _admBiGrowthChart(d) {
 function _admBiOnline(d) {
   var el = document.getElementById('adm-online-now');
   if (!el) return;
-  var cols = ['#38a169','#60a5fa','#7B80C1','#a78bfa'];
+  var cols = ['#38a169','#60a5fa','#3B82F6','#a78bfa'];
   el.innerHTML = d.online.map(function(u,i){
     return '<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--surface2);border-radius:7px;">' +
       '<div style="width:24px;height:24px;border-radius:50%;background:'+cols[i%4]+'22;border:1.5px solid '+cols[i%4]+';display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:'+cols[i%4]+';flex-shrink:0;">'+u.ini+'</div>' +
@@ -18157,7 +18192,7 @@ function _admBiOnline(d) {
   var pct = Math.round(d.usuariosOnlineAgora/200*100);
   var bar = document.getElementById('adm-cap-bar');
   var lbl = document.getElementById('adm-cap-label');
-  if (bar) setTimeout(function(){ bar.style.width=pct+'%'; bar.style.background=pct>75?'#e53e3e':pct>50?'#7B80C1':'linear-gradient(90deg,#38a169,var(--accent))'; },100);
+  if (bar) setTimeout(function(){ bar.style.width=pct+'%'; bar.style.background=pct>75?'#e53e3e':pct>50?'#3B82F6':'linear-gradient(90deg,#38a169,var(--accent))'; },100);
   if (lbl) lbl.textContent = d.usuariosOnlineAgora+'/200 usuários ('+pct+'% da capacidade)';
 }
 
@@ -18180,7 +18215,7 @@ function _admBiModelos(d) {
   if (!el) return;
   var top = d.modelos.slice().sort(function(a,b){ return b.usuarios-a.usuarios; }).slice(0,8);
   var maxU = top[0].usuarios;
-  var cols = ['#7B80C1','#7B80C1','var(--accent)','#60a5fa','#60a5fa','#68d391','#adb5bd','#adb5bd'];
+  var cols = ['#3B82F6','#3B82F6','var(--accent)','#60a5fa','#60a5fa','#68d391','#adb5bd','#adb5bd'];
   el.innerHTML = top.map(function(m,i){
     return '<div style="display:flex;align-items:center;gap:8px;">' +
       '<div style="width:16px;font-size:10px;font-weight:700;color:var(--text3);text-align:right;flex-shrink:0;">#'+(i+1)+'</div>' +
@@ -18266,7 +18301,7 @@ function _admBiPlanos(d) {
   if (!el) return;
   var total = d.planos.reduce(function(s,p){ return s+p.count; },0);
   el.innerHTML = d.planos.map(function(p){
-    var cor = p.cor.startsWith('var') ? '#7B80C1' : p.cor;
+    var cor = p.cor.startsWith('var') ? '#3B82F6' : p.cor;
     return '<div style="display:flex;align-items:center;gap:8px;">' +
       '<div style="width:10px;height:10px;border-radius:2px;background:'+cor+';flex-shrink:0;"></div>' +
       '<div style="flex:1;font-size:12px;color:var(--text2);">'+p.nome+'</div>' +
@@ -18294,7 +18329,7 @@ function _admBiCanais(d) {
     var fmt = function(v){ return 'R$'+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:0}); };
     var rKpis = [
       { icon:'💰', val:fmt(d.mrr),         label:'MRR', col:'#68d391' },
-      { icon:'📅', val:fmt(d.arr),         label:'ARR', col:'#7B80C1' },
+      { icon:'📅', val:fmt(d.arr),         label:'ARR', col:'#3B82F6' },
       { icon:'🎟️', val:fmt(d.ticketMedio)+'', label:'Ticket médio', col:'#a78bfa' },
       { icon:'♻️', val:fmt(d.ltv),         label:'LTV médio', col:'#60a5fa' },
     ];
@@ -18311,7 +18346,7 @@ function _admBiCanais(d) {
 function _admBiTopUsers(d) {
   var el = document.getElementById('adm-top-users-bi');
   if (!el) return;
-  var cols = ['#7B80C1','#adb5bd','#f6ad55','#60a5fa','#68d391'];
+  var cols = ['#3B82F6','#adb5bd','#f6ad55','#60a5fa','#68d391'];
   el.innerHTML = d.topUsers.map(function(u,i){
     return '<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2);border-radius:8px;">' +
       '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:18px;color:'+cols[i]+';width:20px;text-align:center;flex-shrink:0;">'+(i+1)+'</div>' +
@@ -18340,7 +18375,7 @@ function _admBiAlertas(d) {
   var el = document.getElementById('adm-alertas-sys');
   if (!el) return;
   var iM = {warn:'⚠️',info:'ℹ️',ok:'✅'};
-  var cM = {warn:'#7B80C1',info:'#60a5fa',ok:'#38a169'};
+  var cM = {warn:'#3B82F6',info:'#60a5fa',ok:'#38a169'};
   el.innerHTML = d.alertas.map(function(a){
     return '<div style="display:flex;align-items:flex-start;gap:9px;padding:9px 12px;background:'+cM[a.tipo]+'0f;border:1px solid '+cM[a.tipo]+'33;border-radius:8px;">' +
       '<span style="font-size:15px;flex-shrink:0;">'+iM[a.tipo]+'</span>' +
