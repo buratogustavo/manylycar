@@ -412,7 +412,10 @@ body.app-active #screen-app { overflow-y: auto; }
   color: var(--accent);
 }
 
-.nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+.nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; filter: grayscale(1) brightness(0.75); }
+.nav-item:hover .nav-icon,
+.nav-item.active .nav-icon { filter: grayscale(0.3) brightness(1); }
+.nav-premium .nav-icon { filter: none !important; }
 
 .sidebar-bottom {
   margin-top: auto;
@@ -962,6 +965,31 @@ body.app-active #screen-app { overflow-y: auto; }
 .empty-desc { font-size: 13px; }
 
 /* VEHICLE IMAGE CARD */
+/* Vehicle photo */
+.vehicle-photo-wrap {
+  width: 100%; height: 160px; overflow: hidden; border-radius: 14px 14px 0 0;
+  background: var(--surface2); position: relative; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+.vehicle-photo-wrap img { width:100%; height:100%; object-fit:cover; }
+.vehicle-photo-placeholder {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  color: var(--text3); font-size: 11px;
+}
+.vehicle-photo-placeholder .ph-icon { font-size: 28px; }
+.vehicle-photo-overlay {
+  position: absolute; inset: 0; background: rgba(0,0,0,0);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: all .2s; border-radius: 14px 14px 0 0;
+}
+.vehicle-photo-wrap:hover .vehicle-photo-overlay {
+  background: rgba(0,0,0,0.45); opacity: 1;
+}
+.vehicle-photo-overlay span {
+  color: white; font-size: 12px; font-weight: 700;
+  background: rgba(0,0,0,0.5); padding: 6px 14px; border-radius: 20px;
+}
+
 .vehicle-img-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -1399,11 +1427,11 @@ body.app-active #screen-app { overflow-y: auto; }
 .consult-price { font-family: 'JetBrains Mono', monospace; color: var(--accent); }
 .consult-comm { font-size: 10px; color: #38a169; }
 
-.marketplace-item {
+.vitrine-item {
   display: flex; align-items: center; gap: 8px;
   padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 12px;
 }
-.marketplace-item:last-child { border-bottom: none; }
+.vitrine-item:last-child { border-bottom: none; }
 .mk-icon { font-size: 18px; }
 .mk-info { flex: 1; }
 .mk-name { color: var(--text); font-weight: 500; font-size: 12px; }
@@ -1650,6 +1678,18 @@ body.app-active #screen-app { overflow-y: auto; }
 /* ================================================================
    TABLET  768px
    ================================================================ */
+@media (min-width: 769px) and (max-width: 1023px) {
+  /* Tablet: sidebar narrower */
+  .sidebar {
+    width: 180px;
+    padding: 16px 10px;
+  }
+  .nav-item { font-size: 12px; padding: 8px 8px; }
+  .nav-section { font-size: 9px; }
+  .page { padding: 16px 18px 24px; }
+  .card { padding: 14px 16px; }
+}
+
 @media (max-width: 768px) {
   /* Layout */
   .mobile-topbar { display: flex; }
@@ -1682,6 +1722,7 @@ body.app-active #screen-app { overflow-y: auto; }
   }
 
   .page { padding: 12px 16px 24px; }
+  .viagem-map-wrap { height: 260px; }
   .page-header { margin-bottom: 12px; }
   .page-title { font-size: 24px; }
 
@@ -1787,7 +1828,9 @@ body.app-active #screen-app { overflow-y: auto; }
   position: relative; gap: 3px; min-height: 54px;
   -webkit-tap-highlight-color: transparent;
 }
-.bn-item .bn-icon { font-size: 22px; line-height: 1; }
+.bn-item .bn-icon { font-size: 22px; line-height: 1; filter: grayscale(1) brightness(0.7); }
+.bn-item.active .bn-icon,
+.bn-fab-wrap .bn-fab { filter: none; }
 .bn-item.active { color: var(--accent); }
 .bn-item .bn-badge {
   position: absolute; top: 6px; right: calc(50% - 14px);
@@ -2348,7 +2391,7 @@ select, textarea {
 
 /* ===== VIAGENS / CHECK-IN ===== */
 .viagem-map-wrap {
-  position: relative; width: 100%; height: 360px;
+  position: relative; width: 100%; height: 400px;
   background: var(--surface2); border-radius: 14px;
   overflow: hidden; margin-bottom: 16px;
   border: 1px solid var(--border);
@@ -2555,7 +2598,7 @@ select, textarea {
 
 
 /* ====================================================
-   MARKETPLACE REDESIGN — Estilo Webmotors
+   VITRINE REDESIGN — Estilo Webmotors
    ==================================================== */
 #page-marketplace { padding: 0 !important; }
 .mkt-layout {
@@ -2749,6 +2792,8 @@ select, textarea {
 #tour-overlay {
   position: fixed; inset: 0; z-index: 8000;
   pointer-events: none;
+
+  overflow-y: auto;
 }
 #tour-spotlight {
   position: absolute;
@@ -3012,6 +3057,47 @@ select, textarea {
   border-radius: 4px; font-size: 11px; color: var(--text2);
   font-family: 'JetBrains Mono', monospace;
 }
+
+/* ================================================================
+   TABLET  769px – 1023px  (sidebar visible but narrower)
+   ================================================================ */
+/* Already added above */
+
+/* ================================================================
+   LARGE DESKTOP  1280px+
+   ================================================================ */
+@media (min-width: 1280px) {
+  .sidebar { width: 240px; }
+  .page { padding: 28px 36px; }
+  .stat-card { padding: 20px 18px; }
+  .card { padding: 20px 22px; margin-bottom: 16px; }
+  .viagem-map-wrap { height: 480px; }
+}
+
+/* ================================================================
+   NOTEBOOK / DESKTOP  1024px+  — light/dark mode toggle visible
+   ================================================================ */
+@media (min-width: 1024px) {
+  /* Theme toggle always visible on desktop sidebar */
+  #sidebar-theme-btn { display: block !important; }
+  /* Bottom nav hidden on desktop (user uses sidebar) */
+  .bottom-nav { display: none !important; }
+  /* Mobile topbar hidden */
+  .mobile-topbar { display: none !important; }
+  /* Sidebar always visible */
+  .sidebar {
+    display: flex !important;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  /* Push main-content to use available space */
+  .main-content { padding-bottom: 24px; }
+}
+
 </style>
 
 <!-- ============================================================ -->
@@ -3250,7 +3336,7 @@ select, textarea {
   <!-- MOBILE TOPBAR -->
   <div class="mobile-topbar">
     <!-- Hamburger ESQUERDA -->
-    <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu" style="margin-right:4px;">
+    <button class="hamburger" aria-label="Abrir menu" onclick="toggleSidebar()" aria-label="Menu" style="margin-right:4px;">
       <span></span><span></span><span></span>
     </button>
 
@@ -3276,7 +3362,7 @@ select, textarea {
     </div>
 
     <!-- Theme toggle DIREITA — sempre visível -->
-    <button class="theme-toggle" onclick="toggleTheme()" id="theme-btn-mobile" title="Alternar tema" style="margin-left:4px;flex-shrink:0;">
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Alternar tema" id="theme-btn-mobile" title="Alternar tema" style="margin-left:4px;flex-shrink:0;">
       <span class="tt-icon" id="theme-icon-mobile">🌙</span>
       <span id="theme-label-mobile">Escuro</span>
     </button>
@@ -3325,70 +3411,49 @@ select, textarea {
 
     <div class="nav-section">Início</div>
     <div class="nav-item active" onclick="showPage('dashboard')">
-      <span class="nav-icon">🏠</span> Dashboard
-    </div>
-    <div class="nav-item" onclick="showPage('perfil')">
-      <span class="nav-icon">👤</span> Meu Perfil
+      <span class="nav-icon">🏠</span> Início
     </div>
     <div class="nav-item" data-unlock="hasVehicle" onclick="showPage('alertas')">
       <span class="nav-icon">🔔</span> Alertas
       <span id="alert-badge" style="margin-left:auto;background:var(--red);color:white;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;display:none;"></span>
     </div>
-    <div class="nav-item" onclick="showPage('configuracoes')">
-      <span class="nav-icon">⚙️</span> Configurações
-    </div>
 
-    <div class="nav-section">Meus Veículos</div>
+    <div class="nav-section">Meu Carro</div>
     <div class="nav-item" onclick="showPage('veiculos')">
-      <span class="nav-icon">🚗</span> Veículos
+      <span class="nav-icon">🚗</span> Garagem
     </div>
     <div class="nav-item" data-unlock="hasVehicle" onclick="showPage('manutencao')">
       <span class="nav-icon">🔩</span> Manutenção
     </div>
-    <div class="nav-item" data-unlock="hasRecord" onclick="showPage('historico')">
-      <span class="nav-icon">📋</span> Histórico
-    </div>
     <div class="nav-item" data-unlock="hasVehicle" onclick="showPage('combustivel')">
       <span class="nav-icon">⛽</span> Combustível
     </div>
-    <div class="nav-item" data-unlock="hasVehicle" onclick="showPage('documentos')">
-      <span class="nav-icon">📅</span> Documentos
-      <span id="doc-badge" style="display:none;margin-left:auto;background:var(--red);color:white;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;"></span>
+    <div class="nav-item" data-unlock="hasVehicle" onclick="showPage('passaporte')">
+      <span class="nav-icon">📋</span> Passaporte
     </div>
 
     <div class="nav-section">Análise</div>
-    <div class="nav-item" data-unlock="record5" onclick="showPage('analytics')">
+    <div class="nav-item" data-unlock="hasVehicle" onclick="showPage('analytics')">
       <span class="nav-icon">📊</span> Painel Financeiro
     </div>
-    <div class="nav-item" data-unlock="record5" onclick="showPage('viagens')">
+    <div class="nav-item" data-unlock="hasVehicle" onclick="showPage('viagens')">
       <span class="nav-icon">🗺️</span> Viagens
     </div>
 
-    <div class="nav-section">Mercado</div>
+    <div class="nav-section">Vitrine</div>
     <div class="nav-item" data-unlock="record3" onclick="showPage('marketplace')">
-      <span class="nav-icon">🏪</span> Marketplace
-      <span style="margin-left:auto;font-size:9px;font-weight:700;background:rgba(123,128,193,0.12);color:var(--accent);padding:2px 6px;border-radius:10px;white-space:nowrap;">🏷️ Anunciar</span>
+      <span class="nav-icon">🏪</span> Vitrine
+
     </div>
     <div class="nav-item" data-unlock="record3" onclick="showPage('sonhar')">
       <span class="nav-icon">🌟</span> Lista de Desejos
       <span id="wishlist-badge" style="margin-left:auto;background:rgba(123,128,193,0.15);color:var(--accent);font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;display:none;"></span>
     </div>
-    <div class="nav-item" data-unlock="record3" onclick="showPage('vender')">
-      <span class="nav-icon">🏷️</span> Vender meu carro
-    </div>
-    <div class="nav-item" data-unlock="record3" onclick="showPage('pecas')">
-      <span class="nav-icon">🔧</span> Consultar Peças
-    </div>
 
-    <div class="nav-section">Meu Modelo</div>
-    <div class="nav-item" data-unlock="record3" onclick="showPage('modelo-info')">
-      <span class="nav-icon">📖</span> Info do Modelo
-    </div>
-    <div class="nav-item" data-unlock="record3" onclick="showPage('opinioes')">
-      <span class="nav-icon">💬</span> Opiniões de Donos
-    </div>
-    <div class="nav-item" onclick="showPage('premium')" style="background:linear-gradient(135deg,rgba(123,128,193,0.1),rgba(167,139,250,0.1));border:1px solid rgba(123,128,193,0.25);">
-      <span class="nav-icon">👑</span> <span style="background:linear-gradient(90deg,#7B80C1,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;">Seja Premium</span>
+
+    <!-- Info do Modelo e Opiniões acessíveis via Garagem -->
+    <div class="nav-item" onclick="showPage('premium')" class="nav-premium" style="background:linear-gradient(135deg,rgba(123,128,193,0.1),rgba(167,139,250,0.1));border:1px solid rgba(123,128,193,0.25);">
+      <span class="nav-icon">👑</span> <span style="background:linear-gradient(90deg,#7B80C1,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;">✦ Fazer Upgrade</span>
     </div>
 
     <!-- Modos ocultos (acesso via v1.0 MVP × 5) -->
@@ -3398,6 +3463,9 @@ select, textarea {
       <!-- Indicador de modo ativo -->
       <div id="modo-badge" style="display:none;margin-bottom:8px;text-align:center;padding:6px 10px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:1px;"></div>
 
+      <div style="display:flex;gap:6px;margin-bottom:8px;">
+        <button onclick="toggleTheme()" style="flex:1;padding:7px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:11px;font-weight:600;color:var(--text2);cursor:pointer;font-family:'Sora',sans-serif;" id="sidebar-theme-btn">🌙 Tema</button>
+      </div>
       <div style="font-size:10px; color:var(--text3); text-align:center; margin-bottom:10px; padding:6px 8px; background:rgba(56,161,105,0.08); border-radius:6px; border:1px solid rgba(56,161,105,0.15);">
         <span style="color:#38a169;">💾</span> Dados salvos localmente
         <div id="saved-at" style="margin-top:2px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text3);"></div>
@@ -3409,7 +3477,15 @@ select, textarea {
           <div style="font-size:10px;color:var(--text3);margin-top:1px;">Ver perfil →</div>
         </div>
       </div>
-      <button class="logout-btn" onclick="doLogout()">Sair da conta</button>
+      <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px;">
+        <div class="nav-item" onclick="showPage('perfil');closeSidebar();" style="margin:0;padding:8px 10px;">
+          <span class="nav-icon">👤</span> Meu Perfil
+        </div>
+        <div class="nav-item" onclick="showPage('configuracoes');closeSidebar();" style="margin:0;padding:8px 10px;">
+          <span class="nav-icon">⚙️</span> Configurações
+        </div>
+      </div>
+      <button class="logout-btn" onclick="doLogout()" aria-label="Sair da conta">Sair da conta</button>
       <button class="logout-btn" style="margin-top:6px; background:rgba(229,62,62,0.08); color:var(--red); border-color:rgba(229,62,62,0.2);" onclick="confirmarLimparDados()">🗑 Limpar todos os dados</button>
       <button class="logout-btn" style="margin-top:6px;color:var(--accent);border-color:rgba(123,128,193,0.3);background:rgba(123,128,193,0.06);" onclick="closeSidebar();setTimeout(function(){localStorage.removeItem('mc_tour_done');iniciarTour();},300);">🗺️ Ver tour do app</button>
       <div style="text-align:center;margin-top:8px;font-size:9px;color:var(--text3);padding:4px;">v1.0 MVP</div>
@@ -3431,7 +3507,7 @@ select, textarea {
       </button>
       <button class="bn-item" onclick="showPage('veiculos');setBottomNav(this)">
         <span class="bn-icon">🚗</span>
-        <span>Veículos</span>
+        <span>Garagem</span>
       </button>
 
       <!-- Botão "+" central -->
@@ -3494,30 +3570,34 @@ select, textarea {
 
     <!-- ===== DASHBOARD ===== -->
     <div id="page-dashboard" class="page active">
-      <div class="page-header">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-          <div>
-            <div class="page-title"><span id="dash-greeting">BOM DIA,</span> <span id="dash-name" style="color:var(--accent)">VOCÊ</span> 👋</div>
-            <div class="page-sub">Aqui está o resumo dos seus veículos</div>
+
+      <!-- SAUDAÇÃO -->
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+        <div>
+          <div class="page-title" style="margin-bottom:2px;">
+            <span id="dash-greeting">BOM DIA,</span>
+            <span id="dash-name" style="color:var(--accent)">VOCÊ</span> 👋
           </div>
-          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-            <!-- Seletor de veículo com setas -->
-            <div id="dash-vehicle-selector" style="display:none;align-items:center;gap:6px;">
-              <button onclick="dashVehicleNav(-1)" style="width:30px;height:30px;border-radius:50%;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">‹</button>
-              <div style="background:rgba(123,128,193,0.08);border:1px solid var(--accent);border-radius:8px;padding:6px 14px;font-size:13px;font-weight:700;color:var(--accent);min-width:140px;text-align:center;" id="dash-active-vehicle-label">—</div>
-              <button onclick="dashVehicleNav(1)" style="width:30px;height:30px;border-radius:50%;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">›</button>
-            </div>
-          </div>
+          <div style="font-size:12px;color:var(--text3);" id="dash-date-sub">Aqui está o resumo dos seus veículos</div>
+        </div>
+        <!-- Seletor de veículo compacto -->
+        <div id="dash-vehicle-selector" style="display:none;align-items:center;gap:6px;">
+          <button onclick="dashVehicleNav(-1)" style="width:28px;height:28px;border-radius:50%;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">‹</button>
+          <div style="background:rgba(123,128,193,0.08);border:1px solid var(--accent);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--accent);min-width:120px;text-align:center;" id="dash-active-vehicle-label">—</div>
+          <button onclick="dashVehicleNav(1)"  style="width:28px;height:28px;border-radius:50%;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">›</button>
         </div>
       </div>
 
-      <!-- MODELOS EM DESTAQUE — todos os veículos -->
-      <div id="dash-hero-vehicle" style="display:none;"></div>
+      <!-- HERO VEÍCULO -->
+      <div id="dash-hero-vehicle" style="display:none;margin-bottom:16px;"></div>
 
-      <!-- STATS — logo abaixo do hero -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <!-- ALERTAS URGENTES -->
+      <div id="dash-alerts-strip" style="display:none;margin-bottom:16px;"></div>
+
+      <!-- 4 MÉTRICAS -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
         <div class="stat-card" onclick="showPage('veiculos')" style="cursor:pointer;">
-          <div class="stat-label">Veículos</div>
+          <div class="stat-label">Garagem</div>
           <div class="stat-value accent" id="stat-veiculos">0</div>
           <div class="stat-desc">cadastrados</div>
         </div>
@@ -3531,47 +3611,25 @@ select, textarea {
           <div class="stat-value" style="color:var(--red)" id="stat-alerts">0</div>
           <div class="stat-desc">pendentes</div>
         </div>
-        <div class="stat-card" onclick="showPage('saude')" style="cursor:pointer;">
+        <div class="stat-card" onclick="showPage('combustivel')" style="cursor:pointer;">
           <div class="stat-label">KM total</div>
           <div class="stat-value" style="color:var(--accent)" id="stat-km-total">0</div>
           <div class="stat-desc">da frota</div>
         </div>
       </div>
 
-      <!-- AÇÕES RÁPIDAS -->
-      <div class="card">
-        <div class="card-title">⚡ Ações rápidas</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          <button onclick="showPage('veiculos')" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 8px;background:var(--accent);color:var(--bg);border:none;border-radius:12px;font-family:'Sora',sans-serif;cursor:pointer;min-height:72px;">
-            <span style="font-size:22px;">🚗</span>
-            <span style="font-size:12px;font-weight:700;letter-spacing:0.3px;">Novo veículo</span>
-          </button>
-          <button onclick="showPage('combustivel')" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 8px;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:12px;font-family:'Sora',sans-serif;cursor:pointer;min-height:72px;">
-            <span style="font-size:22px;">⛽</span>
-            <span style="font-size:12px;font-weight:600;color:var(--text2);">Abastecer</span>
-          </button>
-          <button onclick="abrirRegistroRapido('manutencao')" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 8px;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:12px;font-family:'Sora',sans-serif;cursor:pointer;min-height:72px;">
-            <span style="font-size:22px;">🔧</span>
-            <span style="font-size:12px;font-weight:600;color:var(--text2);">Manutenção</span>
-          </button>
-          <button onclick="showPage('alertas')" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 8px;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:12px;font-family:'Sora',sans-serif;cursor:pointer;min-height:72px;position:relative;">
-            <span style="font-size:22px;">🔔</span>
-            <span style="font-size:12px;font-weight:600;color:var(--text2);">Alertas</span>
-            <span id="quick-alert-badge" style="display:none;position:absolute;top:8px;right:10px;background:var(--red);color:white;font-size:9px;font-weight:800;padding:2px 5px;border-radius:10px;line-height:1.4;">0</span>
-          </button>
-        </div>
-      </div>
-
       <!-- SCORE DE SAÚDE -->
-      <div class="card" id="dash-score-card" style="display:none;">
-        <div class="card-title">❤️ Score de saúde</div>
+      <div class="card" id="dash-score-card" style="display:none;cursor:pointer;" onclick="showPage('saude')">
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
+          ❤️ Score de saúde
+          <span style="font-size:11px;color:var(--text3);font-weight:400;">toque para detalhes →</span>
+        </div>
         <div class="score-vehicle-tabs" id="score-vehicle-tabs"></div>
         <div class="score-section">
           <div class="score-ring-wrap">
             <svg width="110" height="110" viewBox="0 0 110 110">
               <circle class="score-ring-bg" cx="55" cy="55" r="45"/>
-              <circle class="score-ring-fill" id="score-ring" cx="55" cy="55" r="45"
-                stroke-dasharray="283" stroke-dashoffset="283"/>
+              <circle class="score-ring-fill" id="score-ring" cx="55" cy="55" r="45" stroke-dasharray="283" stroke-dashoffset="283"/>
             </svg>
             <div class="score-center">
               <div class="score-num" id="score-num">--</div>
@@ -3586,7 +3644,7 @@ select, textarea {
       <!-- VENCIMENTOS DE DOCUMENTOS -->
       <div id="dash-docs-section" style="display:none;"></div>
 
-      <!-- HISTÓRICO RECENTE -->
+      <!-- ÚLTIMAS MANUTENÇÕES -->
       <div id="dash-history-section" style="display:none;">
         <div class="card">
           <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
@@ -3597,142 +3655,22 @@ select, textarea {
         </div>
       </div>
 
-      <!-- REGISTRO RÁPIDO -->
-      <div class="card" id="dash-quick-register">
-        <div class="card-title">➕ Registro rápido</div>
-        <!-- Tabs -->
-        <div style="display:flex;gap:0;margin-bottom:16px;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
-          <button id="qr-tab-manut" onclick="switchQuickTab('manut')" style="flex:1;padding:9px;font-size:11px;font-weight:700;background:var(--accent);color:var(--bg);border:none;cursor:pointer;font-family:'Sora',sans-serif;transition:all 0.2s;">🔧 Manutenção</button>
-          <button id="qr-tab-fuel"  onclick="switchQuickTab('fuel')"  style="flex:1;padding:9px;font-size:11px;font-weight:600;background:var(--surface2);color:var(--text2);border:none;cursor:pointer;font-family:'Sora',sans-serif;transition:all 0.2s;">⛽ Combustível</button>
-          <button id="qr-tab-km"    onclick="switchQuickTab('km')"    style="flex:1;padding:9px;font-size:11px;font-weight:600;background:var(--surface2);color:var(--text2);border:none;cursor:pointer;font-family:'Sora',sans-serif;transition:all 0.2s;">📍 Atualizar KM</button>
-        </div>
+      <!-- RESUMO FINANCEIRO -->
+      <div id="dash-finance-section" style="display:none;"></div>
 
-        <!-- Manutenção rápida -->
-        <div id="qr-manut">
-          <div class="form-grid">
-            <div class="form-group">
-              <div class="field-label">Veículo</div>
-              <select class="field-select" id="qr-manut-veiculo"></select>
-            </div>
-            <div class="form-group">
-              <div class="field-label">Serviço</div>
-              <select class="field-select" id="qr-manut-tipo">
-                <option>Troca de óleo</option><option>Troca de filtro</option>
-                <option>Revisão de freios</option><option>Troca de pneus</option>
-                <option>Alinhamento/Balanceamento</option><option>Troca de correia</option>
-                <option>Revisão geral</option><option>Outro</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <div class="field-label">Custo (R$)</div>
-              <input class="field-input" id="qr-manut-custo" type="number" placeholder="Ex: 250" inputmode="decimal">
-            </div>
-            <div class="form-group">
-              <div class="field-label">KM atual</div>
-              <input class="field-input" id="qr-manut-km" type="number" placeholder="Ex: 45000" inputmode="numeric">
-            </div>
-          </div>
-          <button class="btn-primary" style="width:auto;padding:10px 24px;margin-top:12px;" onclick="registroRapidoManut()">Registrar manutenção</button>
-        </div>
+      <!-- NOVOS NA VITRINE -->
+      <div id="dash-new-cars" style="display:none;"></div>
 
-        <!-- Combustível rápido -->
-        <div id="qr-fuel" style="display:none;">
-          <div class="form-grid">
-            <div class="form-group">
-              <div class="field-label">Veículo</div>
-              <select class="field-select" id="qr-fuel-veiculo"></select>
-            </div>
-            <div class="form-group">
-              <div class="field-label">Tipo de combustível</div>
-              <select class="field-select" id="qr-fuel-tipo">
-                <option value="Gasolina">⛽ Gasolina</option>
-                <option value="Etanol">🌿 Etanol/Álcool</option>
-                <option value="Flex">🔄 Flex (misto)</option>
-                <option value="Diesel">🚛 Diesel</option>
-                <option value="GNV">💨 GNV (gás natural)</option>
-                <option value="Elétrico">⚡ Energia elétrica (kWh)</option>
-                <option value="Híbrido">🔋 Híbrido (recarga)</option>
-              </select>
-            </div>
-            <div class="form-group" id="qr-fuel-litros-group">
-              <div class="field-label" id="qr-fuel-litros-label">Litros</div>
-              <input class="field-input" id="qr-fuel-litros" type="number" placeholder="Ex: 40" step="0.1" inputmode="decimal">
-            </div>
-            <div class="form-group">
-              <div class="field-label" id="qr-fuel-preco-label">Preço/L (R$)</div>
-              <input class="field-input" id="qr-fuel-preco" type="number" placeholder="Ex: 5.89" step="0.01" inputmode="decimal">
-            </div>
-            <div class="form-group">
-              <div class="field-label">KM atual</div>
-              <input class="field-input" id="qr-fuel-km" type="number" placeholder="Ex: 45000" inputmode="numeric">
-            </div>
-          </div>
-          <button class="btn-primary" style="width:auto;padding:10px 24px;margin-top:12px;" onclick="registroRapidoFuel()">Registrar abastecimento</button>
-        </div>
-
-        <!-- KM rápido -->
-        <div id="qr-km" style="display:none;">
-          <div style="font-size:12px;color:var(--text3);margin-bottom:12px;">Mantenha a quilometragem atualizada para alertas precisos</div>
-          <div id="qr-km-list"></div>
-          <button class="btn-primary" style="width:auto;padding:10px 24px;margin-top:12px;" onclick="salvarKmRapido()">💾 Salvar KM</button>
-        </div>
-      </div>
-
-      <!-- SIMULADOR DE VIAGEM RÁPIDO -->
-      <div class="card" id="dash-sim-card" style="display:none;">
-        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
-          🧮 Simular próxima viagem
-          <button class="btn-secondary" style="padding:5px 12px;font-size:11px;" onclick="showPage('viagens')">Ver viagens →</button>
-        </div>
-        <div style="font-size:12px;color:var(--text3);margin-bottom:12px;">Calcule o custo antes de sair</div>
-        <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end;margin-bottom:10px;">
-          <div class="form-group city-autocomplete" style="margin:0;">
-            <div class="field-label">📍 Origem</div>
-            <input class="field-input" id="dsim-origem" type="text" placeholder="Ex: São Paulo, SP"
-              oninput="sugerirCidades(this,'dsim-sug-origem')" onblur="setTimeout(function(){fecharSugestoes('dsim-sug-origem')},200)" autocomplete="off">
-            <div class="city-suggestions" id="dsim-sug-origem" style="display:none;"></div>
-          </div>
-          <div style="padding-bottom:8px;font-size:18px;color:var(--accent);text-align:center;">→</div>
-          <div class="form-group city-autocomplete" style="margin:0;">
-            <div class="field-label">🏁 Destino</div>
-            <input class="field-input" id="dsim-destino" type="text" placeholder="Ex: Rio de Janeiro, RJ"
-              oninput="sugerirCidades(this,'dsim-sug-destino')" onblur="setTimeout(function(){fecharSugestoes('dsim-sug-destino')},200)" autocomplete="off">
-            <div class="city-suggestions" id="dsim-sug-destino" style="display:none;"></div>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
-          <div class="form-group" style="margin:0;">
-            <div class="field-label">KM da rota</div>
-            <input class="field-input" id="dsim-km" type="number" inputmode="numeric" placeholder="430" oninput="calcDashSim()">
-          </div>
-          <div class="form-group" style="margin:0;">
-            <div class="field-label">Consumo km/L</div>
-            <input class="field-input" id="dsim-consumo" type="number" inputmode="decimal" step="0.1" placeholder="12" oninput="calcDashSim()">
-          </div>
-          <div class="form-group" style="margin:0;">
-            <div class="field-label">Preço/L (R$)</div>
-            <input class="field-input" id="dsim-preco" type="number" inputmode="decimal" step="0.01" placeholder="5.89" oninput="calcDashSim()">
-          </div>
-        </div>
-        <div id="dsim-resultado" style="display:none;background:rgba(123,128,193,0.05);border:1px solid rgba(123,128,193,0.18);border-radius:8px;padding:12px 14px;margin-bottom:10px;">
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center;">
-            <div><div id="dsim-litros" style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--blue);">—</div><div style="font-size:11px;color:var(--text3);">Litros</div></div>
-            <div><div id="dsim-custo-ida" style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--green);">—</div><div style="font-size:11px;color:var(--text3);">Ida</div></div>
-            <div><div id="dsim-custo-iv" style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--accent);">—</div><div style="font-size:11px;color:var(--text3);">Ida+volta</div></div>
-            <div><div id="dsim-tempo" style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--purple);">—</div><div style="font-size:11px;color:var(--text3);">Tempo</div></div>
-          </div>
-          <div id="dsim-parada" style="font-size:11px;color:var(--text3);margin-top:8px;text-align:center;"></div>
-        </div>
-        <button onclick="calcDashSim()" class="btn-primary" style="width:100%;padding:10px;">🔄 Calcular</button>
-      </div>
+      <!-- EMPTY STATE (sem veículos) -->
+      <div id="dash-vehicles-section"></div>
 
     </div><!-- /page-dashboard -->
 
-    <!-- ===== VEÍCULOS ===== -->
+    <!-- ===== GARAGEM ===== -->
     <div id="page-veiculos" class="page">
       <div class="page-header">
-        <div class="page-title">🚗 MEUS VEÍCULOS</div>
-        <div class="page-sub">Cadastre e gerencie seus carros</div>
+        <div class="page-title">🚗 GARAGEM</div>
+        <div class="page-sub">Seus carros, sua garagem</div>
       </div>
 
       <!-- Tabs -->
@@ -3740,7 +3678,7 @@ select, textarea {
         <button id="vtab-carros"    onclick="_veiculosTab('carros')"    style="flex:1;min-width:80px;padding:10px 6px;background:none;border:none;font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--accent);border-bottom:2px solid var(--accent);margin-bottom:-2px;cursor:pointer;transition:all .2s;white-space:nowrap;">🚗 Carros</button>
         <button id="vtab-saude"     onclick="_veiculosTab('saude')"     style="flex:1;min-width:80px;padding:10px 6px;background:none;border:none;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all .2s;white-space:nowrap;">❤️ Saúde</button>
         <button id="vtab-historico" onclick="_veiculosTab('historico')" style="flex:1;min-width:80px;padding:10px 6px;background:none;border:none;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all .2s;white-space:nowrap;">📋 Histórico</button>
-        <button id="vtab-documentos" onclick="_veiculosTab('documentos')" style="flex:1;min-width:80px;padding:10px 6px;background:none;border:none;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all .2s;white-space:nowrap;">📅 Docs</button>
+        <button id="vtab-documentos" onclick="_veiculosTab('documentos')" style="flex:1;min-width:80px;padding:10px 6px;background:none;border:none;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all .2s;white-space:nowrap;position:relative;">📅 Docs<span id="doc-badge" style="display:none;position:absolute;top:4px;right:4px;background:var(--red);color:white;font-size:8px;font-weight:700;padding:1px 5px;border-radius:10px;"></span></button>
       </div>
 
       <!-- Tab: Meus Carros -->
@@ -3820,7 +3758,7 @@ select, textarea {
       <div id="vehicles-list">
         <div class="empty-state">
           <div class="empty-icon">🚗</div>
-          <div class="empty-title">Seu carro ainda não está aqui</div>
+          <div class="empty-title">Sua garagem está vazia</div>
           <div class="empty-desc">Cadastre agora e descubra quanto custa por km, quando trocar o óleo e quanto seu carro vale na revenda.</div>
         </div>
       </div>
@@ -3870,7 +3808,7 @@ select, textarea {
           </div>
         </div>
         <button class="btn-primary" style="width:auto;padding:10px 24px;margin-top:8px;" onclick="salvarPerfil()">💾 Salvar perfil</button>
-      </div>
+
 
       <!-- APARÊNCIA -->
       <div class="card">
@@ -4015,8 +3953,10 @@ select, textarea {
         <div style="font-size:11px;color:var(--text3);margin-bottom:12px;">Versão MVP · Dados salvos localmente</div>
         <div style="font-size:12px;color:var(--text2);">Feito com ❤️ para os apaixonados por carros brasileiros.</div>
       </div>
-    </div>
+    
 
+
+    </div><!-- /page-configuracoes -->
     <!-- ===== PEÇAS ===== -->
     <div id="page-pecas" class="page">
       <div class="page-header">
@@ -4192,6 +4132,22 @@ select, textarea {
           <div id="saude-benchmark-list" style="display:flex;flex-direction:column;gap:10px;"></div>
         </div>
       </div>
+
+      <!-- SERVIÇOS PRÓXIMOS -->
+      <div class="card" style="margin-top:4px;">
+        <div class="card-title">📍 Serviços próximos</div>
+        <div class="nearby-grid">
+          <a class="nearby-card" href="#" onclick="abrirOficinasMaps(event)">
+            <div class="nearby-icon">🔧</div><div class="nearby-title">Oficinas</div><div class="nearby-sub">Ver no Maps</div>
+          </a>
+          <a class="nearby-card" href="#" onclick="abrirPostosMaps(event)">
+            <div class="nearby-icon">⛽</div><div class="nearby-title">Postos</div><div class="nearby-sub">Ver no Maps</div>
+          </a>
+          <a class="nearby-card" href="#" onclick="abrirPecasMaps(event)">
+            <div class="nearby-icon">🔩</div><div class="nearby-title">Auto peças</div><div class="nearby-sub">Ver no Maps</div>
+          </a>
+        </div>
+      </div>
     </div>
 
     <!-- ===== HISTÓRICO ===== -->
@@ -4355,7 +4311,7 @@ select, textarea {
             <div class="mono-tier tier-top">🔥 TOP</div>
           </div>
           <div class="mono-card-body">
-            <div class="mono-desc">Usuário encontra a peça, clica no link e compra. O app recebe comissão automática do marketplace.</div>
+            <div class="mono-desc">Usuário encontra a peça, clica no link e compra. O app recebe comissão automática do vitrine.</div>
             <div class="mono-demo">
               <div class="mono-demo-label">Exemplo ao vivo</div>
               <div class="price-compare-row"><span>Pastilha de freio — ML</span><span class="price-val">R$89,90</span><span class="aff-tag">+8% = R$7,19</span></div>
@@ -4512,17 +4468,17 @@ select, textarea {
             <div class="mono-icon">🛍️</div>
             <div class="mono-header-text">
               <div class="mono-num">#08</div>
-              <div class="mono-title">Marketplace Próprio de Peças</div>
+              <div class="mono-title">Vitrine Próprio de Peças</div>
             </div>
             <div class="mono-tier tier-future">🚀 FUTURO</div>
           </div>
           <div class="mono-card-body">
-            <div class="mono-desc">No futuro o app vira um marketplace de peças diretamente — vendedores anunciam, app cobra comissão + taxa de anúncio.</div>
+            <div class="mono-desc">No futuro o app vira um vitrine de peças diretamente — vendedores anunciam, app cobra comissão + taxa de anúncio.</div>
             <div class="mono-demo">
               <div class="mono-demo-label">Peças de vendedores parceiros</div>
-              <div class="marketplace-item"><span class="mk-icon">🛢️</span><div class="mk-info"><div class="mk-name">Filtro Óleo Bosch</div><div class="mk-seller">Loja AutoFácil</div></div><div><span class="mk-price">R$32,00</span><span class="mk-comm">Taxa: R$3,20</span></div></div>
-              <div class="marketplace-item"><span class="mk-icon">🔴</span><div class="mk-info"><div class="mk-name">Pastilha Freio TRW</div><div class="mk-seller">PeçasBR Oficial</div></div><div><span class="mk-price">R$95,00</span><span class="mk-comm">Taxa: R$9,50</span></div></div>
-              <div class="marketplace-item"><span class="mk-icon">🔋</span><div class="mk-info"><div class="mk-name">Bateria Moura 60Ah</div><div class="mk-seller">BateriasBR</div></div><div><span class="mk-price">R$370,00</span><span class="mk-comm">Taxa: R$37,00</span></div></div>
+              <div class="vitrine-item"><span class="mk-icon">🛢️</span><div class="mk-info"><div class="mk-name">Filtro Óleo Bosch</div><div class="mk-seller">Loja AutoFácil</div></div><div><span class="mk-price">R$32,00</span><span class="mk-comm">Taxa: R$3,20</span></div></div>
+              <div class="vitrine-item"><span class="mk-icon">🔴</span><div class="mk-info"><div class="mk-name">Pastilha Freio TRW</div><div class="mk-seller">PeçasBR Oficial</div></div><div><span class="mk-price">R$95,00</span><span class="mk-comm">Taxa: R$9,50</span></div></div>
+              <div class="vitrine-item"><span class="mk-icon">🔋</span><div class="mk-info"><div class="mk-name">Bateria Moura 60Ah</div><div class="mk-seller">BateriasBR</div></div><div><span class="mk-price">R$370,00</span><span class="mk-comm">Taxa: R$37,00</span></div></div>
             </div>
           </div>
           <div class="mono-card-footer">
@@ -4620,9 +4576,9 @@ select, textarea {
             <div class="mono-desc">Acessórios segmentados para o modelo do usuário via links de afiliado. Alto ticket médio, baixo custo de integração.</div>
             <div class="mono-demo">
               <div class="mono-demo-label">Acessórios recomendados para o seu carro</div>
-              <div class="marketplace-item"><span class="mk-icon">📱</span><div class="mk-info"><div class="mk-name">Multimídia 9" Android</div><div class="mk-seller">Compatível com HB20</div></div><div><span class="mk-price">R$380</span><span class="mk-comm">+6% = R$22,80</span></div></div>
-              <div class="marketplace-item"><span class="mk-icon">📷</span><div class="mk-info"><div class="mk-name">Câmera de ré HD</div><div class="mk-seller">Universal</div></div><div><span class="mk-price">R$89</span><span class="mk-comm">+8% = R$7,12</span></div></div>
-              <div class="marketplace-item"><span class="mk-icon">🪑</span><div class="mk-info"><div class="mk-name">Capa de banco couro</div><div class="mk-seller">Específica Onix</div></div><div><span class="mk-price">R$210</span><span class="mk-comm">+7% = R$14,70</span></div></div>
+              <div class="vitrine-item"><span class="mk-icon">📱</span><div class="mk-info"><div class="mk-name">Multimídia 9" Android</div><div class="mk-seller">Compatível com HB20</div></div><div><span class="mk-price">R$380</span><span class="mk-comm">+6% = R$22,80</span></div></div>
+              <div class="vitrine-item"><span class="mk-icon">📷</span><div class="mk-info"><div class="mk-name">Câmera de ré HD</div><div class="mk-seller">Universal</div></div><div><span class="mk-price">R$89</span><span class="mk-comm">+8% = R$7,12</span></div></div>
+              <div class="vitrine-item"><span class="mk-icon">🪑</span><div class="mk-info"><div class="mk-name">Capa de banco couro</div><div class="mk-seller">Específica Onix</div></div><div><span class="mk-price">R$210</span><span class="mk-comm">+7% = R$14,70</span></div></div>
             </div>
           </div>
           <div class="mono-card-footer">
@@ -4821,7 +4777,7 @@ select, textarea {
           </div>
         </div>
 
-      </div><!-- /mono-grid -->
+
 
       <!-- CALCULADORA DE MONETIZAÇÃO -->
       <div class="card" style="margin-top:24px;">
@@ -4884,8 +4840,12 @@ select, textarea {
         <div id="calc-result" style="background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:20px;"></div>
       </div>
 
-    </div>
+    
+  
 
+</div>
+
+    </div><!-- /page-monetizacao -->
     <!-- ===== COMBUSTÍVEL ===== -->
     <div id="page-combustivel" class="page">
       <div class="page-header">
@@ -4972,7 +4932,7 @@ select, textarea {
     <div id="page-documentos" class="page">
       <div class="page-header">
         <div style="display:flex;align-items:center;gap:10px;">
-          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;">‹</button>
+          <button onclick="showPage('veiculos');setTimeout(function(){_veiculosTab('documentos');},50);" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;">‹</button>
           <div>
             <div class="page-title" style="margin-bottom:0;">📅 DOCUMENTOS</div>
             <div class="page-sub">Controle de vencimentos — IPVA, Seguro e Licenciamento</div>
@@ -5067,6 +5027,38 @@ select, textarea {
         </div>
       </div>
 
+      <!-- FILTROS -->
+      <div class="card" style="margin-bottom:0;">
+        <div class="card-title" style="margin-bottom:10px;">🔎 Filtrar lista de desejos</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <div class="form-group" style="flex:1;min-width:140px;margin:0;">
+            <div class="field-label">Marca</div>
+            <select class="field-select" id="wish-filter-marca" onchange="renderWishlist()">
+              <option value="">Todas</option>
+              <option>Toyota</option><option>Honda</option><option>Volkswagen</option>
+              <option>Chevrolet</option><option>Fiat</option><option>Ford</option>
+              <option>Hyundai</option><option>Jeep</option><option>Nissan</option>
+              <option>BMW</option><option>Mercedes-Benz</option><option>Audi</option>
+              <option>Porsche</option><option>Volvo</option><option>Renault</option>
+              <option>Peugeot</option><option>Mitsubishi</option><option>Subaru</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex:1;min-width:140px;margin:0;">
+            <div class="field-label">Carroceria</div>
+            <select class="field-select" id="wish-filter-tipo" onchange="renderWishlist()">
+              <option value="">Todos</option>
+              <option value="sedan">Sedan</option>
+              <option value="suv">SUV</option>
+              <option value="hatch">Hatchback</option>
+              <option value="pickup">Pickup</option>
+              <option value="coupe">Coupê</option>
+              <option value="esportivo">Esportivo</option>
+              <option value="eletrico">Elétrico</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       <!-- BUSCA -->
       <div class="card">
         <div class="card-title">🔍 Pesquisar modelo</div>
@@ -5112,11 +5104,14 @@ select, textarea {
     </div>
 
 
-    <!-- ===== MARKETPLACE ===== -->
+    <!-- ===== VITRINE ===== -->
     <div id="page-marketplace" class="page">
 
       <!-- ── TOP BAR ──────────────────────────────────────────── -->
-      <div style="padding:14px 16px 0;border-bottom:1px solid var(--border);background:var(--surface);">
+      <div style="padding:10px 16px 4px;background:var(--surface);">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--text);">🏪 VITRINE</div>
+      </div>
+      <div style="padding:10px 16px 0;border-bottom:1px solid var(--border);background:var(--surface);">
         <div class="mkt-topbar">
           <!-- Filtros mobile toggle -->
           <button id="btn-mkt-filtros" onclick="document.getElementById('mkt-sidebar').classList.toggle('open')"
@@ -5124,7 +5119,7 @@ select, textarea {
             ⚙️ Filtros
           </button>
           <input class="mkt-topbar-search" id="mkt-search" type="text"
-            placeholder="🔍  Buscar por marca ou modelo..." autocomplete="off"
+            placeholder="🔍  Buscar na Vitrine..." autocomplete="off"
             oninput="renderMarketplace()">
           <button onclick="showPage('anunciar')"
             style="flex-shrink:0;padding:10px 18px;background:var(--accent);color:var(--bg);border:none;border-radius:10px;font-family:'Sora',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;">
@@ -5397,6 +5392,15 @@ select, textarea {
         </div>
       </div>
 
+      <!-- TABS -->
+      <div style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:16px;">
+        <button id="vtab-viagens-hist" onclick="_viagensTab('hist')" style="flex:1;padding:10px 8px;background:none;border:none;font-family:'Sora',sans-serif;font-size:13px;font-weight:700;color:var(--accent);border-bottom:2px solid var(--accent);margin-bottom:-2px;cursor:pointer;transition:all .2s;white-space:nowrap;">📍 Minhas Viagens</button>
+        <button id="vtab-viagens-plan" onclick="_viagensTab('plan')" style="flex:1;padding:10px 8px;background:none;border:none;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all .2s;white-space:nowrap;">🗺️ Planejar</button>
+      </div>
+
+      <!-- Tab: Minhas Viagens -->
+      <div id="vtab-viagens-hist-content">
+
       <!-- MAPA -->
       <div class="card" style="padding:0;overflow:hidden;">
         <div style="padding:14px 18px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;">
@@ -5458,6 +5462,11 @@ select, textarea {
         </div>
         <div id="viagem-sugestoes-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;"></div>
       </div>
+
+      </div><!-- /vtab-viagens-hist-content -->
+
+      <!-- Tab: Planejar -->
+      <div id="vtab-viagens-plan-content" style="display:none;">
 
       <!-- SIMULAR PRÓXIMA VIAGEM -->
       <div class="card" id="viagem-simular-card">
@@ -5593,6 +5602,29 @@ select, textarea {
       </div>
     </div>
 
+      </div><!-- /vtab-viagens-plan-content -->
+
+    <!-- ===== PASSAPORTE DO VEÍCULO ===== -->
+    <div id="page-passaporte" class="page">
+      <div class="page-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="showPage('veiculos')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;">‹</button>
+          <div>
+            <div class="page-title" style="margin-bottom:0;">📋 PASSAPORTE</div>
+            <div class="page-sub">Dossiê técnico completo do seu veículo</div>
+          </div>
+        </div>
+      </div>
+      <div id="passaporte-page-content">
+        <div class="empty-state">
+          <div class="empty-icon">📋</div>
+          <div class="empty-title">Selecione um veículo</div>
+          <div class="empty-desc">O Passaporte reúne score, histórico verificado e valor estimado do seu carro.</div>
+          <button class="empty-cta" onclick="showPage('veiculos')">+ Cadastrar veículo</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ===== VENDER MEU CARRO ===== -->
     <div id="page-vender" class="page">
       <div class="page-header">
@@ -5600,16 +5632,16 @@ select, textarea {
           <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;flex-shrink:0;">‹</button>
           <div>
             <div class="page-title" style="margin-bottom:0;">🏷️ VENDER MEU CARRO</div>
-            <div class="page-sub">Dossiê completo + publique no Marketplace com 1 clique</div>
+            <div class="page-sub">Dossiê completo + publique no Vitrine com 1 clique</div>
           </div>
         </div>
       </div>
-      <!-- CTA rápido para o marketplace -->
+      <!-- CTA rápido para o vitrine -->
       <div style="background:rgba(123,128,193,0.07);border:1px solid rgba(123,128,193,0.2);border-radius:12px;padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px;">
         <span style="font-size:28px;flex-shrink:0;">🏪</span>
         <div style="flex:1;">
           <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;">Já quer anunciar?</div>
-          <div style="font-size:11px;color:var(--text3);">Publique no Marketplace ManyCars com passaporte verificado incluso.</div>
+          <div style="font-size:11px;color:var(--text3);">Publique no Vitrine ManyCars com passaporte verificado incluso.</div>
         </div>
         <button onclick="showPage('marketplace')" style="flex-shrink:0;padding:8px 14px;background:var(--accent);color:var(--bg);border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;white-space:nowrap;">Anunciar →</button>
       </div>
@@ -5797,7 +5829,7 @@ select, textarea {
             <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text2);">✅ <span>Alertas básicos de manutenção</span></div>
             <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text3);">❌ <span style="color:var(--text3);">Manuais técnicos</span></div>
             <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text3);">❌ <span style="color:var(--text3);">Passaporte verificado</span></div>
-            <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text3);">❌ <span style="color:var(--text3);">Anúncio no marketplace</span></div>
+            <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text3);">❌ <span style="color:var(--text3);">Anúncio no vitrine</span></div>
           </div>
           <div id="free-plan-cta"></div>
         </div>
@@ -5822,7 +5854,7 @@ select, textarea {
             <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text2);">✅ <span>Passaporte verificado para venda</span></div>
             <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text2);">✅ <span>Alertas push no celular</span></div>
             <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text2);">✅ <span>Score de saúde detalhado</span></div>
-            <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text3);">❌ <span style="color:var(--text3);">Anúncio no marketplace (grátis)</span></div>
+            <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text3);">❌ <span style="color:var(--text3);">Anúncio no vitrine (grátis)</span></div>
             <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text3);">❌ <span style="color:var(--text3);">Exportação de relatórios</span></div>
           </div>
           <button class="btn-primary" style="width:100%;padding:13px;font-size:14px;" id="btn-plus" onclick="_abrirCheckout('plus','mensal')">
@@ -5847,7 +5879,7 @@ select, textarea {
           <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px;">
             <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text2);">✅ <span><strong>Tudo do Plus, mais:</strong></span></div>
             <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text2);">✅ <span><strong>Veículos ilimitados</strong></span></div>
-            <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text2);">✅ <span><strong>1 anúncio no marketplace grátis/mês</strong></span></div>
+            <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text2);">✅ <span><strong>1 anúncio no vitrine grátis/mês</strong></span></div>
             <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text2);">✅ <span>Exportação PDF e Excel</span></div>
             <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text2);">✅ <span>Comparativo entre veículos</span></div>
             <div style="display:flex;gap:8px;align-items:center;font-size:12px;color:var(--text2);">✅ <span>Suporte prioritário</span></div>
@@ -6104,6 +6136,56 @@ select, textarea {
   </div>
 
 </div><!-- /page-modo-admin -->
+
+    <div id="page-perfil" class="page" style="padding-top:14px;">
+      <div class="page-header" style="margin-bottom:14px;">
+        <div class="page-title">👤 MEU PERFIL</div>
+        <div class="page-sub">Sua jornada automobilística em números</div>
+      </div>
+
+      <!-- Hero do usuário -->
+      <div class="card" id="perfil-hero" style="background:linear-gradient(135deg,rgba(123,128,193,0.07),rgba(96,165,250,0.05));border-color:rgba(123,128,193,0.15);"></div>
+
+      <!-- Stats gerais -->
+      <div id="perfil-stats-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;"></div>
+
+      <!-- Financeiro breakdown -->
+      <div class="card" id="perfil-financeiro" style="margin-top:4px;"></div>
+
+      <!-- Viagens stats -->
+      <div class="card" id="perfil-viagens-stats" style="margin-top:4px;"></div>
+
+      <!-- Conquistas -->
+      <div class="card" id="perfil-conquistas" style="margin-top:4px;"></div>
+
+      <!-- Ranking -->
+      <div class="card" id="perfil-ranking-card" style="margin-top:4px;">
+        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
+          🏆 Ranking nacional
+          <span style="font-size:11px;color:var(--text3);font-weight:400;">Como você se compara</span>
+        </div>
+        <div id="perfil-ranking-content" style="margin-top:8px;"></div>
+      </div>
+
+      <!-- Dados do app -->
+      <div class="card" id="perfil-app-info" style="margin-top:4px;margin-bottom:32px;"></div>
+    </div>
+
+    <!-- ===== RANKING ===== -->
+
+    <div id="page-ranking" class="page">
+      <div class="page-header">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;flex-shrink:0;">‹</button>
+          <div>
+            <div class="page-title" style="margin-bottom:0;">🏆 RANKING</div>
+            <div class="page-sub">Como seus carros se comparam com a frota nacional</div>
+          </div>
+        </div>
+      </div>
+      <div id="ranking-content"></div>
+    </div>
+
   </div><!-- /main-content -->
 
   <!-- ===== EDIT VIAGEM MODAL ===== -->
@@ -6345,53 +6427,20 @@ select, textarea {
   </div>
 
     <!-- ===== PERFIL ===== -->
-    <div id="page-perfil" class="page" style="padding-top:14px;">
-      <div class="page-header" style="margin-bottom:14px;">
-        <div class="page-title">👤 MEU PERFIL</div>
-        <div class="page-sub">Sua jornada automobilística em números</div>
-      </div>
 
-      <!-- Hero do usuário -->
-      <div class="card" id="perfil-hero" style="background:linear-gradient(135deg,rgba(123,128,193,0.07),rgba(96,165,250,0.05));border-color:rgba(123,128,193,0.15);"></div>
 
-      <!-- Stats gerais -->
-      <div id="perfil-stats-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;"></div>
 
-      <!-- Financeiro breakdown -->
-      <div class="card" id="perfil-financeiro" style="margin-top:4px;"></div>
 
-      <!-- Viagens stats -->
-      <div class="card" id="perfil-viagens-stats" style="margin-top:4px;"></div>
-
-      <!-- Conquistas -->
-      <div class="card" id="perfil-conquistas" style="margin-top:4px;"></div>
-
-      <!-- Ranking -->
-      <div class="card" id="perfil-ranking-card" style="margin-top:4px;">
-        <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
-          🏆 Ranking nacional
-          <span style="font-size:11px;color:var(--text3);font-weight:400;">Como você se compara</span>
-        </div>
-        <div id="perfil-ranking-content" style="margin-top:8px;"></div>
-      </div>
-
-      <!-- Dados do app -->
-      <div class="card" id="perfil-app-info" style="margin-top:4px;margin-bottom:32px;"></div>
-    </div>
-
-    <!-- ===== RANKING ===== -->
-    <div id="page-ranking" class="page">
-      <div class="page-header">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;flex-shrink:0;">‹</button>
-          <div>
-            <div class="page-title" style="margin-bottom:0;">🏆 RANKING</div>
-            <div class="page-sub">Como seus carros se comparam com a frota nacional</div>
-          </div>
-        </div>
-      </div>
-      <div id="ranking-content"></div>
-    </div>
+<!-- LOADING OVERLAY -->
+<div id="loading-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;gap:16px;">
+  <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+    <circle cx="24" cy="24" r="20" stroke="var(--border2)" stroke-width="4"/>
+    <path d="M24 4 A20 20 0 0 1 44 24" stroke="var(--accent)" stroke-width="4" stroke-linecap="round">
+      <animateTransform attributeName="transform" type="rotate" from="0 24 24" to="360 24 24" dur="0.75s" repeatCount="indefinite"/>
+    </path>
+  </svg>
+  <div id="loading-msg" style="font-family:'Sora',sans-serif;font-size:13px;font-weight:600;color:var(--text2);">Entrando…</div>
+</div>
 
 </div><!-- /screen-app -->
 
@@ -6716,8 +6765,8 @@ var _miniTours = {
   saude: [
     { target: '#page-saude', title: 'Score de saúde do carro', desc: 'O ManyCars analisa todas as suas manutenções e gera um score de 0 a 100. Quanto mais completo o histórico, mais preciso o diagnóstico.', arrow: 'arrow-top', pos: 'below' },
   ],
-  marketplace: [
-    { target: '#page-marketplace .mkt-search', title: 'Compre e venda com Passaporte', desc: 'Todos os anúncios com 🛡️ têm histórico verificado pelo ManyCars — você sabe exatamente o que está comprando.', arrow: 'arrow-top', pos: 'below', fallbackTarget: '#page-marketplace' },
+  vitrine: [
+    { target: '#page-marketplace .mkt-search', title: 'Compre e venda na Vitrine', desc: 'Todos os anúncios com 🛡️ têm histórico verificado pelo ManyCars — você sabe exatamente o que está comprando.', arrow: 'arrow-top', pos: 'below', fallbackTarget: '#page-marketplace' },
     { target: '.mkt-filters-sidebar', title: 'Filtros inteligentes', desc: 'Filtre por preço, ano, combustível e pela opção "Com Passaporte" para ver só os carros com histórico comprovado.', arrow: 'arrow-left', pos: 'right', fallbackTarget: '#page-marketplace' },
   ],
   vender: [
@@ -6736,7 +6785,7 @@ var _miniTours = {
     { target: '#page-viagens', title: 'Controle de viagens', desc: 'Registre viagens longas e veja o custo por km. Útil para reembolso de combustível ou para calcular o custo real de uma viagem.', arrow: 'arrow-top', pos: 'below' },
   ],
   sonhar: [
-    { target: '#page-sonhar', title: 'Lista de desejos', desc: 'Adicione carros que você quer ter no futuro. O ManyCars monitora os preços no marketplace e avisa quando um aparece.', arrow: 'arrow-top', pos: 'below' },
+    { target: '#page-sonhar', title: 'Lista de desejos', desc: 'Adicione carros que você quer ter no futuro. O ManyCars monitora os preços no vitrine e avisa quando um aparece.', arrow: 'arrow-top', pos: 'below' },
   ],
   opinioes: [
     { target: '#page-opinioes', title: 'Opiniões de donos reais', desc: 'Veja o que outros donos do mesmo modelo pensam sobre manutenção, consumo e problemas comuns. Sem filtro, sem marketing.', arrow: 'arrow-top', pos: 'below' },
@@ -6908,6 +6957,8 @@ var _syncFailCount = 0;  // rastreia falhas consecutivas de sync
 
 var _saveTimer = null;
 function saveState() {
+  // Check streak after any save
+  try { _checkKmStreak(); } catch(e) {}
   if (_saveTimer) clearTimeout(_saveTimer);
   _saveTimer = setTimeout(_doSaveState, 300);
 }
@@ -7351,7 +7402,7 @@ var _tourSteps  = [
   {
     target:  '#bottom-nav',
     title:   'Navegação principal',
-    desc:    'Acesse Início, Veículos e Mercado com um toque. O Menu tem todas as outras funcionalidades do app.',
+    desc:    'Acesse Início, Garagem e Vitrine com um toque. O Menu tem todas as outras funcionalidades do app.',
     arrow:   'arrow-bottom',
     pos:     'above',
   },
@@ -8088,8 +8139,40 @@ function marcarAlertaFeito(titulo, vehicleId) {
   saveState();
   renderAlerts();
   updateDashboard();
-  _applyProgressiveDisclosure(); // unlock fases hasRecord / record3 / record5
-  showToast('✓ ' + titulo + ' registrado! ' + (kmAtual > 0 ? kmAtual.toLocaleString('pt-BR') + ' km' : ''), 'success');
+  _applyProgressiveDisclosure();
+
+  // Toast com ação de desfazer
+  var _undoEntry = state.history[state.history.length - 1];
+  showToastUndo('✓ ' + titulo + ' registrado!', function() {
+    state.history = state.history.filter(function(h){ return h !== _undoEntry; });
+    if (checkId && state.docs[vehicleId] && state.docs[vehicleId].checklist) {
+      delete state.docs[vehicleId].checklist[checkId];
+    }
+    saveState(); renderAlerts(); updateDashboard();
+    showToast('Registro desfeito', 'info');
+  });
+}
+
+// Toast com botão Desfazer (dura 6s)
+function showToastUndo(msg, onUndo) {
+  var t = document.getElementById('toast');
+  var icon = document.getElementById('toast-icon');
+  var msgEl = document.getElementById('toast-msg');
+  if (!t || !msgEl) { showToast(msg, 'success'); return; }
+  if (icon) icon.textContent = '✓';
+  var _undoBtn = '<button onclick="_undoAction()" style="background:none;border:none;color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;text-decoration:underline;padding:0 0 0 6px;font-family:\"Sora\",sans-serif;">Desfazer</button>';
+  msgEl.innerHTML = msg + ' ' + _undoBtn;
+  t.className = 'toast success show';
+  window._pendingUndo = onUndo;
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(function(){
+    t.className = 'toast'; window._pendingUndo = null;
+  }, 6000);
+}
+function _undoAction() {
+  if (window._pendingUndo) { window._pendingUndo(); window._pendingUndo = null; }
+  var t = document.getElementById('toast');
+  if (t) t.className = 'toast';
 }
 
 // ============================================================
@@ -8311,11 +8394,13 @@ async function doLogin() {
   if (!pass)  { showToast('Informe sua senha', 'error'); return; }
 
   _setAuthBtnLoading('btn-login', 'btn-login-txt', 'btn-login-spin', true);
+  _showLoading('Verificando conta…');
 
   if (!_supabaseReady) {
     // Modo local — sem Supabase
     if (pass.length < 4) { showToast('Senha mín. 4 caracteres', 'error'); _setAuthBtnLoading('btn-login','btn-login-txt','btn-login-spin',false); return; }
     var name = capitalize(email.split('@')[0].replace(/[._-]/g,' '));
+    _hideLoading();
     _loginUser({ name: name, email: email, id: 'local_' + Date.now() });
     _setAuthBtnLoading('btn-login','btn-login-txt','btn-login-spin',false);
     return;
@@ -8327,9 +8412,10 @@ async function doLogin() {
     // onAuthStateChange cuida do resto
   } catch(err) {
     _setAuthBtnLoading('btn-login','btn-login-txt','btn-login-spin',false);
+    _hideLoading();
     // Extrai mensagem limpa (evita "Error: Error: ...")
     var rawMsg = (err && err.message) ? err.message : String(err);
-    var msg = rawMsg.replace(/^Error:\s*/i, '').replace(/^Error:\s*/i, '');
+    var msg = rawMsg.replace(/^(Error:\s*)+/i, '');
     // Erros de rede — fallback automático para modo local
     if (msg.toLowerCase().includes('failed to fetch') ||
         msg.toLowerCase().includes('networkerror') ||
@@ -8343,8 +8429,8 @@ async function doLogin() {
       return;
     }
     // Erros de autenticação
-    if (msg.includes('Invalid login credentials') || msg.includes('invalid_credentials'))
-      msg = 'E-mail ou senha incorretos';
+    if (msg.includes('Invalid login credentials') || msg.includes('invalid_credentials') || msg.includes('Invalid credentials'))
+      msg = 'E-mail ou senha incorretos. Verifique e tente novamente.';
     else if (msg.includes('Email not confirmed'))
       msg = 'Confirme seu e-mail antes de entrar';
     else if (msg.includes('Too many requests'))
@@ -8492,6 +8578,18 @@ function _syncSidebarAvatar() {
   if (nm) nm.textContent = firstName;
 }
 
+function _showLoading(msg) {
+  var ov = document.getElementById('loading-overlay');
+  var msgEl = document.getElementById('loading-msg');
+  if (!ov) return;
+  if (msgEl) msgEl.textContent = msg || 'Carregando…';
+  ov.style.display = 'flex';
+}
+function _hideLoading() {
+  var ov = document.getElementById('loading-overlay');
+  if (ov) ov.style.display = 'none';
+}
+
 function _loginUser(user) {
   state.user = user;
   saveState();
@@ -8599,6 +8697,13 @@ function showPage(page) {
     setTimeout(function(){ _veiculosTab('saude'); }, 50);
     return;
   }
+  // Histórico agora vive dentro da aba de Veículos
+  if (page === 'historico') {
+    showPage('veiculos');
+    setTimeout(function(){ _veiculosTab('historico'); }, 50);
+    return;
+  }
+  // Documentos agora vive dentro da aba de Veículos
   // Ranking agora vive dentro do Perfil
   if (page === 'ranking') {
     showPage('perfil');
@@ -8609,6 +8714,11 @@ function showPage(page) {
     return;
   }
 
+  // Scroll to top
+  var mc = document.querySelector('.main-content');
+  if (mc) mc.scrollTop = 0;
+
+  if (page === 'passaporte') { setTimeout(renderPassaportePage, 50); }
   // Progressive disclosure: marca visita e dispara mini-tour se necessário
   _pdOnPageVisit(page);
 
@@ -9087,7 +9197,22 @@ function vehicleImgCard(v, i) {
   var dotColors = { 'preto':'#222', 'branco':'#f0f0f0', 'prata':'#aaa', 'cinza':'#888', 'vermelho':'#e53e3e', 'azul':'#3182ce', 'verde':'#38a169', 'amarelo':'#7B80C1', 'laranja':'#dd6b20', 'rosa':'#d53f8c', 'marrom':'#795548' };
   var dotStyle = 'width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px;background:' + (dotColors[colorDot] || 'var(--border2)') + ';border:1px solid rgba(255,255,255,0.15);';
 
+  var photoKey  = 'mc_photo_' + v.id;
+  var photoData = localStorage.getItem(photoKey);
+
   var html = '<div class="vehicle-img-card' + (isArchived ? ' archived-card' : '') + '" id="vcard-' + v.id + '" style="' + (isArchived ? 'opacity:0.65;' : '') + '">';
+
+  // Photo area
+  html += '<div class="vehicle-photo-wrap" onclick="abrirFotoVeiculo(' + v.id + ')" title="Adicionar foto">';
+  if (photoData) {
+    html += '<img src="' + photoData + '" alt="' + v.marca + ' ' + v.modelo + '">';
+  } else {
+    html += '<div class="vehicle-photo-placeholder"><div class="ph-icon">🚗</div><div>Adicionar foto</div></div>';
+  }
+  html += '<div class="vehicle-photo-overlay"><span>📷 Trocar foto</span></div>';
+  html += '<input type="file" id="photo-input-' + v.id + '" accept="image/*" style="display:none;" onchange="_salvarFotoVeiculo(' + v.id + ', this)" onclick="event.stopPropagation()">';
+  html += '</div>';
+
   // Header with brand initial and placa
   html += '<div class="vehicle-img-wrap" style="display:flex;align-items:center;justify-content:center;font-family:\'Bebas Neue\',sans-serif;font-size:42px;letter-spacing:2px;color:rgba(123,128,193,0.18);user-select:none;">';
   html += v.marca.charAt(0).toUpperCase();
@@ -9161,7 +9286,7 @@ function reativarVeiculo(vehicleId) {
 function renderVehiclesList() {
   var el = document.getElementById('vehicles-list');
   if (!state.vehicles.length) {
-    el.innerHTML = '<div class="empty-state"><div class="empty-icon">🚗</div><div class="empty-title">Adicione seu primeiro carro</div><div class="empty-desc">Digite a placa acima e os dados são preenchidos automaticamente. Leva menos de 1 minuto.</div></div>';
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">🚗</div><div class="empty-title">Adicione seu primeiro carro à garagem</div><div class="empty-desc">Digite a placa acima e os dados são preenchidos automaticamente. Leva menos de 1 minuto.</div></div>';
     return;
   }
   var html = '<div class="vehicles-grid">';
@@ -9230,58 +9355,122 @@ function selectVehicle(i) {
 function updateDashboard() {
   var active = state.vehicles.filter(function(v){ return !v.archived; });
 
-  // Init active vehicle if not set
   if (!_dashActiveVehicleId && active.length) _dashActiveVehicleId = active[0].id;
 
   document.getElementById('stat-veiculos').textContent = active.length;
   var activeIds = active.map(function(v){ return v.id; });
   document.getElementById('stat-manut').textContent = state.history.filter(function(h){ return activeIds.indexOf(h.veiculoId) >= 0; }).length;
 
-  // KM total da frota
   var kmTotal = active.reduce(function(s, v){ return s + (parseInt(v.km) || 0); }, 0);
   var kmEl = document.getElementById('stat-km-total');
   if (kmEl) kmEl.textContent = kmTotal >= 1000 ? (kmTotal/1000).toFixed(0) + 'k' : kmTotal;
 
-  // Dynamic greeting
   var greetEl = document.getElementById('dash-greeting');
   if (greetEl) greetEl.textContent = getGreeting() + ',';
 
-  // Alerts across all active vehicles
+  // Update date subtitle
+  var dateSub = document.getElementById('dash-date-sub');
+  if (dateSub) {
+    var now  = new Date();
+    var dias = ['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+    var meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+    var dateStr = dias[now.getDay()] + ', ' + now.getDate() + ' de ' + meses[now.getMonth()];
+    // Show streak if active
+    var streak = state._kmStreak;
+    var streakStr = '';
+    if (streak && streak.count >= 3) {
+      streakStr = ' · 🔥 ' + streak.count + ' dias';
+    }
+    dateSub.textContent = dateStr + streakStr;
+  }
+
   var pending = 0;
   active.forEach(function(v){ pending += getVehicleAlerts(v).filter(function(a){ return a.urgency !== 'low'; }).length; });
   document.getElementById('stat-alerts').textContent = pending;
-  var qBadge = document.getElementById('quick-alert-badge');
-  if (qBadge) { qBadge.textContent = pending; qBadge.style.display = pending > 0 ? 'block' : 'none'; }
 
   renderScore(active.length ? active[0] : null);
   renderDashHero();
-  populateQuickSelects();
   renderDashHistory();
+  renderDashDocs();
+  renderDashAlertsStrip();
+  renderDashFinance();
   updateBnBadge();
 
-  // dash-vehicles-section removido do dashboard — seção gerenciada na aba Veículos
   var sec = document.getElementById('dash-vehicles-section');
   if (sec) sec.innerHTML = '';
-
   if (!state.vehicles.length) renderEmptyDashboard();
+}
 
-  renderDashDocs();
-  renderDashSimViagem();
+function renderDashAlertsStrip() {
+  var strip = document.getElementById('dash-alerts-strip');
+  if (!strip) return;
+  var urgent = [];
+  state.vehicles.filter(function(v){ return !v.archived; }).forEach(function(v){
+    getVehicleAlerts(v).forEach(function(a){
+      if (a.urgency === 'high' || a.urgency === 'medium') urgent.push({ v: v, a: a });
+    });
+  });
+  if (!urgent.length) { strip.style.display = 'none'; return; }
+  strip.style.display = 'block';
+  var html = '<div class="card" style="cursor:pointer;" onclick="showPage(\'alertas\')">' +
+    '<div class="card-title" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">' +
+      '🔔 Alertas pendentes' +
+      '<span style="font-size:10px;background:var(--red);color:#fff;padding:2px 8px;border-radius:10px;font-weight:700;">' + urgent.length + '</span>' +
+    '</div>';
+  urgent.slice(0, 3).forEach(function(item){
+    var color = item.a.urgency === 'high' ? '#fc8181' : '#f6ad55';
+    html += '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">' +
+      '<span style="font-size:16px;">' + item.a.icon + '</span>' +
+      '<div style="flex:1;"><div style="font-size:12px;font-weight:600;color:var(--text);">' + item.a.title + '</div>' +
+      '<div style="font-size:11px;color:var(--text3);">' + item.v.marca + ' ' + item.v.modelo.split(' ')[0] + '</div></div>' +
+      '<span style="font-size:10px;font-weight:700;color:' + color + ';">' + (item.a.urgency === 'high' ? 'URGENTE' : 'PRÓXIMO') + '</span>' +
+    '</div>';
+  });
+  if (urgent.length > 3) html += '<div style="font-size:11px;color:var(--text3);text-align:center;padding-top:8px;">+ ' + (urgent.length - 3) + ' outros alertas</div>';
+  html += '</div>';
+  strip.innerHTML = html;
+}
 
-  // Show trip simulator if there are active vehicles
-  var simCard = document.getElementById('dash-sim-card');
-  if (simCard) {
-    simCard.style.display = state.vehicles.filter(function(v){ return !v.archived; }).length ? 'block' : 'none';
-    // Prefill consumo+preco from last fuel record
-    var dsimConsumo = document.getElementById('dsim-consumo');
-    var dsimPreco   = document.getElementById('dsim-preco');
-    if (dsimConsumo && !dsimConsumo.value && state.fuel.length >= 2) {
-      var sorted = state.fuel.slice().sort(function(a,b){ return b.data.localeCompare(a.data); });
-      if (sorted[0].preco) dsimPreco && (dsimPreco.value = sorted[0].preco.toFixed(2));
-      var diff = Math.abs((sorted[0].km||0) - (sorted[1].km||0));
-      if (diff > 0 && sorted[1].litros > 0) dsimConsumo.value = (diff / sorted[1].litros).toFixed(1);
-    }
+function renderDashFinance() {
+  var sec = document.getElementById('dash-finance-section');
+  if (!sec) return;
+  var activeIds = state.vehicles.filter(function(v){ return !v.archived; }).map(function(v){ return v.id; });
+  if (!activeIds.length || (state.history.length === 0 && state.fuel.length === 0)) {
+    sec.style.display = 'none'; return;
   }
+  // Current month
+  var now   = new Date();
+  var ym    = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  var manutMes  = state.history.filter(function(h){ return activeIds.indexOf(h.veiculoId) >= 0 && (h.data||'').startsWith(ym); })
+    .reduce(function(s,h){ return s+(h.custo||0); }, 0);
+  var fuelMes   = state.fuel.filter(function(f){ return activeIds.indexOf(f.veiculoId) >= 0 && (f.data||'').startsWith(ym); })
+    .reduce(function(s,f){ return s+(f.custo||0); }, 0);
+  var totalMes  = manutMes + fuelMes;
+  var manutTotal = state.history.filter(function(h){ return activeIds.indexOf(h.veiculoId) >= 0; }).reduce(function(s,h){ return s+(h.custo||0); }, 0);
+  var fuelTotal  = state.fuel.filter(function(f){ return activeIds.indexOf(f.veiculoId) >= 0; }).reduce(function(s,f){ return s+(f.custo||0); }, 0);
+  var fmt = function(v){ return 'R$' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:0}); };
+  sec.style.display = 'block';
+  sec.innerHTML =
+    '<div class="card" style="cursor:pointer;" onclick="showPage(\'analytics\')">' +
+      '<div class="card-title" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">' +
+        '💰 Gastos registrados' +
+        '<span style="font-size:11px;color:var(--text3);font-weight:400;">ver analytics →</span>' +
+      '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;">' +
+        '<div style="background:var(--surface2);border-radius:10px;padding:10px 8px;">' +
+          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;color:var(--accent);">' + fmt(totalMes) + '</div>' +
+          '<div style="font-size:10px;color:var(--text3);margin-top:2px;">este mês</div>' +
+        '</div>' +
+        '<div style="background:var(--surface2);border-radius:10px;padding:10px 8px;">' +
+          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;color:#60a5fa;">' + fmt(manutTotal) + '</div>' +
+          '<div style="font-size:10px;color:var(--text3);margin-top:2px;">manutenção</div>' +
+        '</div>' +
+        '<div style="background:var(--surface2);border-radius:10px;padding:10px 8px;">' +
+          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;color:#68d391;">' + fmt(fuelTotal) + '</div>' +
+          '<div style="font-size:10px;color:var(--text3);margin-top:2px;">combustível</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
 }
 
 function renderDashDocs() {
@@ -10052,7 +10241,7 @@ function validarCampo(id, check, msgEl, msg) {
 function renderVenderPage(vehicleIdx) {
   var content = document.getElementById('vender-content');
   if (!state.vehicles.length) {
-    content.innerHTML = '<div class="empty-state"><div class="empty-icon">🚗</div><div class="empty-title">Adicione seu primeiro carro</div><div class="empty-desc">Cadastre um veículo para gerar seu dossiê de venda</div><button class="empty-cta" onclick="showPage(\'veiculos\')">+ Cadastrar veículo</button></div>';
+    content.innerHTML = '<div class="empty-state"><div class="empty-icon">🚗</div><div class="empty-title">Adicione seu primeiro carro à garagem</div><div class="empty-desc">Cadastre um veículo para gerar seu dossiê de venda</div><button class="empty-cta" onclick="showPage(\'veiculos\')">+ Cadastrar veículo</button></div>';
     return;
   }
 
@@ -11132,6 +11321,11 @@ function gerarInsights() {
 // ============================================================
 // 📍 SERVIÇOS PRÓXIMOS
 // ============================================================
+function abrirPecasMaps(e) {
+  if (e) e.preventDefault();
+  var query = encodeURIComponent('auto peças');
+  window.open('https://www.google.com/maps/search/' + query, '_blank');
+}
 function abrirOficinasMaps(e) {
   e.preventDefault();
   var q = encodeURIComponent('oficina mecânica');
@@ -11478,12 +11672,157 @@ function registroRapidoFuel() {
 // ============================================================
 // FIPE ESTIMADA
 // ============================================================
-var FIPE_BASE = { 'onix':72000,'polo':82000,'argo':68000,'hb20':65000,'corolla':135000,'civic':125000,'strada':98000,'tracker':115000,'tcross':108000,'kwid':55000,'default':75000 };
+
+// ============================================================
+// 📷 FOTO DO VEÍCULO
+// ============================================================
+function abrirFotoVeiculo(vehicleId) {
+  var inp = document.getElementById('photo-input-' + vehicleId);
+  if (inp) inp.click();
+}
+
+function _salvarFotoVeiculo(vehicleId, input) {
+  var file = input.files && input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    // Compress to max 400px wide
+    var img = new Image();
+    img.onload = function() {
+      var canvas = document.createElement('canvas');
+      var MAX = 600;
+      var ratio = Math.min(MAX/img.width, MAX/img.height, 1);
+      canvas.width  = img.width  * ratio;
+      canvas.height = img.height * ratio;
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      var compressed = canvas.toDataURL('image/jpeg', 0.75);
+      try {
+        localStorage.setItem('mc_photo_' + vehicleId, compressed);
+        renderVehicles(); // refresh cards
+        showToast('Foto salva! ✓', 'success');
+      } catch(e) {
+        showToast('Foto grande demais para salvar localmente.', 'error');
+      }
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function removerFotoVeiculo(vehicleId) {
+  localStorage.removeItem('mc_photo_' + vehicleId);
+  renderVehicles();
+  showToast('Foto removida', 'info');
+}
+
+
+// ViaCEP — lookup gratuito
+async function _lookupCEP(cep) {
+  if (!cep || cep.length < 8) return;
+  try {
+    var res = await fetch('https://viacep.com.br/ws/' + cep.replace(/\D/g,'') + '/json/');
+    if (!res.ok) return;
+    var data = await res.json();
+    if (data.erro) return;
+    var cidade = (data.localidade || '') + (data.uf ? ' – ' + data.uf : '');
+    if (cidade && state.user) {
+      state.user.cidade = cidade;
+      state.user.uf = data.uf || '';
+      saveState();
+      // Update profile display
+      var cidadeEl = document.getElementById('perfil-cidade-label');
+      if (cidadeEl) cidadeEl.textContent = cidade;
+    }
+  } catch(e) { /* silencioso */ }
+}
+
+// FIPE_BASE — estimativa offline (fallback quando sem conexão)
+var FIPE_BASE = {
+  'onix':72000,'polo':82000,'argo':68000,'hb20':65000,'corolla':135000,
+  'civic':125000,'strada':98000,'tracker':115000,'tcross':108000,'kwid':55000,
+  'gol':45000,'uno':38000,'palio':42000,'fiesta':48000,'ka':52000,
+  'fox':44000,'voyage':48000,'saveiro':78000,'amarok':195000,'hilux':230000,
+  'ranger':210000,'s10':175000,'tucson':168000,'sportage':178000,'compass':175000,
+  'renegade':118000,'toro':155000,'mobi':55000,'march':58000,'versa':82000,
+  'sentra':105000,'kicks':125000,'cr-v':195000,'hr-v':148000,'fit':92000,
+  'city':108000,'accord':195000,'creta':148000,'ix35':132000,'santa':218000,
+  'cruze':128000,'cobalt':68000,'spin':88000,'meriva':52000,'captiva':98000,
+  'astra':62000,'vectra':58000,'omega':72000,'montana':78000,'zafira':68000,
+  'default':75000
+};
+
+// Cache de resultados FIPE reais (por placa/modelo+ano)
+var _fipeCache = {};
+
 function estimarFipe(v) {
-  var key = (v.modelo||'').toLowerCase().split(' ')[0];
+  // 1. Verifica cache do Supabase (salvo após consulta real)
+  if (v.fipeReal) return v.fipeReal;
+  // 2. Fallback para tabela offline
+  var key  = (v.modelo||'').toLowerCase().split(' ')[0];
   var base = FIPE_BASE[key] || FIPE_BASE['default'];
   var age  = new Date().getFullYear() - (parseInt(v.ano)||2020);
   return Math.round(base * Math.pow(0.88, age) / 1000) * 1000;
+}
+
+// Consulta FIPE real via API parallelum (sem auth, gratuita)
+async function consultarFipeReal(vehicleId) {
+  var v = state.vehicles.find(function(x){ return x.id === vehicleId; });
+  if (!v || !v.modelo) return null;
+
+  var cacheKey = v.modelo.toLowerCase().split(' ')[0] + '_' + v.ano;
+  if (_fipeCache[cacheKey]) {
+    if (v) { v.fipeReal = _fipeCache[cacheKey]; saveState(); }
+    return _fipeCache[cacheKey];
+  }
+
+  try {
+    // Busca código da marca
+    var marcaQuery = encodeURIComponent((v.marca||'').toLowerCase());
+    var marcasRes  = await fetch('https://parallelum.com.br/fipe/api/v1/carros/marcas');
+    if (!marcasRes.ok) throw new Error('API indisponível');
+    var marcas = await marcasRes.json();
+    var marca  = marcas.find(function(m){
+      return m.nome.toLowerCase().includes(marcaQuery) ||
+             marcaQuery.includes(m.nome.toLowerCase().split(' ')[0]);
+    });
+    if (!marca) return null;
+
+    // Busca modelos da marca
+    var modelosRes = await fetch('https://parallelum.com.br/fipe/api/v1/carros/marcas/' + marca.codigo + '/modelos');
+    var modeloData = await modelosRes.json();
+    var modeloKey  = (v.modelo||'').toLowerCase().split(' ')[0];
+    var modelo     = (modeloData.modelos||[]).find(function(m){
+      return m.nome.toLowerCase().includes(modeloKey);
+    });
+    if (!modelo) return null;
+
+    // Busca anos disponíveis
+    var anosRes = await fetch('https://parallelum.com.br/fipe/api/v1/carros/marcas/' + marca.codigo + '/modelos/' + modelo.codigo + '/anos');
+    var anos    = await anosRes.json();
+    // Encontra o ano mais próximo
+    var anoAlvo = parseInt(v.ano) || new Date().getFullYear();
+    var anoFipe = anos.reduce(function(best, a) {
+      var anoNum = parseInt(a.codigo.split('-')[0]);
+      var bestNum = parseInt(best.codigo.split('-')[0]);
+      return Math.abs(anoNum - anoAlvo) < Math.abs(bestNum - anoAlvo) ? a : best;
+    }, anos[0]);
+    if (!anoFipe) return null;
+
+    // Busca preço final
+    var precoRes = await fetch('https://parallelum.com.br/fipe/api/v1/carros/marcas/' + marca.codigo + '/modelos/' + modelo.codigo + '/anos/' + anoFipe.codigo);
+    var preco    = await precoRes.json();
+    var valor    = parseInt((preco.Valor||'0').replace(/[^0-9]/g,''));
+    if (!valor) return null;
+
+    _fipeCache[cacheKey] = valor;
+    if (v) { v.fipeReal = valor; saveState(); }
+    showToast('FIPE atualizada: R$' + valor.toLocaleString('pt-BR') + ' ✓', 'success');
+    updateDashboard();
+    return valor;
+  } catch(e) {
+    // Falha silenciosa — usa estimativa
+    return null;
+  }
 }
 
 // ============================================================
@@ -11598,54 +11937,69 @@ function recalcMono() {
 // Database de cidades brasileiras com coordenadas (lat/lng relativas ao canvas)
 var CIDADES_BR = [
   // Norte
-  { nome:'Manaus', uf:'AM', lat:-3.1190, lng:-60.0217 },
-  { nome:'Belém', uf:'PA', lat:-1.4558, lng:-48.5044 },
-  { nome:'Porto Velho', uf:'RO', lat:-8.7612, lng:-63.9004 },
-  { nome:'Macapá', uf:'AP', lat:0.0356, lng:-51.0705 },
-  { nome:'Rio Branco', uf:'AC', lat:-9.9754, lng:-67.8249 },
-  { nome:'Boa Vista', uf:'RR', lat:2.8199, lng:-60.6733 },
-  { nome:'Palmas', uf:'TO', lat:-10.1689, lng:-48.3317 },
+  { nome:'Manaus', uf:'AM', lat:-3.1190, lng:-60.0217 , capital:true},
+  { nome:'Belém', uf:'PA', lat:-1.4558, lng:-48.5044 , capital:true},
+  { nome:'Porto Velho', uf:'RO', lat:-8.7612, lng:-63.9004 , capital:true},
+  { nome:'Macapá', uf:'AP', lat:0.0356, lng:-51.0705 , capital:true},
+  { nome:'Rio Branco', uf:'AC', lat:-9.9754, lng:-67.8249 , capital:true},
+  { nome:'Boa Vista', uf:'RR', lat:2.8199, lng:-60.6733 , capital:true},
+  { nome:'Palmas', uf:'TO', lat:-10.1689, lng:-48.3317 , capital:true},
   // Nordeste
-  { nome:'São Luís', uf:'MA', lat:-2.5297, lng:-44.3028 },
-  { nome:'Teresina', uf:'PI', lat:-5.0892, lng:-42.8019 },
-  { nome:'Fortaleza', uf:'CE', lat:-3.7172, lng:-38.5433 },
-  { nome:'Natal', uf:'RN', lat:-5.7945, lng:-35.2110 },
-  { nome:'João Pessoa', uf:'PB', lat:-7.1195, lng:-34.8450 },
-  { nome:'Recife', uf:'PE', lat:-8.0476, lng:-34.8770 },
-  { nome:'Maceió', uf:'AL', lat:-9.6658, lng:-35.7350 },
-  { nome:'Aracaju', uf:'SE', lat:-10.9472, lng:-37.0731 },
-  { nome:'Salvador', uf:'BA', lat:-12.9714, lng:-38.5014 },
-  { nome:'Feira de Santana', uf:'BA', lat:-12.2664, lng:-38.9663 },
+  { nome:'São Luís', uf:'MA', lat:-2.5297, lng:-44.3028 , capital:true},
+  { nome:'Teresina', uf:'PI', lat:-5.0892, lng:-42.8019 , capital:true},
+  { nome:'Fortaleza', uf:'CE', lat:-3.7172, lng:-38.5433 , capital:true},
+  { nome:'Natal', uf:'RN', lat:-5.7945, lng:-35.2110 , capital:true},
+  { nome:'João Pessoa', uf:'PB', lat:-7.1195, lng:-34.8450 , capital:true},
+  { nome:'Recife', uf:'PE', lat:-8.0476, lng:-34.8770 , capital:true},
+  { nome:'Maceió', uf:'AL', lat:-9.6658, lng:-35.7350 , capital:true},
+  { nome:'Aracaju', uf:'SE', lat:-10.9472, lng:-37.0731 , capital:true},
+  { nome:'Salvador', uf:'BA', lat:-12.9714, lng:-38.5014 , capital:true},
+  { nome:'Feira de Santana', uf:'BA', lat:-12.2664, lng:-38.9663 , capital:true},
   // Centro-Oeste
-  { nome:'Brasília', uf:'DF', lat:-15.7801, lng:-47.9292 },
-  { nome:'Goiânia', uf:'GO', lat:-16.6869, lng:-49.2648 },
-  { nome:'Cuiabá', uf:'MT', lat:-15.6014, lng:-56.0979 },
-  { nome:'Campo Grande', uf:'MS', lat:-20.4697, lng:-54.6201 },
-  { nome:'Anápolis', uf:'GO', lat:-16.3281, lng:-48.9529 },
+  { nome:'Brasília', uf:'DF', lat:-15.7801, lng:-47.9292 , capital:true},
+  { nome:'Goiânia', uf:'GO', lat:-16.6869, lng:-49.2648 , capital:true},
+  { nome:'Cuiabá', uf:'MT', lat:-15.6014, lng:-56.0979 , capital:true},
+  { nome:'Campo Grande', uf:'MS', lat:-20.4697, lng:-54.6201 , capital:true},
+  { nome:'Anápolis', uf:'GO', lat:-16.3281, lng:-48.9529 , capital:true},
   // Sudeste
-  { nome:'São Paulo', uf:'SP', lat:-23.5505, lng:-46.6333 },
-  { nome:'Rio de Janeiro', uf:'RJ', lat:-22.9068, lng:-43.1729 },
-  { nome:'Belo Horizonte', uf:'MG', lat:-19.9167, lng:-43.9345 },
-  { nome:'Vitória', uf:'ES', lat:-20.3155, lng:-40.3128 },
-  { nome:'Campinas', uf:'SP', lat:-22.9099, lng:-47.0626 },
-  { nome:'Santos', uf:'SP', lat:-23.9608, lng:-46.3336 },
-  { nome:'Ribeirão Preto', uf:'SP', lat:-21.1767, lng:-47.8208 },
-  { nome:'São José dos Campos', uf:'SP', lat:-23.1794, lng:-45.8869 },
-  { nome:'Sorocaba', uf:'SP', lat:-23.5015, lng:-47.4526 },
-  { nome:'Uberlândia', uf:'MG', lat:-18.9186, lng:-48.2772 },
-  { nome:'Juiz de Fora', uf:'MG', lat:-21.7642, lng:-43.3503 },
-  { nome:'Niterói', uf:'RJ', lat:-22.8833, lng:-43.1036 },
-  { nome:'Duque de Caxias', uf:'RJ', lat:-22.7856, lng:-43.3117 },
+  { nome:'São Paulo', uf:'SP', lat:-23.5505, lng:-46.6333 , capital:true},
+  { nome:'Rio de Janeiro', uf:'RJ', lat:-22.9068, lng:-43.1729 , capital:true},
+  { nome:'Belo Horizonte', uf:'MG', lat:-19.9167, lng:-43.9345 , capital:true},
+  { nome:'Vitória', uf:'ES', lat:-20.3155, lng:-40.3128 , capital:true},
+  { nome:'Campinas', uf:'SP', lat:-22.9099, lng:-47.0626 , capital:true},
+  { nome:'Santos', uf:'SP', lat:-23.9608, lng:-46.3336 , capital:true},
+  { nome:'Ribeirão Preto', uf:'SP', lat:-21.1767, lng:-47.8208 , capital:true},
+  { nome:'São José dos Campos', uf:'SP', lat:-23.1794, lng:-45.8869 , capital:true},
+  { nome:'Sorocaba', uf:'SP', lat:-23.5015, lng:-47.4526 , capital:true},
+  { nome:'Uberlândia', uf:'MG', lat:-18.9186, lng:-48.2772 , capital:true},
+  { nome:'Juiz de Fora', uf:'MG', lat:-21.7642, lng:-43.3503 , capital:true},
+  { nome:'Niterói', uf:'RJ', lat:-22.8833, lng:-43.1036 , capital:true},
+  { nome:'Duque de Caxias', uf:'RJ', lat:-22.7856, lng:-43.3117 , capital:true},
   // Sul
-  { nome:'Curitiba', uf:'PR', lat:-25.4284, lng:-49.2733 },
-  { nome:'Porto Alegre', uf:'RS', lat:-30.0277, lng:-51.2287 },
-  { nome:'Florianópolis', uf:'SC', lat:-27.5954, lng:-48.5480 },
-  { nome:'Londrina', uf:'PR', lat:-23.3045, lng:-51.1696 },
-  { nome:'Maringá', uf:'PR', lat:-23.4205, lng:-51.9331 },
-  { nome:'Joinville', uf:'SC', lat:-26.3044, lng:-48.8487 },
-  { nome:'Blumenau', uf:'SC', lat:-26.9194, lng:-49.0661 },
-  { nome:'Caxias do Sul', uf:'RS', lat:-29.1678, lng:-51.1794 },
-  { nome:'Pelotas', uf:'RS', lat:-31.7654, lng:-52.3376 },
+  { nome:'Curitiba', uf:'PR', lat:-25.4284, lng:-49.2733 , capital:true},
+  { nome:'Porto Alegre', uf:'RS', lat:-30.0277, lng:-51.2287 , capital:true},
+  { nome:'Florianópolis', uf:'SC', lat:-27.5954, lng:-48.5480 , capital:true},
+  { nome:'Londrina', uf:'PR', lat:-23.3045, lng:-51.1696 , capital:true},
+  { nome:'Maringá', uf:'PR', lat:-23.4205, lng:-51.9331 , capital:true},
+  { nome:'Joinville', uf:'SC', lat:-26.3044, lng:-48.8487 , capital:true},
+  { nome:'Blumenau', uf:'SC', lat:-26.9194, lng:-49.0661 , capital:true},
+  { nome:'Caxias do Sul', uf:'RS', lat:-29.1678, lng:-51.1794 , capital:true},
+  { nome:'Pelotas', uf:'RS', lat:-31.7654, lng:-52.3376 , capital:true},
+,
+  // Cidades extras (não capitais mas importantes)
+  { nome:'Campinas', uf:'SP', lat:-22.9056, lng:-47.0608, capital:false },
+  { nome:'Santos', uf:'SP', lat:-23.9608, lng:-46.3336, capital:false },
+  { nome:'Ribeirão Preto', uf:'SP', lat:-21.1775, lng:-47.8103, capital:false },
+  { nome:'Uberlândia', uf:'MG', lat:-18.9122, lng:-48.2772, capital:false },
+  { nome:'Juiz de Fora', uf:'MG', lat:-21.7642, lng:-43.3503, capital:false },
+  { nome:'Joinville', uf:'SC', lat:-26.3045, lng:-48.8487, capital:false },
+  { nome:'Blumenau', uf:'SC', lat:-26.9194, lng:-49.0661, capital:false },
+  { nome:'Caxias do Sul', uf:'RS', lat:-29.1678, lng:-51.1794, capital:false },
+  { nome:'Londrina', uf:'PR', lat:-23.3105, lng:-51.1628, capital:false },
+  { nome:'Maringá', uf:'PR', lat:-23.4205, lng:-51.9333, capital:false },
+  { nome:'Feira de Santana', uf:'BA', lat:-12.2664, lng:-38.9663, capital:false },
+  { nome:'Caruaru', uf:'PE', lat:-8.2836, lng:-35.9769, capital:false },
+  { nome:'Mossoró', uf:'RN', lat:-5.1877, lng:-37.3442, capital:false },
 ];
 
 // State de viagens
@@ -11912,8 +12266,18 @@ function renderViagemMapa() {
 
   // Background
   var isDark = document.body && !document.body.classList.contains('light-mode');
-  ctx.fillStyle = isDark ? '#12131a' : '#e8edf2';
+  ctx.fillStyle = isDark ? '#0f1117' : '#e8edf2';
   ctx.fillRect(0, 0, W, H);
+
+  // Subtle grid
+  ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.04)';
+  ctx.lineWidth = 1;
+  for (var gx = 0; gx < W; gx += 40) {
+    ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke();
+  }
+  for (var gy = 0; gy < H; gy += 40) {
+    ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke();
+  }
 
   // ── SILHUETA DO BRASIL (polígono simplificado, ~60 pontos) ──
   // Pontos em lat/lng percorrendo o contorno do Brasil no sentido horário
@@ -11957,13 +12321,21 @@ function renderViagemMapa() {
   ctx.lineWidth = 1.5;
   ctx.stroke();
 
-  // Draw state border suggestions as city dots
+  // Draw capital city dots with labels
   CIDADES_BR.forEach(function(c) {
     var p = coordToCanvas(c.lat, c.lng, W, H);
+    // Dot
     ctx.beginPath();
-    ctx.arc(p.x, p.y, 2.5, 0, Math.PI*2);
-    ctx.fillStyle = isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.15)';
+    ctx.arc(p.x, p.y, c.capital ? 3.5 : 2, 0, Math.PI*2);
+    ctx.fillStyle = isDark ? 'rgba(255,255,255,0.18)' : 'rgba(0,0,0,0.20)';
     ctx.fill();
+    // Label for capitals only (if zoom allows)
+    if (c.capital && W > 400) {
+      ctx.font = '8px Sora, sans-serif';
+      ctx.fillStyle = isDark ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)';
+      ctx.textAlign = 'center';
+      ctx.fillText(c.nome.split(',')[0], p.x, p.y - 6);
+    }
   });
 
   // Filter
@@ -12010,6 +12382,23 @@ function renderViagemMapa() {
     ctx.setLineDash(isAtiva ? [] : [6, 3]);
     ctx.stroke();
     ctx.setLineDash([]);
+
+    // Distance label near midpoint
+    var t = 0.5;
+    var lx = (1-t)*(1-t)*po.x + 2*(1-t)*t*cx + t*t*pd.x;
+    var ly = (1-t)*(1-t)*po.y + 2*(1-t)*t*cy + t*t*pd.y;
+    if (v.km && isAtiva) {
+      ctx.font = 'bold 9px Sora, sans-serif';
+      ctx.textAlign = 'center';
+      var bg = isDark ? 'rgba(15,17,23,0.85)' : 'rgba(255,255,255,0.85)';
+      var textW = ctx.measureText(v.km.toLocaleString('pt-BR') + ' km').width + 8;
+      ctx.fillStyle = bg;
+      ctx.beginPath();
+      ctx.roundRect(lx - textW/2, ly - 9, textW, 14, 4);
+      ctx.fill();
+      ctx.fillStyle = isAtiva ? '#7B80C1' : (isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.5)');
+      ctx.fillText(v.km.toLocaleString('pt-BR') + ' km', lx, ly + 1);
+    }
 
     // Arrow at midpoint
     var t = 0.55;
@@ -12965,6 +13354,239 @@ var OPINIAO_DATA = [
 ];
 
 // ============================================================
+// 📋 PASSAPORTE DO VEÍCULO
+// ============================================================
+function renderPassaportePage() {
+  var el = document.getElementById('passaporte-page-content');
+  if (!el) return;
+  var active = state.vehicles.filter(function(v){ return !v.archived; });
+  if (!active.length) return;
+  var opts = active.map(function(v){
+    return '<option value="' + v.id + '">' + v.marca + ' ' + v.modelo + ' ' + v.ano + '</option>';
+  }).join('');
+  el.innerHTML =
+    '<div class="card" style="margin-bottom:8px;">' +
+      '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">' +
+        '<select class="field-select" id="passaporte-sel" style="flex:1;max-width:280px;" onchange="renderPassaportePage()">' + opts + '</select>' +
+        '<button class="btn-secondary" style="padding:9px 14px;font-size:12px;" onclick="compartilharPassaporte()">🔗 Compartilhar</button>' +
+      '</div>' +
+    '</div>' +
+    '<div id="passaporte-body"></div>';
+  var sel = document.getElementById('passaporte-sel');
+  var vid = sel ? parseInt(sel.value) : active[0].id;
+  var v   = state.vehicles.find(function(x){ return x.id === vid; }) || active[0];
+  _renderPassaporteVehicle(v);
+}
+
+function _renderPassaporteVehicle(v) {
+  var body = document.getElementById('passaporte-body');
+  if (!body || !v) return;
+  var score = calcScore(v); var scoreColor = getScoreColor(score);
+  var offset = Math.round(283 * (1 - score / 100));
+  var fipe = estimarFipe(v);
+  var hist = state.history.filter(function(h){ return h.veiculoId === v.id; });
+  var fuel = state.fuel.filter(function(f){ return f.veiculoId === v.id; });
+  var docs = state.docs[v.id] || {};
+  var upgrades = docs.upgrades || [];
+  var upgradeTotal = upgrades.reduce(function(s,u){ return s+(u.valor||0); }, 0);
+  var valorSugerido = Math.round((fipe + upgradeTotal) / 1000) * 1000;
+  var hoje = new Date().toLocaleDateString('pt-BR');
+  var tier = score >= 80 ? 'Excelente' : score >= 60 ? 'Bom' : score >= 40 ? 'Regular' : 'Atenção';
+  var fmt = function(n){ return 'R$' + Math.round(n).toLocaleString('pt-BR'); };
+
+  // Foto do veículo
+  var photoKey2  = 'mc_photo_' + v.id;
+  var photoData2 = localStorage.getItem(photoKey2);
+  var photoHtml  = photoData2
+    ? '<div style="width:100%;height:180px;border-radius:12px;overflow:hidden;margin-bottom:4px;">' +
+        '<img src="' + photoData2 + '" style="width:100%;height:100%;object-fit:cover;">' +
+      '</div>'
+    : '<div onclick="abrirFotoVeiculo(' + v.id + ')" style="width:100%;height:120px;border-radius:12px;background:var(--surface2);border:1px dashed var(--border2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;margin-bottom:4px;">' +
+        '<span style="font-size:28px;">📷</span>' +
+        '<span style="font-size:11px;color:var(--text3);">Adicionar foto do veículo</span>' +
+      '</div>';
+
+  body.innerHTML = photoHtml +
+    photoHtml +
+    // Score
+    '<div class="card"><div class="card-title">Score de saúde</div>' +
+    '<div class="score-section">' +
+      '<div class="score-ring-wrap"><svg width="110" height="110" viewBox="0 0 110 110">' +
+        '<circle class="score-ring-bg" cx="55" cy="55" r="45"/>' +
+        '<circle class="score-ring-fill" cx="55" cy="55" r="45" stroke-dasharray="283" stroke-dashoffset="' + offset + '" style="stroke:' + scoreColor + '"/>' +
+      '</svg><div class="score-center"><div class="score-num" style="color:' + scoreColor + ';">' + score + '</div><div class="score-lbl">/ 100</div></div></div>' +
+      '<div class="score-details"><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;">' + tier + '</div>' +
+      '<div style="font-size:12px;color:var(--text2);">📋 ' + hist.length + ' manutenções</div>' +
+      '<div style="font-size:12px;color:var(--text2);">⛽ ' + fuel.length + ' abastecimentos</div></div>' +
+    '</div></div>' +
+    // Ficha técnica
+    '<div class="card"><div class="card-title">Ficha técnica</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">' +
+      [['Marca',v.marca],['Modelo',v.modelo],['Ano',v.ano],['Cor',v.cor||'—'],
+       ['Combustível',v.combustivel||'—'],['Placa',v.placa||'—'],
+       ['KM atual',parseInt(v.km||0).toLocaleString('pt-BR')+' km']].map(function(r){
+        return '<div style="background:var(--surface2);border-radius:8px;padding:8px 12px;">' +
+          '<div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">' + r[0] + '</div>' +
+          '<div style="font-size:12px;font-weight:600;color:var(--text);">' + r[1] + '</div></div>';
+      }).join('') +
+    '</div></div>' +
+    // Valor estimado
+    '<div class="card" style="border:1px solid rgba(123,128,193,0.2);">' +
+    '<div class="card-title">Valor estimado</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">' +
+      '<div style="text-align:center;padding:12px;background:var(--surface2);border-radius:10px;">' +
+        '<div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">FIPE base' + (v.fipeReal ? ' ✓' : ' est.') + '</div>' +
+        '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;color:var(--text);">' + fmt(fipe) + '</div>' +
+      '</div>' +
+      '<div style="text-align:center;padding:12px;background:rgba(123,128,193,0.08);border:1px solid rgba(123,128,193,0.2);border-radius:10px;">' +
+        '<div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Com upgrades</div>' +
+        '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;color:var(--accent);">' + fmt(valorSugerido) + '</div>' +
+      '</div>' +
+    '</div>' +
+    (upgrades.length ? '<div style="font-size:11px;color:var(--text3);">Upgrades: ' + upgrades.map(function(u){ return u.nome + ' ('+fmt(u.valor)+')'; }).join(' · ') + '</div>' : '') +
+    '<button onclick="_adicionarUpgrade(' + v.id + ')" style="margin-top:10px;width:100%;padding:10px;background:none;border:1px dashed var(--border2);border-radius:8px;font-size:12px;color:var(--text3);cursor:pointer;font-family:\'Sora\',sans-serif;">+ Adicionar upgrade (insufilm, som, rodas…)</button>' +
+    '</div>' +
+    // Histórico
+    '<div class="card"><div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">Histórico verificado<span style="font-size:10px;color:var(--text3);font-weight:400;">' + hist.length + ' registros</span></div>' +
+    (hist.length ? hist.slice(-5).reverse().map(function(h){
+      return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);">' +
+        '<div style="flex:1;"><div style="font-size:12px;font-weight:600;color:var(--text);">' + h.tipo + '</div>' +
+        '<div style="font-size:10px;color:var(--text3);">' + h.data + (h.km?' · '+parseInt(h.km).toLocaleString('pt-BR')+' km':'') + '</div></div>' +
+        (h.custo>0?'<span style="font-size:11px;color:var(--accent);font-family:\'JetBrains Mono\',monospace;">'+fmt(h.custo)+'</span>':'') +
+      '</div>';
+    }).join('') : '<div style="font-size:12px;color:var(--text3);padding:8px 0;">Sem manutenções registradas.</div>') +
+    '</div>' +
+    '<div style="text-align:center;font-size:10px;color:var(--text3);padding:8px 0 16px;">Gerado em ' + hoje + ' · ManyCars</div>';
+}
+
+function _adicionarUpgrade(vehicleId) {
+  var nome  = prompt('Nome do upgrade (ex: Insufilm, Som, Rodas):');
+  if (!nome) return;
+  var valor = parseFloat(prompt('Valor investido (R$):') || '0');
+  if (!state.docs[vehicleId]) state.docs[vehicleId] = {};
+  if (!state.docs[vehicleId].upgrades) state.docs[vehicleId].upgrades = [];
+  state.docs[vehicleId].upgrades.push({ nome: nome, valor: valor, data: new Date().toISOString().slice(0,10) });
+  saveState(); renderPassaportePage();
+  showToast('Upgrade adicionado! ✓', 'success');
+}
+
+// ============================================================
+// 🔥 STREAK DE ATUALIZAÇÃO DE KM
+// ============================================================
+function _checkKmStreak() {
+  if (!state.vehicles || !state.vehicles.length) return;
+
+  var hoje = new Date().toISOString().slice(0,10);
+  var streakData = state._kmStreak || { count: 0, lastDate: null, lastCelebrated: 0 };
+
+  // Verifica se já registrou algo hoje
+  var registrouHoje = state.history.some(function(h){
+    return h.data === hoje;
+  }) || state.fuel.some(function(f){
+    return f.data === hoje;
+  });
+
+  if (!registrouHoje) return;
+  if (streakData.lastDate === hoje) return; // já contou hoje
+
+  var ontem = new Date(hoje);
+  ontem.setDate(ontem.getDate() - 1);
+  var ontemStr = ontem.toISOString().slice(0,10);
+
+  // Se registrou ontem, continua streak; senão reinicia
+  if (streakData.lastDate === ontemStr) {
+    streakData.count++;
+  } else if (streakData.lastDate !== hoje) {
+    streakData.count = 1;
+  }
+  streakData.lastDate = hoje;
+  state._kmStreak = streakData;
+  saveState();
+
+  // Celebra marcos: 3, 7, 14, 30 dias
+  var marcos = [3, 7, 14, 21, 30, 60, 90];
+  if (marcos.indexOf(streakData.count) >= 0 && streakData.lastCelebrated !== streakData.count) {
+    streakData.lastCelebrated = streakData.count;
+    state._kmStreak = streakData;
+    saveState();
+    _celebrarStreak(streakData.count);
+  }
+}
+
+function _celebrarStreak(dias) {
+  var emojis = { 3:'🔥', 7:'⚡', 14:'🏆', 21:'💎', 30:'🌟', 60:'🚀', 90:'👑' };
+  var msgs = {
+    3:  '3 dias atualizando! Bom começo!',
+    7:  '1 semana! Você está no caminho certo.',
+    14: '2 semanas! Seu carro agradece.',
+    21: '21 dias de constância — hábito formado!',
+    30: '1 mês! Você cuida do carro melhor que a maioria.',
+    60: '2 meses! Você é referência em manutenção.',
+    90: '3 meses de dedicação! Nível ManyCars Master 👑',
+  };
+  var emoji = emojis[dias] || '🔥';
+  var msg   = msgs[dias] || (dias + ' dias de streak!');
+  _showStreakCelebration(emoji, msg, dias);
+}
+
+function _fecharStreakCelebration() {
+  var el = document.getElementById('streak-celebration');
+  if (el) el.remove();
+}
+
+function _showStreakCelebration(emoji, msg, dias) {
+  // Cria overlay de celebração
+  var ov = document.createElement('div');
+  ov.id = 'streak-celebration';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:9998;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);';
+  ov.innerHTML =
+    '<div style="background:var(--surface);border:1px solid rgba(123,128,193,0.4);border-radius:24px;padding:36px 28px;max-width:320px;width:90%;text-align:center;animation:fadeUp 0.4s ease both;">' +
+      '<div style="font-size:56px;margin-bottom:16px;line-height:1;">' + emoji + '</div>' +
+      '<div style="font-family:Bebas Neue,sans-serif;font-size:28px;color:var(--accent);letter-spacing:1px;margin-bottom:8px;">' + dias + ' dias</div>' +
+      '<div style="font-size:14px;color:var(--text);font-weight:600;margin-bottom:6px;">' + msg + '</div>' +
+      '<div style="font-size:12px;color:var(--text3);margin-bottom:24px;">Continue registrando para manter o streak!</div>' +
+      '<button onclick="_fecharStreakCelebration()" style="padding:12px 32px;background:var(--accent);color:var(--bg);border:none;border-radius:12px;font-family:Sora,sans-serif;font-size:14px;font-weight:700;cursor:pointer;">Continuar</button>' +
+    '</div>';
+  document.body.appendChild(ov);
+  ov.addEventListener('click', function(e){ if(e.target===ov) ov.remove(); });
+
+  // Confetti leve
+  _streakConfetti();
+}
+
+function _streakConfetti() {
+  var canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;inset:0;z-index:9999;pointer-events:none;';
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  document.body.appendChild(canvas);
+  var ctx = canvas.getContext('2d');
+  var particles = Array.from({length:60}, function() {
+    return {
+      x: Math.random()*canvas.width, y: -20,
+      vx: (Math.random()-0.5)*4, vy: Math.random()*4+2,
+      r: Math.random()*6+3,
+      color: ['#7B80C1','#a78bfa','#60a5fa','#68d391','#f6ad55'][Math.floor(Math.random()*5)],
+      rot: Math.random()*360, rotV: (Math.random()-0.5)*6
+    };
+  });
+  var frame = 0;
+  var anim = setInterval(function() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(function(p) {
+      p.x += p.vx; p.y += p.vy; p.rot += p.rotV;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r);
+      ctx.restore();
+    });
+    frame++;
+    if (frame > 90) { clearInterval(anim); canvas.remove(); }
+  }, 16);
+}
+
+// ============================================================
 // RANKING
 // ============================================================
 
@@ -13078,6 +13700,20 @@ function _calcUserStats() {
     gastoTotal: gastoTotal, kmViagens: kmViagens,
     cidades: Object.keys(cidadesSet).length
   };
+}
+
+function _downgradeParaPlus() {
+  if (!confirm('Fazer downgrade para o plano PLUS? Você perderá os recursos exclusivos do PRO.')) return;
+  if (state.user) state.user.plan = 'plus';
+  saveState(); _updatePlanBadge(); renderPremiumPage();
+  showToast('Plano alterado para PLUS ✓', 'success');
+}
+
+function _cancelarPlano() {
+  if (!confirm('Cancelar assinatura? Você voltará ao plano gratuito ao fim do período pago.')) return;
+  if (state.user) state.user.plan = 'free';
+  saveState(); _updatePlanBadge(); renderPremiumPage();
+  showToast('Assinatura cancelada. Acesso mantido até o fim do período.', 'info');
 }
 
 function _renderRankingInPerfil() {
@@ -14156,18 +14792,34 @@ function renderWishlist() {
   var countEl = document.getElementById('wishlist-count');
   if (!sec || !grid) return;
 
+  // Apply filters
+  var filtroMarca = (document.getElementById('wish-filter-marca') || {}).value || '';
+  var filtroTipo  = (document.getElementById('wish-filter-tipo')  || {}).value || '';
+  var filtered = wishlist.filter(function(w) {
+    var label = (w.label || '').toLowerCase();
+    var query = (w.query || '').toLowerCase();
+    if (filtroMarca && !label.includes(filtroMarca.toLowerCase()) && !query.includes(filtroMarca.toLowerCase())) return false;
+    if (filtroTipo) {
+      var tipoMap = { suv:'suv',sedan:'sedan',hatch:'hatch hb',pickup:'pick',coupe:'coupê coupe',esportivo:'sport esport',eletrico:'elétr eletr' };
+      var words = (tipoMap[filtroTipo] || filtroTipo).split(' ');
+      var matches = words.some(function(w){ return label.includes(w) || query.includes(w); });
+      if (!matches) return false;
+    }
+    return true;
+  });
+
   sec.style.display = wishlist.length ? 'block' : 'none';
   if (!wishlist.length) return;
-  if (countEl) countEl.textContent = wishlist.length + ' carro' + (wishlist.length>1?'s':'') + ' salvos';
+  if (countEl) countEl.textContent = filtered.length + '/' + wishlist.length + ' carro' + (wishlist.length>1?'s':'') + ' salvos';
 
   var fmt = function(v){ return 'R$' + Math.round(v).toLocaleString('pt-BR'); };
 
-  if (!wishlist.length) {
-    grid.innerHTML = '<div class="wish-empty"><div class="wish-empty-icon">💭</div><div class="wish-empty-text">Pesquise um carro e clique em "Salvar na wishlist"</div></div>';
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="wish-empty"><div class="wish-empty-icon">🔎</div><div class="wish-empty-text">Nenhum carro corresponde aos filtros selecionados.</div></div>';
     return;
   }
 
-  grid.innerHTML = wishlist.map(function(w) {
+  grid.innerHTML = filtered.map(function(w) {
     var isSelected = compareSelection.indexOf(w.id) >= 0;
     var consumoLabel = w.consumo > 0 ? w.consumo + ' km/L' : 'Elétrico';
     var seguroLabel = w.seguro + '% FIPE';
@@ -14896,7 +15548,7 @@ function renderModeloInfo() {
   var active = state.vehicles.filter(function(v){ return !v.archived; });
   if (!active.length) {
     content.innerHTML = '<div class="empty-state"><div class="empty-icon">📖</div>' +
-      (state.vehicles.length ? '<div class="empty-title">Todos os veículos foram vendidos</div>' : '<div class="empty-title">Adicione seu primeiro carro</div>') +
+      (state.vehicles.length ? '<div class="empty-title">Todos os veículos foram vendidos</div>' : '<div class="empty-title">Adicione seu primeiro carro à garagem</div>') +
       '<button class="empty-cta" onclick="showPage(\'veiculos\')">+ Cadastrar veículo</button></div>';
     return;
   }
@@ -14949,18 +15601,7 @@ function renderModeloInfoVehicle(vehicleId, tabEl) {
           '<span class="problem-freq freq-'+p.freq+'">'+freqLabel+'</span>' +
         '</div>';
       }).join('') +
-    '</div>' +
-    '<div class="card" style="margin-top:0;">' +
-      '<div class="card-title">📍 Serviços próximos</div>' +
-      '<div class="nearby-grid">' +
-        '<a class="nearby-card" href="#" onclick="abrirOficinasMaps(event)">' +
-          '<div class="nearby-icon">🔧</div><div class="nearby-title">Oficinas próximas</div><div class="nearby-sub">Ver no Google Maps</div>' +
-        '</a>' +
-        '<a class="nearby-card" href="#" onclick="abrirPostosMaps(event)">' +
-          '<div class="nearby-icon">⛽</div><div class="nearby-title">Postos de gasolina</div><div class="nearby-sub">Ver no Google Maps</div>' +
-        '</a>' +
-      '</div>' +
-    '</div>';
+    '</div>' ;
 
   // ── Opiniões de donos do mesmo modelo ──────────────────────
   var todasOpinioes = (typeof OPINIAO_DATA !== 'undefined') ? OPINIAO_DATA : [];
@@ -15025,6 +15666,22 @@ function _renderOpiniaoCard(o) {
   '</div>';
 }
 // ── Tab switcher — página Veículos ──────────────────────────
+function _viagensTab(tab) {
+  var tabs = ['hist', 'plan'];
+  tabs.forEach(function(t) {
+    var btn = document.getElementById('vtab-viagens-' + t);
+    var el  = document.getElementById('vtab-viagens-' + t + '-content');
+    var active = t === tab;
+    if (btn) {
+      btn.style.color        = active ? 'var(--accent)' : 'var(--text3)';
+      btn.style.fontWeight   = active ? '700' : '600';
+      btn.style.borderBottom = active ? '2px solid var(--accent)' : '2px solid transparent';
+    }
+    if (el) el.style.display = active ? 'block' : 'none';
+  });
+  if (tab === 'hist') renderViagensHistorico && renderViagensHistorico();
+}
+
 function _veiculosTab(tab) {
   var tabs   = ['carros', 'saude', 'historico', 'documentos'];
   var accent = 'var(--accent)';
@@ -15055,7 +15712,7 @@ function _vTabVehicleSelector(wrapId, selId, onChangeFn) {
     wrap.innerHTML =
       '<div class="empty-state">' +
         '<div class="empty-icon">🚗</div>' +
-        '<div class="empty-title">Adicione seu primeiro carro</div>' +
+        '<div class="empty-title">Adicione seu primeiro carro à garagem</div>' +
         '<div class="empty-desc">Cadastre um veículo para ver esta seção.</div>' +
       '</div>';
     return null;
@@ -15112,6 +15769,23 @@ function _renderHistoricoInline() {
     : '');
 }
 
+function _abrirDocumentosEdit() {
+  // Navega direto para page-documentos sem passar pelo redirect
+  var allPages = document.querySelectorAll('.page');
+  allPages.forEach(function(p){ p.classList.remove('active'); });
+  var target = document.getElementById('page-documentos');
+  if (target) {
+    target.classList.add('active');
+    target.scrollTop = 0;
+    // Sincroniza o veículo selecionado no tab
+    var sel = document.getElementById('docs-inline-sel');
+    var vid = sel ? sel.value : '';
+    var docSel = document.getElementById('docs-veiculo-sel');
+    if (docSel && vid) docSel.value = vid;
+    renderDocumentos();
+  }
+}
+
 function _renderDocumentosInline() {
   var wrap = document.getElementById('documentos-inline-wrap');
   if (!wrap) return;
@@ -15127,7 +15801,7 @@ function _renderDocumentosInline() {
     '<div class="card" style="margin-bottom:8px;">' +
       '<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">' +
         '<select class="field-select" id="docs-inline-sel" style="flex:1;max-width:260px;" onchange="_renderDocumentosInline()">' + opts + '</select>' +
-        '<button class="btn-secondary" style="padding:9px 14px;font-size:12px;" onclick="showPage(\'documentos\')">Editar →</button>' +
+        '<button class="btn-secondary" style="padding:9px 14px;font-size:12px;" onclick="_abrirDocumentosEdit()">Editar →</button>' +
       '</div>' +
     '</div>' +
     '<div id="docs-inline-body"></div>';
@@ -16074,7 +16748,11 @@ function salvarPerfil() {
   if (!state.user) state.user = {};
   state.user.name  = nome;
   state.user.email = email;
-  if (cep) state.user.cep = cep;
+  if (cep) {
+    state.user.cep = cep;
+    // Lookup cidade via ViaCEP (grátis, sem auth)
+    _lookupCEP(cep);
+  }
   saveState();
   var firstName = nome.split(' ')[0];
   var dn = document.getElementById('dash-name');
@@ -16440,7 +17118,7 @@ function _comprarPassaporte(placa) {
 
 
 // ============================================================
-// MARKETPLACE — Compra e venda de veículos
+// VITRINE — Compra e venda de veículos
 // ============================================================
 var _mktAnuncios    = [];     // cache local de anúncios
 var _mktFiltroAno   = '';     // '' = todos
@@ -16915,6 +17593,28 @@ function renderPremiumPage() {
       card.style.background = 'rgba(123,128,193,0.04)';
     }
   });
+
+  // Inject manage plan section
+  var mgEl = document.getElementById('premium-manage');
+  if (mgEl) {
+    var plan = (state.user && state.user.plan) || 'free';
+    if (plan !== 'free') {
+      mgEl.innerHTML =
+        '<div class="card" style="border:1px solid rgba(229,62,62,0.2);margin-top:8px;">' +
+          '<div class="card-title" style="color:var(--text2);">⚙️ Gerenciar assinatura</div>' +
+          '<div style="font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.6;">Seu plano atual: <strong style="color:var(--accent);">' + plan.toUpperCase() + '</strong>. Você pode fazer downgrade ou cancelar a qualquer momento.</div>' +
+          '<div style="display:flex;flex-direction:column;gap:8px;">' +
+            (plan !== 'plus' ? '<button onclick="_downgradeParaPlus()" style="padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;">Downgrade para PLUS</button>' : '') +
+            '<button onclick="_cancelarPlano()" style="padding:12px;background:rgba(229,62,62,0.06);border:1px solid rgba(229,62,62,0.25);border-radius:10px;font-size:13px;font-weight:600;color:#fc8181;cursor:pointer;">Cancelar assinatura</button>' +
+          '</div>' +
+          '<div style="font-size:10px;color:var(--text3);margin-top:10px;text-align:center;">O acesso premium continua até o fim do período pago.</div>' +
+        '</div>';
+      mgEl.style.display = 'block';
+    } else {
+      mgEl.style.display = 'none';
+    }
+  }
+
 }
 
 // ============================================================
