@@ -2330,6 +2330,47 @@ select, textarea {
   cursor: pointer; font-family: 'Sora', sans-serif; transition: all 0.2s;
 }
 .doc-edit-btn:hover { border-color: var(--accent); color: var(--accent); }
+.doc-card-clickable { transition: all 0.18s; user-select: none; -webkit-tap-highlight-color: transparent; }
+.doc-card-clickable:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.2); }
+.doc-card-clickable:active { transform: translateY(0); }
+.doc-edit-panel {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: -4px;
+  margin-bottom: 8px;
+  animation: fadeUp 0.15s ease;
+}
+
+/* ===== VEHICLE TABS (pill style) ===== */
+.vtab-btn {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  font-family: 'Sora', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text3);
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+}
+.vtab-btn:hover {
+  border-color: var(--border2);
+  color: var(--text2);
+  background: var(--surface2);
+}
+.vtab-btn.vtab-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(59,130,246,0.3);
+}
 
 /* ===== GRÁFICO PIZZA ===== */
 .pizza-wrap { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
@@ -3409,6 +3450,9 @@ select, textarea {
     <div class="nav-item" onclick="showPage('veiculos')">
       <span class="nav-icon">🚗</span> Garagem
     </div>
+    <div class="nav-item" onclick="showPage('modelo-info')">
+      <span class="nav-icon">🚀</span> Primeiros Passos
+    </div>
     <div class="nav-item" data-unlock="hasVehicle" onclick="showPage('manutencao')">
       <span class="nav-icon">🔩</span> Manutenção
     </div>
@@ -3428,13 +3472,15 @@ select, textarea {
     </div>
 
     <div class="nav-section">Vitrine</div>
-    <div class="nav-item" data-unlock="record3" onclick="showPage('marketplace')">
+    <div class="nav-item" onclick="showPage('marketplace')">
       <span class="nav-icon">🏪</span> Vitrine
-
     </div>
-    <div class="nav-item" data-unlock="record3" onclick="showPage('sonhar')">
+    <div class="nav-item" onclick="showPage('sonhar')">
       <span class="nav-icon">🌟</span> Lista de Desejos
       <span id="wishlist-badge" style="margin-left:auto;background:rgba(59,130,246,0.15);color:var(--accent);font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;display:none;"></span>
+    </div>
+    <div class="nav-item" onclick="showPage('ranking')">
+      <span class="nav-icon">🏆</span> Ranking
     </div>
 
 
@@ -3456,16 +3502,13 @@ select, textarea {
         <div id="saved-at" style="margin-top:2px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--text3);"></div>
       </div>
       <div class="user-chip" onclick="_irParaPerfil()" style="cursor:pointer;border-radius:10px;padding:8px;transition:background 0.15s;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='transparent'">
-        <div class="user-avatar" id="sidebar-avatar" style="font-size:18px;display:flex;align-items:center;justify-content:center;">J</div>
+        <div class="user-avatar" id="sidebar-avatar" style="font-size:18px;display:flex;align-items:center;justify-content:center;">G</div>
         <div style="flex:1;min-width:0;">
-          <div class="user-name" id="sidebar-name">Usuário</div>
-          <div style="font-size:10px;color:var(--text3);margin-top:1px;">Ver perfil →</div>
+          <div class="user-name" id="sidebar-name" style="font-weight:700;">Usuário</div>
+          <div id="sidebar-plano-badge" style="font-size:10px;color:var(--text3);margin-top:2px;">Plano Free</div>
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:8px;">
-        <div class="nav-item" onclick="showPage('perfil');closeSidebar();" style="margin:0;padding:8px 10px;">
-          <span class="nav-icon">👤</span> Meu Perfil
-        </div>
         <div class="nav-item" onclick="showPage('configuracoes');closeSidebar();" style="margin:0;padding:8px 10px;">
           <span class="nav-icon">⚙️</span> Configurações
         </div>
@@ -3659,11 +3702,11 @@ select, textarea {
       </div>
 
       <!-- Tabs -->
-      <div style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:16px;overflow-x:auto;scrollbar-width:none;">
-        <button id="vtab-carros"    onclick="_veiculosTab('carros')"    style="flex:1;min-width:80px;padding:10px 6px;background:none;border:none;font-family:'Sora',sans-serif;font-size:12px;font-weight:700;color:var(--accent);border-bottom:2px solid var(--accent);margin-bottom:-2px;cursor:pointer;transition:all .2s;white-space:nowrap;">🚗 Carros</button>
-        <button id="vtab-saude"     onclick="_veiculosTab('saude')"     style="flex:1;min-width:80px;padding:10px 6px;background:none;border:none;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all .2s;white-space:nowrap;">❤️ Saúde</button>
-        <button id="vtab-historico" onclick="_veiculosTab('historico')" style="flex:1;min-width:80px;padding:10px 6px;background:none;border:none;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all .2s;white-space:nowrap;">📋 Histórico</button>
-        <button id="vtab-documentos" onclick="_veiculosTab('documentos')" style="flex:1;min-width:80px;padding:10px 6px;background:none;border:none;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;color:var(--text3);border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer;transition:all .2s;white-space:nowrap;position:relative;">📅 Docs<span id="doc-badge" style="display:none;position:absolute;top:4px;right:4px;background:var(--red);color:white;font-size:8px;font-weight:700;padding:1px 5px;border-radius:10px;"></span></button>
+      <div style="display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;">
+        <button id="vtab-carros"    onclick="_veiculosTab('carros')"    class="vtab-btn vtab-active">🚗 Carros</button>
+        <button id="vtab-saude"     onclick="_veiculosTab('saude')"     class="vtab-btn">❤️ Saúde</button>
+        <button id="vtab-historico" onclick="_veiculosTab('historico')" class="vtab-btn">📋 Histórico</button>
+        <button id="vtab-documentos" onclick="_veiculosTab('documentos')" class="vtab-btn" style="position:relative;">📅 Docs<span id="doc-badge" style="display:none;position:absolute;top:2px;right:2px;background:var(--red);color:white;font-size:8px;font-weight:700;padding:1px 5px;border-radius:10px;"></span></button>
       </div>
 
       <!-- Tab: Meus Carros -->
@@ -3731,6 +3774,10 @@ select, textarea {
             <div class="form-group">
               <div class="field-label">Quilometragem atual</div>
               <input class="field-input" id="v-km" type="number" placeholder="Ex: 45000" inputmode="numeric">
+            </div>
+            <div class="form-group" style="grid-column:1/-1;">
+              <div class="field-label">📍 KM ao pegar o carro <span style="font-size:10px;color:var(--text3);font-weight:400;">(marco zero)</span></div>
+              <input class="field-input" id="v-km-inicial" type="number" placeholder="Ex: 20000  (0 se carro novo)" inputmode="numeric">
             </div>
           </div>
           <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
@@ -4023,7 +4070,7 @@ select, textarea {
           </div>
           <div class="form-group">
             <div class="field-label">Data</div>
-            <input class="field-input" id="manut-data" type="date">
+            <input class="field-input" id="manut-data" type="date" max="">
           </div>
           <div class="form-group">
             <div class="field-label">KM no momento</div>
@@ -4874,15 +4921,15 @@ select, textarea {
           </div>
           <div class="form-group">
             <div class="field-label">Data</div>
-            <input class="field-input" id="fuel-data" type="date">
+            <input class="field-input" id="fuel-data" type="date" max="">
           </div>
           <div class="form-group">
             <div class="field-label">KM atual do odômetro</div>
             <input class="field-input" id="fuel-km" type="number" placeholder="Ex: 45230" min="0" inputmode="numeric">
           </div>
           <div class="form-group">
-            <div class="field-label" id="fuel-litros-label">Litros abastecidos</div>
-            <input class="field-input" id="fuel-litros" type="number" placeholder="Ex: 40.5" step="0.1" min="0" oninput="updateFuelPreview()" inputmode="decimal">
+            <div class="field-label" id="fuel-total-label">Valor total pago (R$)</div>
+            <input class="field-input" id="fuel-total" type="number" placeholder="Ex: 250.00" step="0.01" min="0" oninput="updateFuelPreview()" inputmode="decimal">
           </div>
           <div class="form-group">
             <div class="field-label" id="fuel-preco-label">Preço por litro (R$)</div>
@@ -5340,8 +5387,8 @@ select, textarea {
         <div style="display:flex;align-items:center;gap:10px;">
           <button onclick="showPage('dashboard')" aria-label="Voltar" style="background:none;border:none;cursor:pointer;padding:4px 8px 4px 0;color:var(--text3);font-size:22px;line-height:1;-webkit-tap-highlight-color:transparent;">‹</button>
           <div>
-            <div class="page-title" style="margin-bottom:0;">📖 INFO DO MODELO</div>
-            <div class="page-sub">Recomendações técnicas e problemas conhecidos do seu carro</div>
+            <div class="page-title" style="margin-bottom:0;">🚀 PRIMEIROS PASSOS</div>
+            <div class="page-sub">Guia de onboarding, info técnica e dicas do seu modelo</div>
           </div>
         </div>
       </div>
@@ -6846,6 +6893,12 @@ function _updatePlanBadge() {
   badge.style.boxShadow = plano === 'pro'
     ? '0 0 6px rgba(167,139,250,0.4)'
     : 'none';
+  var sbp = document.getElementById('sidebar-plano-badge');
+  if (sbp) {
+    var icons={'free':'','plus':'⭐ ','premium':'⭐ ','pro':'👑 ','lifetime':'♾️ '};
+    sbp.textContent = (icons[plano]||'') + 'Plano ' + (cfg ? cfg.label : plano.toUpperCase());
+    sbp.style.color = cfg ? cfg.color : 'var(--text3)';
+  }
 }
 
 
@@ -8746,7 +8799,7 @@ function showPage(page) {
   if (page === 'vender')       renderVenderPage(0);
   if (page === 'dashboard')    updateDashboard();
   if (page === 'veiculos')     renderVehiclesList();
-  if (page === 'combustivel')  renderFuelPage();
+  if (page === 'combustivel')  { renderFuelPage(); _setMaxDateToday(); }
   if (page === 'documentos')   renderDocumentos();
   if (page === 'analytics')    renderAnalytics();
   if (page === 'monetizacao')  setTimeout(recalcMono, 80);
@@ -8757,7 +8810,7 @@ function showPage(page) {
   if (page === 'wishlist')      { showPage('sonhar'); return; } // merged into sonhar
   if (page === 'configuracoes') renderConfigPage();
   if (page === 'viagens')      renderViagemPage();
-  if (page === 'manutencao')   renderManutencaoPage();
+  if (page === 'manutencao')   { renderManutencaoPage(); _setMaxDateToday(); }
   if (page === 'saude')        renderSaudePage();
   if (page === 'opinioes')     { renderOpinioesCloud(); renderOpiniaoStats(); }
   if (page === 'perfil')       renderPerfilPage();
@@ -8913,65 +8966,9 @@ async function buscarPlaca() {
   }, 100);
 }
 
-// Autocomplete de marcas populares no campo v-marca
-function _ativarAutocompleteMarca() {
-  var marcaEl = document.getElementById('v-marca');
-  if (!marcaEl || marcaEl._autocompleteAtivo) return;
-  marcaEl._autocompleteAtivo = true;
-
-  var marcas = ['Chevrolet','Fiat','Volkswagen','Hyundai','Toyota','Honda',
-                'Jeep','Renault','Nissan','Ford','Mitsubishi','Kia',
-                'Mercedes-Benz','BMW','Audi','Peugeot','Citroën','Caoa Chery'];
-
-  marcaEl.addEventListener('input', function() {
-    var v = this.value.toLowerCase();
-    var lista = document.getElementById('_marca-datalist');
-    if (!lista) {
-      lista = document.createElement('datalist');
-      lista.id = '_marca-datalist';
-      this.setAttribute('list', '_marca-datalist');
-      document.body.appendChild(lista);
-    }
-    lista.innerHTML = marcas
-      .filter(function(m){ return m.toLowerCase().includes(v); })
-      .map(function(m){ return '<option value="' + m + '">'; })
-      .join('');
-  });
-
-  // Ao escolher marca, sugere modelos
-  marcaEl.addEventListener('change', function() {
-    _sugerirModelos(this.value);
-  });
-}
-
-function _sugerirModelos(marca) {
-  var modeloEl = document.getElementById('v-modelo');
-  if (!modeloEl) return;
-
-  var modelos = {
-    'Chevrolet': ['Onix','Onix Plus','Tracker','Cruze','S10','Montana','Spin','Cobalt'],
-    'Fiat':      ['Strada','Argo','Pulse','Cronos','Toro','Uno','Mobi','Doblo'],
-    'Volkswagen':['Polo','Virtus','T-Cross','Taos','Saveiro','Gol','Fox','Tiguan'],
-    'Hyundai':   ['HB20','HB20S','Creta','Tucson','Santa Fe','i30'],
-    'Toyota':    ['Corolla','Corolla Cross','Hilux','SW4','Yaris','RAV4'],
-    'Honda':     ['Civic','HR-V','CR-V','Fit','City','WR-V'],
-    'Jeep':      ['Compass','Renegade','Commander','Gladiator'],
-    'Renault':   ['Kwid','Duster','Captur','Logan','Sandero','Oroch'],
-    'Nissan':    ['Kicks','Frontier','Versa','Sentra'],
-    'Ford':      ['Ranger','Bronco Sport','Territory','Maverick'],
-  };
-
-  var lista = document.getElementById('_modelo-datalist');
-  if (!lista) {
-    lista = document.createElement('datalist');
-    lista.id = '_modelo-datalist';
-    modeloEl.setAttribute('list', '_modelo-datalist');
-    document.body.appendChild(lista);
-  }
-  var opts = modelos[marca] || [];
-  lista.innerHTML = opts.map(function(m){ return '<option value="' + m + '">'; }).join('');
-  if (opts.length) modeloEl.focus();
-}
+// _ativarAutocompleteMarca e _sugerirModelos substituídos pelo fipe-engine.js
+function _ativarAutocompleteMarca() { if (typeof initFipeAutocomplete === 'function') initFipeAutocomplete(); }
+function _sugerirModelos() {}
 
 function resetBusca() {
   document.getElementById('v-placa').value = '';
@@ -8984,26 +8981,7 @@ function resetBusca() {
   state._pendingPlaca = null;
 }
 
-function cadastrarVeiculo() {
-  var marca       = document.getElementById('v-marca').value.trim();
-  var modelo      = document.getElementById('v-modelo').value.trim();
-  var ano         = document.getElementById('v-ano').value.trim();
-  var cor         = document.getElementById('v-cor').value.trim();
-  var combustivel = document.getElementById('v-combustivel').value.trim();
-  var km          = document.getElementById('v-km').value;
-  var placa       = state._pendingPlaca || '—';
-  if (!marca || !modelo || !km) { showToast('Preencha a quilometragem para continuar', 'error'); return; }
-  var v = { id: Date.now(), placa: placa, marca: marca, modelo: modelo, ano: ano, cor: cor, combustivel: combustivel, km: parseInt(km) };
-  state.vehicles.push(v);
-  saveState();
-  renderVehiclesList();
-  updateDashboard();
-  _applyProgressiveDisclosure(); // unlock fase hasVehicle
-  showToast(marca + ' ' + modelo + ' cadastrado! 🚗', 'success');
-  resetBusca();
-  // Perguntar sobre importação de histórico antes do checklist
-  setTimeout(function(){ _promptImportarHistorico(v); }, 400);
-}
+// cadastrarVeiculo() substituído pelo fipe-engine.js (salva códigos FIPE + snapshot histórico)
 
 function _promptHistPendenteById(vid) {
   var v = state.vehicles.find(function(x){ return x.id === vid; });
@@ -10426,12 +10404,15 @@ function renderFuelPage() {
 }
 
 function updateFuelPreview() {
-  var litros = parseFloat(document.getElementById('fuel-litros').value) || 0;
-  var preco  = parseFloat(document.getElementById('fuel-preco').value)  || 0;
+  var total  = parseFloat((document.getElementById('fuel-total')||{}).value) || 0;
+  var preco  = parseFloat(document.getElementById('fuel-preco').value) || 0;
   var preview = document.getElementById('fuel-custo-preview');
   if (preview) {
-    if (litros > 0 && preco > 0) {
-      preview.textContent = '💰 Total: R$ ' + (litros * preco).toLocaleString('pt-BR', {minimumFractionDigits:2});
+    if (total > 0 && preco > 0) {
+      var l = (total / preco).toFixed(2);
+      preview.textContent = '⛽ ' + l + ' L  •  R$ ' + total.toLocaleString('pt-BR', {minimumFractionDigits:2});
+    } else if (total > 0) {
+      preview.textContent = 'R$ ' + total.toLocaleString('pt-BR', {minimumFractionDigits:2});
     } else {
       preview.textContent = '';
     }
@@ -10440,43 +10421,42 @@ function updateFuelPreview() {
 
 function registrarAbastecimento() {
   _haptic('success');
-  var vid    = document.getElementById('fuel-veiculo') ? document.getElementById('fuel-veiculo').value : '';
-  var tipo   = document.getElementById('fuel-tipo').value;
-  var data   = document.getElementById('fuel-data').value;
-  var km     = parseInt(document.getElementById('fuel-km').value);
-  var litros = parseFloat(document.getElementById('fuel-litros').value);
-  var preco  = parseFloat(document.getElementById('fuel-preco').value);
+  var vid   = document.getElementById('fuel-veiculo') ? document.getElementById('fuel-veiculo').value : '';
+  var tipo  = document.getElementById('fuel-tipo').value;
+  var data  = document.getElementById('fuel-data').value;
+  var km    = parseInt(document.getElementById('fuel-km').value);
+  var total = parseFloat((document.getElementById('fuel-total')||{}).value) || 0;
+  var preco = parseFloat(document.getElementById('fuel-preco').value) || 0;
 
-  if (!vid)            { showToast('Selecione um veículo', 'error'); return; }
-  if (!data)           { showToast('Informe a data', 'error'); return; }
+  if (!vid)  { showToast('Selecione um veículo', 'error'); return; }
+  if (!data) { showToast('Informe a data', 'error'); return; }
+  var todayStr = new Date().toISOString().slice(0,10);
+  if (data > todayStr) { showToast('⚠️ Data não pode ser futura', 'error'); return; }
   if (isNaN(km)||km<0) { showToast('KM inválido', 'error'); return; }
-  if (isNaN(litros)||litros<=0) { showToast('Informe os litros abastecidos', 'error'); return; }
-  if (isNaN(preco)||preco<=0)   { showToast('Informe o preço por litro', 'error'); return; }
+  if (total <= 0) { showToast('Informe o valor total pago', 'error'); return; }
+  if (preco <= 0) { showToast('Informe o preço por litro', 'error'); return; }
 
-  // Validate KM not decreasing
-  var vCheck = state.vehicles.find(function(x){ return x.id === parseInt(vid); });
-  if (vCheck && km > 0 && km < vCheck.km) {
-    showToast('⚠️ KM menor que o atual (' + vCheck.km.toLocaleString('pt-BR') + ' km). Verifique!', 'error');
-    return;
-  }
+  var litros = parseFloat((total / preco).toFixed(3));
+  var vId = parseInt(vid);
 
-  var custo = litros * preco;
-  var entry = { id: Date.now(), veiculoId: parseInt(vid), tipo: tipo, data: data, km: km, litros: litros, preco: preco, custo: custo };
+  // Validação cronológica: bloqueia se houver registro anterior com km maior
+  var bloqueio = state.fuel.some(function(f){ return f.veiculoId===vId && f.data<data && f.km>km; });
+  if (bloqueio) { showToast('⚠️ KM menor que registros de datas anteriores', 'error'); return; }
+
+  var entry = { id: Date.now(), veiculoId: vId, tipo: tipo, data: data, km: km, litros: litros, preco: preco, custo: total, total: total };
   state.fuel.push(entry);
 
-  // Atualização automática de KM se superior ao atual
-  var v = state.vehicles.find(function(x){ return x.id === parseInt(vid); });
-  if (v && km > v.km) { v.km = km; }
+  // Só atualiza km do veículo se este for o registro mais recente
+  var v = state.vehicles.find(function(x){ return x.id===vId; });
+  var recent = !state.fuel.some(function(f){ return f.veiculoId===vId && f.data>data && f.id!==entry.id; });
+  if (v && recent && km > v.km) v.km = km;
 
   saveState();
   document.getElementById('fuel-km').value = '';
-  document.getElementById('fuel-litros').value = '';
+  if (document.getElementById('fuel-total')) document.getElementById('fuel-total').value = '';
   document.getElementById('fuel-preco').value = '';
   document.getElementById('fuel-custo-preview').textContent = '';
-  renderFuelList();
-  renderFuelStats();
-  updateDashboard();
-  _applyProgressiveDisclosure(); // unlock fases hasRecord / record3 / record5
+  renderFuelList(); renderFuelStats(); updateDashboard(); _applyProgressiveDisclosure();
   showToast('Abastecimento registrado! ⛽', 'success');
 }
 
@@ -10861,7 +10841,6 @@ function renderDocumentos() {
     content.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><div class="empty-title">Nunca mais pague multa por atraso</div><div class="empty-desc">Cadastre seu carro e receba alertas antes do IPVA, seguro e licenciamento vencerem.</div><button class="empty-cta" onclick="showPage(\'veiculos\')">+ Cadastrar veículo</button></div>';
     return;
   }
-
   var html = '';
   state.vehicles.forEach(function(v) {
     var vDocs = state.docs[v.id] || {};
@@ -10872,51 +10851,49 @@ function renderDocumentos() {
     DOC_TYPES.forEach(function(dt) {
       var dateStr  = vDocs[dt.key] || '';
       var pagoDate = vDocs[dt.key + '_pago'] || '';
-      var statusHtml = '', daysHtml = '', pagoHtml = '';
-      var cls = 'doc-empty';
-      var isPago = false;
-
+      var cls = 'doc-empty', statusHtml = '', daysHtml = '', isPago = false;
       if (dateStr) {
         var venc  = new Date(dateStr + 'T12:00:00');
         var today = new Date(); today.setHours(0,0,0,0);
         var diff  = Math.round((venc - today) / (1000*60*60*24));
-
-        // Verifica se foi marcado como pago E ainda não chegou na janela de 30 dias do próximo ciclo
         if (pagoDate) {
-          // Recalcula: próximo vencimento é o mesmo mês/dia do próximo ano
-          var proxVenc = new Date(venc); proxVenc.setFullYear(proxVenc.getFullYear() + 1);
-          var diasProxVenc = Math.round((proxVenc - today) / (1000*60*60*24));
-          isPago = diasProxVenc > 30; // still "quiet" if more than 30 days until next cycle
+          var px = new Date(venc); px.setFullYear(px.getFullYear()+1);
+          isPago = Math.round((px - today)/(1000*60*60*24)) > 30;
         }
-
         if (isPago) {
           cls = 'doc-ok';
           statusHtml = '<span class="doc-status doc-ok">✓ PAGO</span>';
-          daysHtml = '<div class="doc-days" style="color:#38a169;">Pago em ' + new Date(pagoDate + 'T12:00:00').toLocaleDateString('pt-BR') + '</div>';
-          pagoHtml = '<button class="doc-edit-btn" style="color:var(--text3);border-color:var(--border);" onclick="desfazerPago('+v.id+',\''+dt.key+'\')">↩ Desfazer</button>';
+          daysHtml = '<div class="doc-days" style="color:#38a169;">Pago em '+new Date(pagoDate+'T12:00:00').toLocaleDateString('pt-BR')+'</div>';
         } else if (diff < 0) {
           cls = 'doc-expired';
           statusHtml = '<span class="doc-status doc-expired">VENCIDO</span>';
-          daysHtml = '<div class="doc-days" style="color:var(--red);">Venceu há ' + Math.abs(diff) + ' dia(s)</div>';
-          pagoHtml = '<button class="doc-edit-btn" style="background:rgba(56,161,105,0.08);color:#38a169;border-color:rgba(56,161,105,0.3);" onclick="marcarDocPago('+v.id+',\''+dt.key+'\')">✅ Marcar como pago</button>';
+          daysHtml = '<div class="doc-days" style="color:var(--red);">Venceu há '+Math.abs(diff)+' dia(s)</div>';
         } else if (diff <= 30) {
           cls = 'doc-warn';
-          statusHtml = '<span class="doc-status doc-warn">⚠ ' + diff + ' DIAS</span>';
-          daysHtml = '<div class="doc-days" style="color:var(--accent);">Vence em ' + diff + ' dia(s)</div>';
-          pagoHtml = '<button class="doc-edit-btn" style="background:rgba(56,161,105,0.08);color:#38a169;border-color:rgba(56,161,105,0.3);" onclick="marcarDocPago('+v.id+',\''+dt.key+'\')">✅ Marcar como pago</button>';
+          statusHtml = '<span class="doc-status doc-warn">⚠ '+diff+' DIAS</span>';
+          daysHtml = '<div class="doc-days" style="color:var(--accent);">Vence em '+diff+' dia(s)</div>';
         } else {
           cls = 'doc-ok';
           statusHtml = '<span class="doc-status doc-ok">✓ OK</span>';
-          daysHtml = '<div class="doc-days">Vence em ' + diff + ' dias</div>';
+          daysHtml = '<div class="doc-days">Vence em '+diff+' dias</div>';
         }
       }
-
-      html += '<div class="doc-card '+cls+'" style="border-color:'+(cls==='doc-expired'?'rgba(229,62,62,0.3)':cls==='doc-warn'?'rgba(59,130,246,0.3)':cls==='doc-ok'?'rgba(56,161,105,0.2)':'var(--border)')+'">';
+      var bc = cls==='doc-expired'?'rgba(229,62,62,0.3)':cls==='doc-warn'?'rgba(59,130,246,0.3)':cls==='doc-ok'?'rgba(56,161,105,0.2)':'var(--border)';
+      var panelId = 'doc-panel-'+v.id+'-'+dt.key;
+      // Card clicável
+      html += '<div class="doc-card doc-card-clickable '+cls+'" style="border-color:'+bc+';cursor:pointer;" onclick="_toggleDocPanel('+v.id+',\''+dt.key+'\')">';
       html += '<div class="doc-card-header"><div class="doc-icon">'+dt.icon+'</div><div class="doc-name">'+dt.name+'</div>'+statusHtml+'</div>';
-      html += '<div class="doc-date">'+(dateStr ? new Date(dateStr+'T12:00:00').toLocaleDateString('pt-BR') : '— Não informado')+'</div>';
+      html += '<div class="doc-date">'+(dateStr ? new Date(dateStr+'T12:00:00').toLocaleDateString('pt-BR') : '<span style="color:var(--text3);">Toque para definir</span>')+'</div>';
       html += daysHtml;
-      if (!isPago) html += '<input type="date" class="field-input" style="margin-top:10px;" id="doc-'+v.id+'-'+dt.key+'" value="'+dateStr+'" onchange="salvarDocumento('+v.id+',\''+dt.key+'\',this.value)">';
-      html += pagoHtml;
+      html += '<div style="margin-top:8px;font-size:10px;color:var(--text3);letter-spacing:.5px;">✏️ EDITAR</div>';
+      html += '</div>';
+      // Painel inline (oculto)
+      html += '<div id="'+panelId+'" class="doc-edit-panel" style="display:none;grid-column:1/-1;">';
+      html += '<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;"><span style="font-size:20px;">'+dt.icon+'</span><span style="font-weight:700;color:var(--text);">'+dt.name+'</span><button onclick="_toggleDocPanel('+v.id+',\''+dt.key+'\');event.stopPropagation()" style="margin-left:auto;background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;">✕</button></div>';
+      html += '<div class="field-label" style="margin-bottom:6px;">Data de vencimento</div>';
+      html += '<input type="date" class="field-input" id="doc-input-'+v.id+'-'+dt.key+'" value="'+dateStr+'" onclick="event.stopPropagation()" onchange="salvarDocumento('+v.id+',\''+dt.key+'\',this.value)">';
+      if (dateStr && !isPago) html += '<button class="doc-edit-btn" style="margin-top:10px;background:rgba(56,161,105,0.08);color:#38a169;border-color:rgba(56,161,105,0.3);" onclick="event.stopPropagation();marcarDocPago('+v.id+',\''+dt.key+'\')">✅ Marcar como pago</button>';
+      if (isPago)              html += '<button class="doc-edit-btn" style="margin-top:10px;" onclick="event.stopPropagation();desfazerPago('+v.id+',\''+dt.key+'\')">↩ Desfazer pagamento</button>';
       html += '</div>';
     });
     html += '</div></div>';
@@ -10925,6 +10902,22 @@ function renderDocumentos() {
   updateDocBadge();
 }
 
+function _toggleDocPanel(vehicleId, key) {
+  var panelId = 'doc-panel-' + vehicleId + '-' + key;
+  document.querySelectorAll('.doc-edit-panel').forEach(function(p) {
+    if (p.id !== panelId) p.style.display = 'none';
+  });
+  var panel = document.getElementById(panelId);
+  if (!panel) return;
+  var opening = panel.style.display === 'none';
+  panel.style.display = opening ? 'block' : 'none';
+  if (opening) {
+    setTimeout(function() {
+      var inp = document.getElementById('doc-input-' + vehicleId + '-' + key);
+      if (inp) { try { inp.showPicker(); } catch(e) { inp.focus(); } }
+    }, 80);
+  }
+}
 function desfazerPago(vehicleId, key) {
   if (state.docs[vehicleId]) delete state.docs[vehicleId][key + '_pago'];
   saveState();
@@ -11755,94 +11748,8 @@ async function _lookupCEP(cep) {
   } catch(e) { /* silencioso */ }
 }
 
-// FIPE_BASE — estimativa offline (fallback quando sem conexão)
-var FIPE_BASE = {
-  'onix':72000,'polo':82000,'argo':68000,'hb20':65000,'corolla':135000,
-  'civic':125000,'strada':98000,'tracker':115000,'tcross':108000,'kwid':55000,
-  'gol':45000,'uno':38000,'palio':42000,'fiesta':48000,'ka':52000,
-  'fox':44000,'voyage':48000,'saveiro':78000,'amarok':195000,'hilux':230000,
-  'ranger':210000,'s10':175000,'tucson':168000,'sportage':178000,'compass':175000,
-  'renegade':118000,'toro':155000,'mobi':55000,'march':58000,'versa':82000,
-  'sentra':105000,'kicks':125000,'cr-v':195000,'hr-v':148000,'fit':92000,
-  'city':108000,'accord':195000,'creta':148000,'ix35':132000,'santa':218000,
-  'cruze':128000,'cobalt':68000,'spin':88000,'meriva':52000,'captiva':98000,
-  'astra':62000,'vectra':58000,'omega':72000,'montana':78000,'zafira':68000,
-  'default':75000
-};
-
-// Cache de resultados FIPE reais (por placa/modelo+ano)
-var _fipeCache = {};
-
-function estimarFipe(v) {
-  // 1. Verifica cache do Supabase (salvo após consulta real)
-  if (v.fipeReal) return v.fipeReal;
-  // 2. Fallback para tabela offline
-  var key  = (v.modelo||'').toLowerCase().split(' ')[0];
-  var base = FIPE_BASE[key] || FIPE_BASE['default'];
-  var age  = new Date().getFullYear() - (parseInt(v.ano)||2020);
-  return Math.round(base * Math.pow(0.88, age) / 1000) * 1000;
-}
-
-// Consulta FIPE real via API parallelum (sem auth, gratuita)
-async function consultarFipeReal(vehicleId) {
-  var v = state.vehicles.find(function(x){ return x.id === vehicleId; });
-  if (!v || !v.modelo) return null;
-
-  var cacheKey = v.modelo.toLowerCase().split(' ')[0] + '_' + v.ano;
-  if (_fipeCache[cacheKey]) {
-    if (v) { v.fipeReal = _fipeCache[cacheKey]; saveState(); }
-    return _fipeCache[cacheKey];
-  }
-
-  try {
-    // Busca código da marca
-    var marcaQuery = encodeURIComponent((v.marca||'').toLowerCase());
-    var marcasRes  = await fetch('https://parallelum.com.br/fipe/api/v1/carros/marcas');
-    if (!marcasRes.ok) throw new Error('API indisponível');
-    var marcas = await marcasRes.json();
-    var marca  = marcas.find(function(m){
-      return m.nome.toLowerCase().includes(marcaQuery) ||
-             marcaQuery.includes(m.nome.toLowerCase().split(' ')[0]);
-    });
-    if (!marca) return null;
-
-    // Busca modelos da marca
-    var modelosRes = await fetch('https://parallelum.com.br/fipe/api/v1/carros/marcas/' + marca.codigo + '/modelos');
-    var modeloData = await modelosRes.json();
-    var modeloKey  = (v.modelo||'').toLowerCase().split(' ')[0];
-    var modelo     = (modeloData.modelos||[]).find(function(m){
-      return m.nome.toLowerCase().includes(modeloKey);
-    });
-    if (!modelo) return null;
-
-    // Busca anos disponíveis
-    var anosRes = await fetch('https://parallelum.com.br/fipe/api/v1/carros/marcas/' + marca.codigo + '/modelos/' + modelo.codigo + '/anos');
-    var anos    = await anosRes.json();
-    // Encontra o ano mais próximo
-    var anoAlvo = parseInt(v.ano) || new Date().getFullYear();
-    var anoFipe = anos.reduce(function(best, a) {
-      var anoNum = parseInt(a.codigo.split('-')[0]);
-      var bestNum = parseInt(best.codigo.split('-')[0]);
-      return Math.abs(anoNum - anoAlvo) < Math.abs(bestNum - anoAlvo) ? a : best;
-    }, anos[0]);
-    if (!anoFipe) return null;
-
-    // Busca preço final
-    var precoRes = await fetch('https://parallelum.com.br/fipe/api/v1/carros/marcas/' + marca.codigo + '/modelos/' + modelo.codigo + '/anos/' + anoFipe.codigo);
-    var preco    = await precoRes.json();
-    var valor    = parseInt((preco.Valor||'0').replace(/[^0-9]/g,''));
-    if (!valor) return null;
-
-    _fipeCache[cacheKey] = valor;
-    if (v) { v.fipeReal = valor; saveState(); }
-    showToast('FIPE atualizada: R$' + valor.toLocaleString('pt-BR') + ' ✓', 'success');
-    updateDashboard();
-    return valor;
-  } catch(e) {
-    // Falha silenciosa — usa estimativa
-    return null;
-  }
-}
+// FIPE_BASE, estimarFipe() e consultarFipeReal() substituídos pelo fipe-engine.js
+// (correção do bug encodeURIComponent + lookup robusto + histórico mensal)
 
 // ============================================================
 // DOCUMENTOS — botão PAGO
@@ -12926,8 +12833,14 @@ function registrarManutencao() {
   var v = state.vehicles.find(function(x){ return x.id === vid; });
   if (!v) return;
 
-  // update KM if higher
-  if (km > v.km) v.km = km;
+  // Validação cronológica de KM
+  if (km > 0) {
+    var bloqueio2 = state.history.some(function(h){ return h.veiculoId===vid && h.data<data && h.km>km; });
+    if (bloqueio2) { showToast('⚠️ KM menor que registros anteriores', 'error'); return; }
+  }
+  // Só atualiza km se for o mais recente
+  var recent2 = !state.history.some(function(h){ return h.veiculoId===vid && h.data>data; });
+  if (km > 0 && recent2 && km > v.km) v.km = km;
 
   state.history.push({
     id: Date.now() + Math.random(),
@@ -15702,22 +15615,19 @@ function _viagensTab(tab) {
 }
 
 function _veiculosTab(tab) {
-  var tabs   = ['carros', 'saude', 'historico', 'documentos'];
-  var accent = 'var(--accent)';
-  var muted  = 'var(--text3)';
-
+  var tabs = ['carros', 'saude', 'historico', 'documentos'];
   tabs.forEach(function(t) {
     var btn     = document.getElementById('vtab-' + t);
     var content = document.getElementById('vtab-' + t + '-content');
-    var active  = t === tab;
+    var isActive = t === tab;
     if (btn) {
-      btn.style.color        = active ? accent : muted;
-      btn.style.fontWeight   = active ? '700'  : '600';
-      btn.style.borderBottom = active ? '2px solid var(--accent)' : '2px solid transparent';
+      btn.classList.toggle('vtab-active', isActive);
+      btn.style.color = '';
+      btn.style.fontWeight = '';
+      btn.style.borderBottom = '';
     }
-    if (content) content.style.display = active ? 'block' : 'none';
+    if (content) content.style.display = isActive ? 'block' : 'none';
   });
-
   if (tab === 'saude')      _renderSaudeInline();
   if (tab === 'historico')  _renderHistoricoInline();
   if (tab === 'documentos') _renderDocumentosInline();
@@ -18445,3 +18355,778 @@ function fecharRegistroRapido() {
       </div>
     </div>
   </div>
+
+<!-- ============================================================
+     FIPE ENGINE v2 — autocomplete dinâmico, bug fixes, histórico
+     Substitui: FIPE_BASE, estimarFipe(), consultarFipeReal(),
+                _ativarAutocompleteMarca(), _sugerirModelos(),
+                cadastrarVeiculo()
+     ============================================================ -->
+<script>
+/* ============================================================
+   ManyCars — FIPE ENGINE v2
+   ============================================================ */
+
+var FIPE_API    = 'https://parallelum.com.br/fipe/api/v1/carros';
+var FIPE_TTL    = 7 * 24 * 60 * 60 * 1000;
+var FIPE_LS_KEY = 'mc_fipe_cache_v2';
+
+// ── 1. CACHE (localStorage, TTL 7 dias) ──────────────────────
+var _fc = (function() {
+  var _data = null;
+  function _load() {
+    if (_data) return _data;
+    try { var raw = localStorage.getItem(FIPE_LS_KEY); _data = raw ? JSON.parse(raw) : { ts: {}, v: {} }; }
+    catch(e) { _data = { ts: {}, v: {} }; }
+    return _data;
+  }
+  function get(key) {
+    var d = _load(), ts = d.ts[key];
+    if (!ts || (Date.now() - ts) > FIPE_TTL) return null;
+    return d.v[key] || null;
+  }
+  function set(key, val) {
+    var d = _load(); d.ts[key] = Date.now(); d.v[key] = val;
+    try { localStorage.setItem(FIPE_LS_KEY, JSON.stringify(d)); } catch(e) {}
+  }
+  return { get: get, set: set };
+})();
+
+// ── 2. FETCH COM CACHE ────────────────────────────────────────
+async function _fipeGet(url, cacheKey) {
+  var cached = _fc.get(cacheKey);
+  if (cached) return cached;
+  var res = await fetch(url, { signal: AbortSignal.timeout(8000) });
+  if (!res.ok) throw new Error('FIPE API: ' + res.status);
+  var data = await res.json();
+  _fc.set(cacheKey, data);
+  return data;
+}
+
+// ── 3. NORMALIZAÇÃO — FIX DO BUG encodeURIComponent ──────────
+function _norm(str) {
+  return (str || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9\s]/g, '').trim();
+}
+function _score(query, target) {
+  var q = _norm(query), t = _norm(target);
+  if (t === q) return 1;
+  if (t.startsWith(q)) return 0.9;
+  if (t.includes(q)) return 0.7;
+  var words = q.split(/\s+/).filter(Boolean);
+  var hits = words.filter(function(w) { return t.includes(w); }).length;
+  return hits / Math.max(words.length, 1) * 0.6;
+}
+function _bestMatch(query, list) {
+  var best = null, bestScore = 0;
+  list.forEach(function(item) { var s = _score(query, item.nome); if (s > bestScore) { bestScore = s; best = item; } });
+  return bestScore > 0.3 ? best : null;
+}
+
+// ── 4. API FIPE ───────────────────────────────────────────────
+async function fipeListarMarcas() {
+  return _fipeGet(FIPE_API + '/marcas', 'marcas');
+}
+async function fipeListarModelos(codigoMarca) {
+  var data = await _fipeGet(FIPE_API + '/marcas/' + codigoMarca + '/modelos', 'modelos_' + codigoMarca);
+  return data.modelos || data;
+}
+async function fipeListarAnos(codigoMarca, codigoModelo) {
+  return _fipeGet(FIPE_API + '/marcas/' + codigoMarca + '/modelos/' + codigoModelo + '/anos', 'anos_' + codigoMarca + '_' + codigoModelo);
+}
+async function fipePreco(codigoMarca, codigoModelo, codigoAno) {
+  var cacheKey = 'preco_' + codigoMarca + '_' + codigoModelo + '_' + codigoAno;
+  var cached = _fc.get(cacheKey);
+  if (cached) return cached;
+  var res = await fetch(FIPE_API + '/marcas/' + codigoMarca + '/modelos/' + codigoModelo + '/anos/' + codigoAno, { signal: AbortSignal.timeout(8000) });
+  if (!res.ok) throw new Error('FIPE preço: ' + res.status);
+  var data = await res.json();
+  // Preço expira em 24h (não 7 dias)
+  var d = JSON.parse(localStorage.getItem(FIPE_LS_KEY) || '{"ts":{},"v":{}}');
+  d.ts[cacheKey] = Date.now() - FIPE_TTL + (24 * 60 * 60 * 1000);
+  d.v[cacheKey] = data;
+  try { localStorage.setItem(FIPE_LS_KEY, JSON.stringify(d)); } catch(e) {}
+  return data;
+}
+
+// ── 5. LOOKUP COMPLETO ────────────────────────────────────────
+async function fipeLookup(marcaNome, modeloNome, ano) {
+  var marcas = await fipeListarMarcas();
+  var marca  = _bestMatch(marcaNome, marcas);
+  if (!marca) throw new Error('Marca não encontrada: ' + marcaNome);
+  var modelos = await fipeListarModelos(marca.codigo);
+  var modelo  = _bestMatch(modeloNome, modelos);
+  if (!modelo) throw new Error('Modelo não encontrado: ' + modeloNome);
+  var anos    = await fipeListarAnos(marca.codigo, modelo.codigo);
+  if (!anos || !anos.length) throw new Error('Nenhum ano disponível');
+  var anoAlvo = parseInt(ano) || new Date().getFullYear();
+  var anoFipe = anos.reduce(function(best, a) {
+    var n = parseInt(a.codigo.split('-')[0]), b = parseInt(best.codigo.split('-')[0]);
+    return Math.abs(n - anoAlvo) < Math.abs(b - anoAlvo) ? a : best;
+  }, anos[0]);
+  var preco = await fipePreco(marca.codigo, modelo.codigo, anoFipe.codigo);
+  var valorStr = preco.Valor || preco.valor || '0';
+  var valor = parseFloat(valorStr.replace(/[^\d,]/g, '').replace(',', '.'));
+  return { valor: Math.round(valor), codigoMarca: marca.codigo, codigoModelo: modelo.codigo, codigoAno: anoFipe.codigo, mesRef: preco.MesReferencia || '', codigoFipe: preco.CodigoFipe || '', marcaNome: marca.nome, modeloNome: modelo.nome };
+}
+
+// ── 6. estimarFipe() NOVA — fallback offline com depreciação ──
+function estimarFipe(v) {
+  if (v.fipeReal) return v.fipeReal;
+  // Fallback offline por categoria (substitui a FIPE_BASE estática)
+  var m = _norm(v.modelo || '');
+  var base = 75000;
+  if (/hilux|ranger|amarok|frontier/.test(m)) base = 220000;
+  else if (/s10|toro|saveiro|oroch|montana/.test(m)) base = 160000;
+  else if (/tucson|sportage|sw4|commander/.test(m)) base = 195000;
+  else if (/compass|renegade|duster|creta/.test(m)) base = 145000;
+  else if (/tracker|tcross|taos|captur|pulse/.test(m)) base = 115000;
+  else if (/corolla|cruze|civic|sentra|versa/.test(m)) base = 115000;
+  else if (/hrv|kicks|wrv|ecosport/.test(m)) base = 105000;
+  else if (/polo|virtus|onix|hb20s|city|cronos/.test(m)) base = 80000;
+  else if (/onix|hb20|argo|mobi|kwid|gol|uno/.test(m)) base = 65000;
+  var age = new Date().getFullYear() - (parseInt(v.ano) || 2020);
+  return Math.round(base * Math.pow(0.88, age) / 1000) * 1000;
+}
+
+// ── 7. consultarFipeReal() NOVA — substitui a com bug ─────────
+async function consultarFipeReal(vehicleId) {
+  var v = state.vehicles.find(function(x) { return x.id === vehicleId; });
+  if (!v || !v.modelo || !v.marca) return null;
+  try {
+    var result = await fipeLookup(v.marca, v.modelo, v.ano);
+    if (!result.valor) return null;
+    v.fipeReal        = result.valor;
+    v.fipeCodigoMarca = result.codigoMarca;
+    v.fipeCodigoModel = result.codigoModelo;
+    v.fipeCodigoAno   = result.codigoAno;
+    v.fipeMesRef      = result.mesRef;
+    v.fipeCodigoFipe  = result.codigoFipe;
+    saveState();
+    _salvarSnapshotFipe(v, result.valor, result.mesRef);
+    showToast('FIPE ' + result.mesRef + ': R$ ' + result.valor.toLocaleString('pt-BR') + ' ✓', 'success');
+    updateDashboard();
+    return result.valor;
+  } catch(e) { console.warn('[FIPE]', e.message); return null; }
+}
+
+// ── 8. HISTÓRICO FIPE ─────────────────────────────────────────
+async function _salvarSnapshotFipe(v, valor, mesRef) {
+  var hist = v.fipeHistorico = v.fipeHistorico || [];
+  var mesKey = mesRef || new Date().toISOString().slice(0, 7);
+  if (hist.find(function(h) { return h.mes === mesKey; })) return;
+  hist.push({ mes: mesKey, valor: valor, km: v.km || 0, data: new Date().toISOString() });
+  if (hist.length > 24) hist.splice(0, hist.length - 24);
+  saveState();
+  if (_supabaseReady && _sb && state.user && v.supabaseId) {
+    try {
+      await _sb.from('fipe_historico').upsert({ vehicle_id: v.supabaseId, user_id: state.user.id, mes_ref: mesKey, valor: valor, km: v.km || 0, codigo_fipe: v.fipeCodigoFipe || null }, { onConflict: 'vehicle_id, mes_ref' });
+    } catch(e) {}
+  }
+}
+
+async function carregarHistoricoFipe(vehicleId) {
+  var v = state.vehicles.find(function(x) { return x.id === vehicleId; });
+  if (!v || !v.supabaseId || !_supabaseReady || !_sb) return;
+  try {
+    var { data } = await _sb.from('fipe_historico').select('mes_ref, valor, km, created_at').eq('vehicle_id', v.supabaseId).order('mes_ref', { ascending: true }).limit(24);
+    if (!data || !data.length) return;
+    v.fipeHistorico = data.map(function(d) { return { mes: d.mes_ref, valor: d.valor, km: d.km, data: d.created_at }; });
+    saveState();
+  } catch(e) {}
+}
+
+// ── 9. SPARKLINE SVG ──────────────────────────────────────────
+function fipeSparkline(v, opts) {
+  opts = opts || {};
+  var w = opts.width || 120, h = opts.height || 36;
+  var hist = (v.fipeHistorico || []).filter(function(p) { return p.valor > 0; });
+  if (hist.length < 2) {
+    return '<span style="font-family:\'JetBrains Mono\',monospace;font-size:12px;color:var(--accent);">R$ ' + (v.fipeReal || estimarFipe(v)).toLocaleString('pt-BR') + '</span>';
+  }
+  var valores = hist.map(function(p) { return p.valor; });
+  var min = Math.min.apply(null, valores), max = Math.max.apply(null, valores), range = max - min || 1;
+  var pts = hist.map(function(p, i) {
+    var x = (i / (hist.length - 1)) * w;
+    var y = h - ((p.valor - min) / range) * (h - 4) - 2;
+    return x.toFixed(1) + ',' + y.toFixed(1);
+  }).join(' ');
+  var primeiro = valores[0], ultimo = valores[valores.length - 1];
+  var delta = ((ultimo - primeiro) / primeiro) * 100;
+  var cor = delta >= 0 ? '#22C55E' : '#EF4444';
+  var lastX = w.toFixed(1), lastY = (h - ((ultimo - min) / range) * (h - 4) - 2).toFixed(1);
+  return '<div style="display:flex;align-items:center;gap:8px;"><svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" style="overflow:visible"><polyline points="' + pts + '" fill="none" stroke="' + cor + '" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="' + lastX + '" cy="' + lastY + '" r="3" fill="' + cor + '"/></svg><div><div style="font-family:\'JetBrains Mono\',monospace;font-size:13px;color:var(--text);font-weight:600;">R$ ' + ultimo.toLocaleString('pt-BR') + '</div><div style="font-size:10px;color:' + cor + ';font-weight:600;">' + (delta >= 0 ? '+' : '') + delta.toFixed(1) + '% em ' + hist.length + ' meses</div></div></div>';
+}
+
+// ── 10. AUTOCOMPLETE UI ───────────────────────────────────────
+var _acState = { marcas: null, modelos: null, anos: null, marcaSel: null, modelSel: null };
+
+async function initFipeAutocomplete() {
+  var inputMarca  = document.getElementById('v-marca');
+  var inputModelo = document.getElementById('v-modelo');
+  var inputAno    = document.getElementById('v-ano');
+  if (!inputMarca || !inputModelo || inputMarca._fipeAcInited) return;
+  inputMarca._fipeAcInited = true;
+
+  _criarDropdown('ac-dd-marca');
+  _criarDropdown('ac-dd-modelo');
+  _criarDropdown('ac-dd-ano');
+
+  try { _acState.marcas = await fipeListarMarcas(); } catch(e) {}
+
+  inputMarca.addEventListener('input', _debounce(async function() {
+    var q = inputMarca.value.trim();
+    if (q.length < 1) { _fecharDd('ac-dd-marca'); return; }
+    var filtradas = (_acState.marcas || []).filter(function(m) { return _score(q, m.nome) > 0.2; }).sort(function(a,b){ return _score(q,b.nome) - _score(q,a.nome); }).slice(0,8);
+    _mostrarDd('ac-dd-marca', filtradas, 'v-marca', function(item) {
+      inputMarca.value = item.nome; _acState.marcaSel = item; _acState.modelSel = null;
+      inputModelo.value = ''; inputAno.value = ''; _fecharDd('ac-dd-marca');
+      _carregarModelos(item.codigo);
+    });
+  }, 250));
+  inputMarca.addEventListener('blur', function() { setTimeout(function(){ _fecharDd('ac-dd-marca'); }, 200); });
+
+  inputModelo.addEventListener('input', _debounce(function() {
+    if (!_acState.marcaSel) return;
+    var q = inputModelo.value.trim();
+    if (q.length < 1) { _fecharDd('ac-dd-modelo'); return; }
+    var filtrados = (_acState.modelos || []).filter(function(m){ return _score(q, m.nome) > 0.2; }).sort(function(a,b){ return _score(q,b.nome) - _score(q,a.nome); }).slice(0,10);
+    _mostrarDd('ac-dd-modelo', filtrados, 'v-modelo', function(item) {
+      inputModelo.value = item.nome; _acState.modelSel = item; inputAno.value = '';
+      _fecharDd('ac-dd-modelo'); _carregarAnos(_acState.marcaSel.codigo, item.codigo);
+    });
+  }, 250));
+  inputModelo.addEventListener('blur', function() { setTimeout(function(){ _fecharDd('ac-dd-modelo'); }, 200); });
+
+  inputAno.addEventListener('focus', function() {
+    if (_acState.anos && _acState.anos.length) {
+      _mostrarDd('ac-dd-ano', _acState.anos, 'v-ano', function(item) {
+        inputAno.value = item.nome.split(' ')[0];
+        inputAno.dataset.codigoAno   = item.codigo;
+        inputAno.dataset.codigoMarca = _acState.marcaSel ? _acState.marcaSel.codigo : '';
+        inputAno.dataset.codigoModel = _acState.modelSel ? _acState.modelSel.codigo : '';
+        _fecharDd('ac-dd-ano');
+        _previewFipeCadastro();
+      });
+    }
+  });
+  inputAno.addEventListener('blur', function() { setTimeout(function(){ _fecharDd('ac-dd-ano'); }, 200); });
+}
+
+async function _carregarModelos(codigoMarca) {
+  var el = document.getElementById('v-modelo');
+  if (el) { el.placeholder = 'Carregando…'; el.disabled = true; }
+  try { _acState.modelos = await fipeListarModelos(codigoMarca); } catch(e) { _acState.modelos = []; }
+  if (el) { el.placeholder = 'Ex: Onix, HB20, Polo…'; el.disabled = false; el.focus(); }
+}
+
+async function _carregarAnos(codigoMarca, codigoModelo) {
+  var el = document.getElementById('v-ano');
+  if (el) { el.placeholder = 'Carregando…'; el.disabled = true; }
+  try { _acState.anos = await fipeListarAnos(codigoMarca, codigoModelo); } catch(e) { _acState.anos = []; }
+  if (el) { el.placeholder = 'Clique para ver anos'; el.disabled = false; el.focus(); }
+}
+
+async function _previewFipeCadastro() {
+  var inputAno = document.getElementById('v-ano');
+  if (!inputAno || !inputAno.dataset.codigoAno) return;
+  var previewEl = document.getElementById('fipe-preview-cadastro');
+  if (!previewEl) {
+    previewEl = document.createElement('div');
+    previewEl.id = 'fipe-preview-cadastro';
+    previewEl.style.cssText = 'margin-top:12px;padding:12px 16px;background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);border-radius:8px;font-size:13px;';
+    var formGrid = document.querySelector('#step-dados .form-grid');
+    if (formGrid) formGrid.parentNode.insertBefore(previewEl, formGrid.nextSibling);
+  }
+  previewEl.innerHTML = '<span style="color:var(--text2);">⏳ Buscando FIPE…</span>';
+  try {
+    var preco = await fipePreco(inputAno.dataset.codigoMarca, inputAno.dataset.codigoModel, inputAno.dataset.codigoAno);
+    var valorStr = preco.Valor || '0';
+    var valor = parseFloat(valorStr.replace(/[^\d,]/g, '').replace(',', '.'));
+    previewEl.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;"><div><div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:3px;">Tabela FIPE — ' + (preco.MesReferencia || '') + '</div><div style="font-family:\'Bebas Neue\',sans-serif;font-size:24px;color:var(--accent);letter-spacing:1px;">R$ ' + Math.round(valor).toLocaleString('pt-BR') + '</div></div><div style="text-align:right;"><div style="font-size:10px;color:var(--text3);">Código FIPE</div><div style="font-family:\'JetBrains Mono\',monospace;font-size:12px;color:var(--text2);">' + (preco.CodigoFipe || '—') + '</div></div></div>';
+    inputAno.dataset.fipeValor = Math.round(valor);
+    inputAno.dataset.fipeMes   = preco.MesReferencia || '';
+    inputAno.dataset.fipeCod   = preco.CodigoFipe || '';
+  } catch(e) {
+    previewEl.innerHTML = '<span style="color:var(--text3);font-size:12px;">FIPE não disponível para esta versão</span>';
+  }
+}
+
+// ── 11. DROPDOWN HELPERS ──────────────────────────────────────
+function _criarDropdown(id) {
+  if (document.getElementById(id)) return;
+  var el = document.createElement('div');
+  el.id = id;
+  el.style.cssText = 'position:fixed;z-index:9999;background:var(--surface);border:1px solid var(--border2);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.5);max-height:240px;overflow-y:auto;min-width:200px;display:none;';
+  document.body.appendChild(el);
+}
+function _mostrarDd(id, items, inputId, onSelect) {
+  var dd = document.getElementById(id);
+  if (!dd || !items.length) { _fecharDd(id); return; }
+  var inp = document.getElementById(inputId);
+  if (inp) {
+    var rect = inp.getBoundingClientRect();
+    dd.style.top   = (rect.bottom + 4) + 'px';
+    dd.style.left  = rect.left + 'px';
+    dd.style.width = rect.width + 'px';
+  }
+  dd.innerHTML = items.map(function(item, i) {
+    return '<div data-i="' + i + '" style="padding:10px 14px;cursor:pointer;font-size:13px;color:var(--text);border-bottom:1px solid var(--border);" onmouseover="this.style.background=\'var(--surface2)\'" onmouseout="this.style.background=\'\'">' + item.nome + '</div>';
+  }).join('');
+  dd.querySelectorAll('[data-i]').forEach(function(el) {
+    el.addEventListener('mousedown', function(e) { e.preventDefault(); onSelect(items[parseInt(el.dataset.i)]); });
+  });
+  dd.style.display = 'block';
+}
+function _fecharDd(id) { var dd = document.getElementById(id); if (dd) dd.style.display = 'none'; }
+function _debounce(fn, ms) { var t; return function() { var a = arguments, c = this; clearTimeout(t); t = setTimeout(function(){ fn.apply(c,a); }, ms); }; }
+
+// ── 12. cadastrarVeiculo() NOVA ───────────────────────────────
+function cadastrarVeiculo() {
+  var marca       = document.getElementById('v-marca').value.trim();
+  var modelo      = document.getElementById('v-modelo').value.trim();
+  var ano         = document.getElementById('v-ano').value.trim();
+  var cor         = document.getElementById('v-cor').value.trim();
+  var combustivel = document.getElementById('v-combustivel').value.trim();
+  var km          = document.getElementById('v-km').value;
+  var placa       = state._pendingPlaca || '—';
+  if (!marca || !modelo || !km) { showToast('Preencha a quilometragem para continuar', 'error'); return; }
+  var inputAno = document.getElementById('v-ano');
+  var fipeValor = inputAno && inputAno.dataset.fipeValor ? parseInt(inputAno.dataset.fipeValor) : null;
+  var v = {
+    id: Date.now(), placa: placa, marca: marca, modelo: modelo, ano: ano,
+    cor: cor, combustivel: combustivel, km: parseInt(km),
+    fipeReal:        fipeValor,
+    fipeCodigoMarca: _acState.marcaSel ? _acState.marcaSel.codigo : null,
+    fipeCodigoModel: _acState.modelSel ? _acState.modelSel.codigo : null,
+    fipeCodigoAno:   inputAno ? inputAno.dataset.codigoAno : null,
+    fipeMesRef:      inputAno ? inputAno.dataset.fipeMes   : null,
+    fipeCodigoFipe:  inputAno ? inputAno.dataset.fipeCod   : null,
+    fipeHistorico:   []
+  };
+  if (v.fipeReal) {
+    v.fipeHistorico.push({ mes: v.fipeMesRef || new Date().toISOString().slice(0,7), valor: v.fipeReal, km: v.km, data: new Date().toISOString() });
+  }
+  state.vehicles.push(v);
+  saveState();
+  renderVehiclesList();
+  updateDashboard();
+  if (typeof _applyProgressiveDisclosure === 'function') _applyProgressiveDisclosure();
+  var prev = document.getElementById('fipe-preview-cadastro');
+  if (prev) prev.remove();
+  _acState.marcaSel = null; _acState.modelSel = null; _acState.anos = null;
+  showToast(marca + ' ' + modelo + ' cadastrado! 🚗', 'success');
+  resetBusca();
+  setTimeout(function() { if (typeof _promptImportarHistorico === 'function') _promptImportarHistorico(v); }, 400);
+}
+
+// ── 13. ATUALIZAÇÃO MENSAL AUTOMÁTICA ─────────────────────────
+async function atualizarFipeMensal() {
+  var mesAtual = new Date().toISOString().slice(0,7);
+  var chave = 'mc_fipe_ultima_atualizacao';
+  if (localStorage.getItem(chave) === mesAtual) return;
+  var veiculos = (state.vehicles || []).filter(function(v) { return !v.archived && v.fipeCodigoMarca && v.fipeCodigoModel && v.fipeCodigoAno; });
+  for (var i = 0; i < veiculos.length; i++) {
+    var v = veiculos[i];
+    try {
+      var preco = await fipePreco(v.fipeCodigoMarca, v.fipeCodigoModel, v.fipeCodigoAno);
+      var valor = parseFloat((preco.Valor || '0').replace(/[^\d,]/g,'').replace(',','.'));
+      if (!valor) continue;
+      v.fipeReal = Math.round(valor); v.fipeMesRef = preco.MesReferencia || mesAtual;
+      _salvarSnapshotFipe(v, v.fipeReal, v.fipeMesRef);
+      await new Promise(function(r){ setTimeout(r, 800); });
+    } catch(e) {}
+  }
+  if (veiculos.length) { saveState(); updateDashboard(); showToast('📊 FIPE atualizada para ' + veiculos.length + ' veículo(s)', 'success'); }
+  localStorage.setItem(chave, mesAtual);
+}
+
+// ── BOOT ──────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+  initFipeAutocomplete();
+  setTimeout(atualizarFipeMensal, 5000);
+});
+</script>
+
+<!-- ============================================================
+     ManyCars — MÓDULO COMPLEMENTAR
+     1. _setMaxDateToday
+     2. kmInicial em cadastrarVeiculo
+     3. Fechar Passaporte — verificação aprofundada
+     4. Primeiros Passos — onboarding renderModeloInfo patch
+     ============================================================ -->
+<script>
+
+// ── 1. Seta max=hoje em todos os inputs de data ───────────────
+function _setMaxDateToday() {
+  var today = new Date().toISOString().slice(0, 10);
+  ['manut-data','fuel-data','viagem-data','edit-manut-data','edit-fuel-data'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.max = today;
+  });
+}
+
+// ── 2. Patch cadastrarVeiculo para salvar kmInicial ───────────
+// Sobrescreve a versão do fipe-engine para incluir kmInicial
+var _cadastrarVeiculoFipe = cadastrarVeiculo;
+cadastrarVeiculo = function() {
+  var marca       = (document.getElementById('v-marca')||{}).value || '';
+  var modelo      = (document.getElementById('v-modelo')||{}).value || '';
+  var ano         = (document.getElementById('v-ano')||{}).value || '';
+  var cor         = (document.getElementById('v-cor')||{}).value || '';
+  var combustivel = (document.getElementById('v-combustivel')||{}).value || '';
+  var km          = parseInt((document.getElementById('v-km')||{}).value) || 0;
+  var kmInicial   = parseInt((document.getElementById('v-km-inicial')||{}).value) || 0;
+  var placa       = state._pendingPlaca || '—';
+
+  if (!marca.trim() || !modelo.trim() || !km) {
+    showToast('Preencha marca, modelo e quilometragem', 'error'); return;
+  }
+
+  var inputAno  = document.getElementById('v-ano');
+  var fipeValor = inputAno && inputAno.dataset.fipeValor ? parseInt(inputAno.dataset.fipeValor) : null;
+
+  var v = {
+    id:              Date.now(),
+    placa:           placa,
+    marca:           marca.trim(),
+    modelo:          modelo.trim(),
+    ano:             ano,
+    cor:             cor.trim(),
+    combustivel:     combustivel.trim(),
+    km:              km,
+    kmInicial:       kmInicial,
+    fipeReal:        fipeValor,
+    fipeCodigoMarca: (typeof _acState !== 'undefined' && _acState.marcaSel) ? _acState.marcaSel.codigo : null,
+    fipeCodigoModel: (typeof _acState !== 'undefined' && _acState.modelSel) ? _acState.modelSel.codigo : null,
+    fipeCodigoAno:   inputAno ? inputAno.dataset.codigoAno  : null,
+    fipeMesRef:      inputAno ? inputAno.dataset.fipeMes    : null,
+    fipeCodigoFipe:  inputAno ? inputAno.dataset.fipeCod    : null,
+    fipeHistorico:   []
+  };
+
+  if (v.fipeReal) {
+    v.fipeHistorico.push({
+      mes:   v.fipeMesRef || new Date().toISOString().slice(0,7),
+      valor: v.fipeReal, km: v.km, data: new Date().toISOString()
+    });
+  }
+
+  state.vehicles.push(v);
+  saveState();
+  renderVehiclesList();
+  updateDashboard();
+  if (typeof _applyProgressiveDisclosure === 'function') _applyProgressiveDisclosure();
+
+  var prev = document.getElementById('fipe-preview-cadastro');
+  if (prev) prev.remove();
+  if (typeof _acState !== 'undefined') { _acState.marcaSel=null; _acState.modelSel=null; _acState.anos=null; }
+
+  showToast(v.marca + ' ' + v.modelo + ' cadastrado! 🚗', 'success');
+  resetBusca();
+  setTimeout(function() { if (typeof _promptImportarHistorico === 'function') _promptImportarHistorico(v); }, 400);
+};
+
+// ── 3. FECHAR PASSAPORTE — verificação aprofundada ────────────
+
+function abrirFecharPassaporte(vehicleId) {
+  var v = state.vehicles.find(function(x){ return x.id === vehicleId; });
+  if (!v) return;
+
+  var hist = state.history.filter(function(h){ return h.veiculoId === vehicleId; });
+  var fuel = state.fuel.filter(function(f){ return f.veiculoId === vehicleId; });
+
+  // Roda a verificação de consistência
+  var verificacao = _verificarConsistenciaPassaporte(v, hist, fuel);
+
+  var modal = document.createElement('div');
+  modal.id = 'passaporte-close-modal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.7);display:flex;align-items:flex-end;justify-content:center;';
+
+  var scoreColor = verificacao.score >= 80 ? '#22C55E' : verificacao.score >= 50 ? '#FBBF24' : '#EF4444';
+  var problemas  = verificacao.problemas.map(function(p){
+    return '<div style="display:flex;gap:8px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);">' +
+      '<span style="font-size:16px;flex-shrink:0;">' + (p.tipo==='erro'?'🔴':'⚠️') + '</span>' +
+      '<div><div style="font-size:12px;font-weight:600;color:var(--text);">' + p.titulo + '</div>' +
+      '<div style="font-size:11px;color:var(--text3);">' + p.detalhe + '</div></div></div>';
+  }).join('') || '<div style="color:#22C55E;font-size:13px;padding:8px 0;">✅ Nenhuma inconsistência encontrada</div>';
+
+  modal.innerHTML =
+    '<div style="background:var(--surface);border-radius:20px 20px 0 0;width:100%;max-width:560px;padding:24px;max-height:90vh;overflow-y:auto;">' +
+    '<div style="width:40px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 20px;"></div>' +
+    '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:4px;">🔒 FECHAR PASSAPORTE</div>' +
+    '<div style="font-size:12px;color:var(--text3);margin-bottom:20px;">' + v.marca + ' ' + v.modelo + ' · ' + v.placa + '</div>' +
+
+    // Score de confiabilidade
+    '<div style="background:var(--surface2);border-radius:12px;padding:16px;margin-bottom:16px;display:flex;align-items:center;gap:16px;">' +
+    '<div style="width:64px;height:64px;border-radius:50%;border:3px solid ' + scoreColor + ';display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;">' +
+    '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;color:' + scoreColor + ';">' + verificacao.score + '</div>' +
+    '<div style="font-size:8px;color:var(--text3);">/ 100</div></div>' +
+    '<div><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;">Score de Confiabilidade</div>' +
+    '<div style="font-size:11px;color:var(--text3);">' + verificacao.resumo + '</div></div></div>' +
+
+    // Problemas
+    '<div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Verificações</div>' +
+    problemas +
+
+    // Evidências exigidas
+    '<div style="margin-top:16px;">' +
+    '<div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;">Evidências para validar</div>' +
+
+    // Foto odômetro
+    '<div style="background:var(--surface2);border-radius:10px;padding:12px;margin-bottom:8px;">' +
+    '<div style="display:flex;align-items:center;gap:10px;">' +
+    '<span id="ev-odometro-icon" style="font-size:20px;">' + (v._evOdometro ? '✅' : '📷') + '</span>' +
+    '<div style="flex:1;">' +
+    '<div style="font-size:12px;font-weight:700;color:var(--text);">Foto do odômetro</div>' +
+    '<div style="font-size:10px;color:var(--text3);">Comprova o KM atual de ' + parseInt(v.km||0).toLocaleString('pt-BR') + ' km</div>' +
+    '</div>' +
+    (v._evOdometro ? '' : '<button onclick="_uploadEvidencia(' + vehicleId + ',\'odometro\')" style="padding:6px 12px;background:var(--accent);color:var(--bg);border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:\'Sora\',sans-serif;">Adicionar</button>') +
+    '</div></div>' +
+
+    // Nota fiscal
+    '<div style="background:var(--surface2);border-radius:10px;padding:12px;margin-bottom:8px;">' +
+    '<div style="display:flex;align-items:center;gap:10px;">' +
+    '<span id="ev-nf-icon" style="font-size:20px;">' + (v._evNotaFiscal ? '✅' : '🧾') + '</span>' +
+    '<div style="flex:1;">' +
+    '<div style="font-size:12px;font-weight:700;color:var(--text);">Nota fiscal de serviço</div>' +
+    '<div style="font-size:10px;color:var(--text3);">Número da NF de pelo menos 1 manutenção registrada</div>' +
+    '</div>' +
+    (v._evNotaFiscal ? '' : '<button onclick="_uploadEvidencia(' + vehicleId + ',\'nf\')" style="padding:6px 12px;background:var(--accent);color:var(--bg);border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:\'Sora\',sans-serif;">Adicionar</button>') +
+    '</div></div>' +
+
+    // CRLV / documento
+    '<div style="background:var(--surface2);border-radius:10px;padding:12px;margin-bottom:16px;">' +
+    '<div style="display:flex;align-items:center;gap:10px;">' +
+    '<span style="font-size:20px;">' + (v._evCRLV ? '✅' : '📋') + '</span>' +
+    '<div style="flex:1;">' +
+    '<div style="font-size:12px;font-weight:700;color:var(--text);">Foto do CRLV (documento do carro)</div>' +
+    '<div style="font-size:10px;color:var(--text3);">Confirma placa, chassi e dados do veículo</div>' +
+    '</div>' +
+    (v._evCRLV ? '' : '<button onclick="_uploadEvidencia(' + vehicleId + ',\'crlv\')" style="padding:6px 12px;background:var(--accent);color:var(--bg);border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:\'Sora\',sans-serif;">Adicionar</button>') +
+    '</div></div>' +
+    '</div>' +
+
+    // Botões
+    '<div style="display:flex;gap:10px;">' +
+    '<button onclick="document.getElementById(\'passaporte-close-modal\').remove()" style="flex:1;padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer;font-family:\'Sora\',sans-serif;">Cancelar</button>' +
+    '<button onclick="_confirmarFecharPassaporte(' + vehicleId + ')" style="flex:2;padding:12px;background:var(--accent);border:none;border-radius:10px;font-size:13px;font-weight:700;color:var(--bg);cursor:pointer;font-family:\'Sora\',sans-serif;">🔒 Fechar e publicar passaporte</button>' +
+    '</div>' +
+    '</div>';
+
+  document.body.appendChild(modal);
+  modal.addEventListener('click', function(e){ if(e.target===modal) modal.remove(); });
+}
+
+function _verificarConsistenciaPassaporte(v, hist, fuel) {
+  var problemas = [];
+  var score = 100;
+
+  // Verificação 1: KM progressão lógica no histórico
+  var todosRegistros = hist.concat(fuel).sort(function(a,b){ return a.data.localeCompare(b.data); });
+  for (var i = 1; i < todosRegistros.length; i++) {
+    var prev = todosRegistros[i-1], curr = todosRegistros[i];
+    if (prev.km > 0 && curr.km > 0 && curr.km < prev.km && curr.data > prev.data) {
+      problemas.push({ tipo:'erro', titulo:'KM regressivo detectado',
+        detalhe: 'Registro de ' + curr.data + ' tem ' + curr.km.toLocaleString('pt-BR') + ' km, menor que ' + prev.data + ' (' + prev.km.toLocaleString('pt-BR') + ' km)' });
+      score -= 20;
+    }
+  }
+
+  // Verificação 2: Saltos impossíveis de KM (>100k km em 1 dia)
+  for (var j = 1; j < todosRegistros.length; j++) {
+    var p = todosRegistros[j-1], c = todosRegistros[j];
+    if (p.km > 0 && c.km > 0 && c.data === p.data && (c.km - p.km) > 500) {
+      problemas.push({ tipo:'aviso', titulo:'Variação alta de KM no mesmo dia',
+        detalhe: 'Diferença de ' + (c.km - p.km).toLocaleString('pt-BR') + ' km registrada em ' + c.data });
+      score -= 10;
+    }
+  }
+
+  // Verificação 3: Histórico vazio
+  if (hist.length === 0) {
+    problemas.push({ tipo:'aviso', titulo:'Sem manutenções registradas',
+      detalhe: 'Passaportes sem histórico têm credibilidade reduzida pelos compradores' });
+    score -= 15;
+  }
+
+  // Verificação 4: KM atual vs ano do carro (média 15k/ano)
+  var anoFab = parseInt(v.ano) || new Date().getFullYear();
+  var idadeAnos = new Date().getFullYear() - anoFab;
+  var kmEsperado = idadeAnos * 15000;
+  if (idadeAnos > 0 && v.km > 0 && v.km > kmEsperado * 2.5) {
+    problemas.push({ tipo:'aviso', titulo:'KM muito acima da média para o ano',
+      detalhe: 'Para um ' + anoFab + ', a média esperada seria ~' + kmEsperado.toLocaleString('pt-BR') + ' km' });
+    score -= 10;
+  }
+
+  // Verificação 5: Placa válida
+  if (!v.placa || v.placa === '—' || v.placa.length < 6) {
+    problemas.push({ tipo:'aviso', titulo:'Placa não informada',
+      detalhe: 'Passaportes sem placa não podem ser buscados por compradores' });
+    score -= 15;
+  }
+
+  // Verificação 6: Dados mínimos
+  if (!v.cor || v.cor === '—') {
+    problemas.push({ tipo:'aviso', titulo:'Cor não informada', detalhe: 'Complete as informações do veículo' });
+    score -= 5;
+  }
+
+  // Bônus por evidências
+  if (v._evOdometro) score = Math.min(100, score + 5);
+  if (v._evNotaFiscal) score = Math.min(100, score + 5);
+  if (v._evCRLV) score = Math.min(100, score + 5);
+
+  score = Math.max(0, score);
+  var resumo = score >= 80 ? 'Excelente — dados consistentes e bem documentados'
+             : score >= 60 ? 'Bom — pequenas inconsistências identificadas'
+             : score >= 40 ? 'Regular — corrija as pendências antes de publicar'
+             :               'Atenção — problemas sérios de consistência detectados';
+
+  return { score: score, problemas: problemas, resumo: resumo };
+}
+
+function _uploadEvidencia(vehicleId, tipo) {
+  var input = document.createElement('input');
+  input.type = 'file'; input.accept = 'image/*';
+  input.onchange = function() {
+    var file = input.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var v = state.vehicles.find(function(x){ return x.id === vehicleId; });
+      if (!v) return;
+      if (tipo === 'odometro') { v._evOdometro = true; var icon = document.getElementById('ev-odometro-icon'); if(icon) icon.textContent='✅'; }
+      if (tipo === 'nf')       { v._evNotaFiscal= true; var icon = document.getElementById('ev-nf-icon');      if(icon) icon.textContent='✅'; }
+      if (tipo === 'crlv')     { v._evCRLV      = true; }
+      saveState();
+      showToast('Evidência adicionada! ✅', 'success');
+      // Reabrir modal atualizado
+      var modal = document.getElementById('passaporte-close-modal');
+      if (modal) { modal.remove(); abrirFecharPassaporte(vehicleId); }
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+}
+
+function _confirmarFecharPassaporte(vehicleId) {
+  var v = state.vehicles.find(function(x){ return x.id === vehicleId; });
+  if (!v) return;
+  var hist = state.history.filter(function(h){ return h.veiculoId === vehicleId; });
+  var fuel = state.fuel.filter(function(f){ return f.veiculoId === vehicleId; });
+  var verificacao = _verificarConsistenciaPassaporte(v, hist, fuel);
+
+  if (verificacao.score < 40) {
+    showToast('⚠️ Score muito baixo (' + verificacao.score + '/100). Corrija as inconsistências antes de fechar.', 'error');
+    return;
+  }
+
+  v.passaporteScore   = verificacao.score;
+  v.passaporteFechado = true;
+  v.passaporteData    = new Date().toISOString();
+  saveState();
+
+  // Salva no Supabase
+  if (typeof _salvarPassaporteNuvem === 'function') _salvarPassaporteNuvem(vehicleId);
+
+  var modal = document.getElementById('passaporte-close-modal');
+  if (modal) modal.remove();
+
+  showToast('🔒 Passaporte fechado! Score ' + verificacao.score + '/100 — pronto para venda.', 'success');
+  renderPassaportePage();
+}
+
+// Adiciona botão "Fechar Passaporte" no renderPassaportePage
+var _renderPassaportePageOrig = renderPassaportePage;
+renderPassaportePage = function() {
+  _renderPassaportePageOrig();
+  // Injeta botão após o conteúdo ser renderizado
+  setTimeout(function() {
+    var body = document.getElementById('passaporte-body');
+    if (!body) return;
+    var sel = document.getElementById('passaporte-sel');
+    if (!sel) return;
+    var vid = parseInt(sel.value);
+    if (!vid) return;
+    var v = state.vehicles.find(function(x){ return x.id === vid; });
+    if (!v) return;
+
+    // Só mostra se não fechado ainda
+    if (!v.passaporteFechado) {
+      var btnDiv = document.createElement('div');
+      btnDiv.style.cssText = 'margin-top:12px;';
+      btnDiv.innerHTML = '<button onclick="abrirFecharPassaporte(' + vid + ')" style="width:100%;padding:13px;background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(29,78,216,0.15));border:1px solid rgba(59,130,246,0.4);border-radius:12px;font-size:13px;font-weight:700;color:var(--accent);cursor:pointer;font-family:\'Sora\',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;">' +
+        '<span>🔒</span> Fechar Passaporte — Verificação de Autenticidade</button>';
+      body.appendChild(btnDiv);
+    } else {
+      var fechadoDiv = document.createElement('div');
+      fechadoDiv.style.cssText = 'margin-top:12px;padding:12px 16px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.3);border-radius:12px;display:flex;align-items:center;gap:10px;';
+      fechadoDiv.innerHTML = '<span style="font-size:20px;">🔒</span><div><div style="font-size:13px;font-weight:700;color:#22C55E;">Passaporte Fechado — Score ' + (v.passaporteScore||0) + '/100</div><div style="font-size:11px;color:var(--text3);">Fechado em ' + (v.passaporteData||'').slice(0,10) + '</div></div>';
+      body.appendChild(fechadoDiv);
+    }
+  }, 150);
+};
+
+// ── 4. PRIMEIROS PASSOS — patch renderModeloInfo ──────────────
+var _renderModeloInfoOrig = typeof renderModeloInfo === 'function' ? renderModeloInfo : null;
+renderModeloInfo = function() {
+  if (_renderModeloInfoOrig) _renderModeloInfoOrig();
+
+  var content = document.getElementById('modelo-info-content');
+  if (!content) return;
+  var active = (state.vehicles||[]).filter(function(v){ return !v.archived; });
+
+  // Se não há veículos, mostra guia de onboarding
+  if (!active.length) {
+    content.innerHTML =
+      '<div style="padding:4px 0 16px;">' +
+      '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;letter-spacing:1px;margin-bottom:16px;">🚀 GUIA DE PRIMEIROS PASSOS</div>' +
+
+      // Passo 1
+      '<div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;">' +
+      '<div style="width:32px;height:32px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:\'Bebas Neue\',sans-serif;font-size:16px;color:var(--bg);flex-shrink:0;">1</div>' +
+      '<div><div style="font-weight:700;color:var(--text);margin-bottom:4px;">Cadastre seu carro</div>' +
+      '<div style="font-size:12px;color:var(--text3);line-height:1.5;">Pesquise pela placa — se o carro tiver passaporte anterior, o histórico vem junto. Senão, preencha marca, modelo e ano.</div>' +
+      '<button onclick="showPage(\'veiculos\')" style="margin-top:8px;padding:7px 14px;background:var(--accent);color:var(--bg);border:none;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;font-family:\'Sora\',sans-serif;">Ir para Garagem →</button></div></div>' +
+
+      // Passo 2
+      '<div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;">' +
+      '<div style="width:32px;height:32px;background:rgba(59,130,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:\'Bebas Neue\',sans-serif;font-size:16px;color:var(--text);flex-shrink:0;">2</div>' +
+      '<div><div style="font-weight:700;color:var(--text);margin-bottom:4px;">Registre a primeira manutenção</div>' +
+      '<div style="font-size:12px;color:var(--text3);line-height:1.5;">Cada revisão registrada aumenta o score do seu carro e o valor na revenda. Comece pelo serviço mais recente.</div></div></div>' +
+
+      // Passo 3
+      '<div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;">' +
+      '<div style="width:32px;height:32px;background:rgba(59,130,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:\'Bebas Neue\',sans-serif;font-size:16px;color:var(--text);flex-shrink:0;">3</div>' +
+      '<div><div style="font-weight:700;color:var(--text);margin-bottom:4px;">Defina as datas dos documentos</div>' +
+      '<div style="font-size:12px;color:var(--text3);line-height:1.5;">IPVA, seguro, CNH e licenciamento — informe os vencimentos e receba alertas automáticos antes de cada um.</div></div></div>' +
+
+      // Passo 4
+      '<div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;display:flex;gap:14px;align-items:flex-start;">' +
+      '<div style="width:32px;height:32px;background:rgba(59,130,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:\'Bebas Neue\',sans-serif;font-size:16px;color:var(--text);flex-shrink:0;">4</div>' +
+      '<div><div style="font-weight:700;color:var(--text);margin-bottom:4px;">Registre abastecimentos</div>' +
+      '<div style="font-size:12px;color:var(--text3);line-height:1.5;">Informe o valor total e o preço por litro. O app calcula a quantidade automaticamente e monitora o consumo do motor.</div></div></div>' +
+
+      // Passo 5
+      '<div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px;display:flex;gap:14px;align-items:flex-start;">' +
+      '<div style="width:32px;height:32px;background:rgba(59,130,246,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:\'Bebas Neue\',sans-serif;font-size:16px;color:var(--text);flex-shrink:0;">5</div>' +
+      '<div><div style="font-weight:700;color:var(--text);margin-bottom:4px;">Feche o Passaporte ao vender</div>' +
+      '<div style="font-size:12px;color:var(--text3);line-height:1.5;">Na hora de vender, abra o Passaporte e clique em "Fechar Passaporte". O app verifica inconsistências e gera um dossiê confiável para o comprador.</div></div></div>' +
+
+      // Dica bônus
+      '<div style="background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.25);border-radius:12px;padding:14px 16px;">' +
+      '<div style="font-size:12px;font-weight:700;color:#FBBF24;margin-bottom:4px;">💡 Dica de valorização</div>' +
+      '<div style="font-size:12px;color:var(--text3);line-height:1.5;">Carros com histórico documentado no ManyCars valem em média 12-15% a mais na revenda. Quanto mais registros, maior o score de confiança para o comprador.</div>' +
+      '</div>' +
+      '</div>';
+  }
+};
+
+// Chama renderModeloInfo imediatamente se a página já estiver ativa
+(function(){
+  var pg = document.getElementById('page-modelo-info');
+  if (pg && pg.classList.contains('active')) renderModeloInfo();
+})();
+
+</script>
