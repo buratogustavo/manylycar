@@ -7114,28 +7114,37 @@ async function _doSyncToCloud(data) {
 
     // Sync veículos
     var vehicles = (data.vehicles || []).map(function(v) {
+      // Converte placa '—' ou vazia para null (evita conflito no upsert)
+      var placaLimpa = (v.placa && v.placa !== '—' && v.placa.trim().length > 1) ? v.placa.trim().toUpperCase() : null;
       var row = {
-        user_id:     userId,
-        marca:       v.marca,
-        modelo:      v.modelo,
-        ano:         parseInt(v.ano) || null,
-        placa:       v.placa || null,
-        cor:         v.cor || null,
-        km:          v.km || 0,
-        combustivel: v.combustivel || 'Flex',
-        archived:    v.archived || false,
-        updated_at:  new Date().toISOString()
+        user_id:          userId,
+        marca:            v.marca,
+        modelo:           v.modelo,
+        ano:              parseInt(v.ano) || null,
+        placa:            placaLimpa,
+        cor:              v.cor || null,
+        km:               v.km || 0,
+        combustivel:      v.combustivel || 'Flex',
+        archived:         v.archived || false,
+        km_inicial:       v.kmInicial || 0,
+        fipe_real:        v.fipeReal  || null,
+        fipe_cod_marca:   v.fipeCodigoMarca  || null,
+        fipe_cod_modelo:  v.fipeCodigoModel  || null,
+        fipe_cod_ano:     v.fipeCodigoAno    || null,
+        fipe_mes_ref:     v.fipeMesRef       || null,
+        fipe_codigo_fipe: v.fipeCodigoFipe   || null,
+        updated_at:       new Date().toISOString()
       };
-      // Só inclui id se for um UUID já existente no Supabase
       if (v.supabaseId && typeof v.supabaseId === 'string' && v.supabaseId.length > 10) {
         row.id = v.supabaseId;
       }
       return row;
     });
     if (vehicles.length) {
-      var { data: vRes } = await _sb.from('vehicles')
-        .upsert(vehicles, { onConflict: 'user_id, placa', ignoreDuplicates: false })
+      var { data: vRes, error: vErr } = await _sb.from('vehicles')
+        .upsert(vehicles, { onConflict: 'id', ignoreDuplicates: false })
         .select('id, marca, modelo, placa');
+      if (vErr) console.warn('[ManyCars sync] vehicles error:', vErr.message);
       // Mapeia IDs de volta ao state local para syncs futuros
       if (vRes) {
         vRes.forEach(function(sv) {
@@ -7171,9 +7180,11 @@ async function _doSyncToCloud(data) {
     // Insere apenas os que já têm vehicle_id; os demais serão reprocessados no próximo sync
     var historyReady = history.filter(function(h){ return h.vehicle_id; });
     if (historyReady.length) {
-      var { data: hRes } = await _sb.from('history').insert(
-        historyReady.map(function(h){ var r = Object.assign({}, h); delete r._localRef; return r; })
+      var { data: hRes, error: hErr } = await _sb.from('history').upsert(
+        historyReady.map(function(h){ var r = Object.assign({}, h); delete r._localRef; return r; }),
+        { onConflict: 'user_id,vehicle_id,tipo,data', ignoreDuplicates: true }
       ).select('id');
+      if (hErr) console.warn('[ManyCars sync] history error:', hErr.message);
       if (hRes) {
         hRes.forEach(function(sr, i) {
           var local = state.history.find(function(h){ return h.id === historyReady[i]._localRef; });
@@ -7199,9 +7210,11 @@ async function _doSyncToCloud(data) {
     });
     var fuelReady = fuel.filter(function(f){ return f.vehicle_id; });
     if (fuelReady.length) {
-      var { data: fRes } = await _sb.from('fuel').insert(
-        fuelReady.map(function(f){ var r = Object.assign({}, f); delete r._localRef; return r; })
+      var { data: fRes, error: fErr } = await _sb.from('fuel').upsert(
+        fuelReady.map(function(f){ var r = Object.assign({}, f); delete r._localRef; return r; }),
+        { onConflict: 'user_id,vehicle_id,data,tipo', ignoreDuplicates: true }
       ).select('id');
+      if (fErr) console.warn('[ManyCars sync] fuel error:', fErr.message);
       if (fRes) {
         fRes.forEach(function(sr, i) {
           var local = state.fuel.find(function(f){ return f.id === fuelReady[i]._localRef; });
@@ -7245,17 +7258,33 @@ async function _loadFromCloud(userId) {
     var { data: vData } = await _sb.from('vehicles').select('*').eq('user_id', userId);
     if (vData && vData.length) {
       state.vehicles = vData.map(function(v) {
+        // Preserva dados extras do localStorage (fipeHistorico, docs, etc.)
+        var localV = (state.vehicles || []).find(function(lv){ return lv.supabaseId === v.id || lv.placa === v.placa; });
         return {
-          id:          v.id,
-          supabaseId:  v.id,
-          marca:       v.marca,
-          modelo:      v.modelo,
-          ano:         v.ano,
-          placa:       v.placa || '',
-          cor:         v.cor || '',
-          km:          v.km || 0,
-          combustivel: v.combustivel || 'Flex',
-          archived:    v.archived || false
+          id:               v.id,
+          supabaseId:       v.id,
+          marca:            v.marca,
+          modelo:           v.modelo,
+          ano:              v.ano,
+          placa:            v.placa || '',
+          cor:              v.cor || '',
+          km:               v.km || 0,
+          combustivel:      v.combustivel || 'Flex',
+          archived:         v.archived || false,
+          kmInicial:        v.km_inicial   || (localV && localV.kmInicial)   || 0,
+          fipeReal:         v.fipe_real    || (localV && localV.fipeReal)    || null,
+          fipeCodigoMarca:  v.fipe_cod_marca  || (localV && localV.fipeCodigoMarca)  || null,
+          fipeCodigoModel:  v.fipe_cod_modelo || (localV && localV.fipeCodigoModel)  || null,
+          fipeCodigoAno:    v.fipe_cod_ano    || (localV && localV.fipeCodigoAno)    || null,
+          fipeMesRef:       v.fipe_mes_ref    || (localV && localV.fipeMesRef)       || null,
+          fipeCodigoFipe:   v.fipe_codigo_fipe|| (localV && localV.fipeCodigoFipe)   || null,
+          fipeHistorico:    (localV && localV.fipeHistorico) || [],
+          passaporteFechado:(localV && localV.passaporteFechado) || false,
+          passaporteScore:  (localV && localV.passaporteScore) || null,
+          passaporteData:   (localV && localV.passaporteData) || null,
+          _evOdometro:      (localV && localV._evOdometro) || false,
+          _evNotaFiscal:    (localV && localV._evNotaFiscal) || false,
+          _evCRLV:          (localV && localV._evCRLV) || false,
         };
       });
     }
@@ -7313,8 +7342,25 @@ async function _loadFromCloud(userId) {
     _doSaveState();
     return true;
   } catch(e) {
+    console.warn('[ManyCars] _loadFromCloud error:', e);
     return false;
   }
+}
+
+// ── Garante que dados locais sejam enviados se nuvem estiver vazia ─────
+async function _forcePushIfCloudEmpty(userId) {
+  if (!_supabaseReady || !_sb || !userId) return;
+  try {
+    var { data: check } = await _sb.from('vehicles').select('id').eq('user_id', userId).limit(1);
+    if (!check || check.length === 0) {
+      // Nuvem vazia mas temos dados locais — faz push imediato
+      if (state.vehicles && state.vehicles.length > 0) {
+        console.log('[ManyCars] Cloud empty, pushing local data...');
+        await _doSyncToCloud({ vehicles: state.vehicles, history: state.history, fuel: state.fuel, docs: state.docs, user: state.user });
+        showToast('☁️ Dados enviados para a nuvem!', 'success');
+      }
+    }
+  } catch(e) { console.warn('[ManyCars] _forcePushIfCloudEmpty:', e); }
 }
 
 // ── Busca manual técnico do modelo na nuvem ─────────────────
@@ -8660,11 +8706,17 @@ function _loginUser(user) {
         renderAlerts();
         updateDashboard();
         _syncSidebarAvatar();
-  _updatePlanBadge();
+        _updatePlanBadge();
         var cnt = state.vehicles.length;
-        showToast('☁️ ' + (cnt > 0 ? cnt + ' veículo' + (cnt > 1 ? 's' : '') + ' carregado' + (cnt > 1 ? 's' : '') + ' da nuvem' : 'Dados sincronizados'), 'success');
+        if (cnt > 0) {
+          showToast('☁️ ' + cnt + ' veículo' + (cnt > 1 ? 's' : '') + ' carregado' + (cnt > 1 ? 's' : '') + ' da nuvem', 'success');
+        }
       } else {
-        showToast('Bem-vindo, ' + firstName + '! 🚗', 'success');
+        // Nuvem vazia ou erro — tenta empurrar dados locais
+        _forcePushIfCloudEmpty(user.id);
+        if (!state.vehicles || !state.vehicles.length) {
+          showToast('Bem-vindo, ' + firstName + '! 🚗', 'success');
+        }
       }
     });
     // Verifica plano ativo no Supabase e pagamentos pendentes
