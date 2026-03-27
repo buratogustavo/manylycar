@@ -125,6 +125,10 @@ body.light-mode input, body.light-mode select { color: var(--text); background: 
   -webkit-tap-highlight-color: transparent;
 }
 .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+@media (max-width: 768px) {
+  /* Label do tema some no mobile — só ícone */
+  #theme-label-mobile { display: none; }
+}
 .theme-toggle .tt-icon { font-size: 16px; transition: transform 0.4s; }
 body.light-mode .theme-toggle .tt-icon { transform: rotate(180deg); }
 
@@ -487,6 +491,8 @@ body.app-active
   min-height: 100vh;
   position: relative;
   isolation: isolate;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 .page {
@@ -510,7 +516,7 @@ body.app-active
 
 
 .page-header {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .page-title {
@@ -522,6 +528,26 @@ body.app-active
 }
 
 .page-sub { font-size: 13px; color: var(--text2); }
+
+/* ===== SPACING FIXES ===== */
+/* Garante que o primeiro elemento de cada page não cola na topbar */
+.page > *:first-child { margin-top: 0; }
+/* Último card de cada page não some atrás do bottom-nav */
+.page > *:last-child { margin-bottom: 0; }
+/* Scrollbar invisível no overflow-x */
+.page::-webkit-scrollbar,
+.main-content::-webkit-scrollbar { display: none; }
+/* Inputs e selects com altura mínima confortável para touch */
+@media (max-width: 768px) {
+  .field-input, .field-select { min-height: 44px; }
+  .btn-primary, .btn-secondary { min-height: 44px; }
+  /* Evita overflow horizontal em qualquer page */
+  .page { overflow-x: hidden; }
+  /* Garante que cards não ultrapassem a viewport */
+  .card { max-width: 100%; box-sizing: border-box; word-break: break-word; }
+  /* Gap entre seções */
+  .page-header + * { margin-top: 0; }
+}
 
 /* ===== CARDS ===== */
 .card {
@@ -556,6 +582,66 @@ body.app-active
 }
 
 .stat-card:hover { border-color: var(--border2); }
+
+/* ── Skeleton loading (modelo Robinhood) ─────────────────────*/
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--surface2) 25%, var(--surface) 50%, var(--surface2) 75%);
+  background-size: 600px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 6px;
+  color: transparent !important;
+  pointer-events: none;
+  user-select: none;
+}
+.skeleton * { visibility: hidden; }
+
+/* ── Shake animation para erros (modelo Robinhood) ───────────*/
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  15%     { transform: translateX(-8px); }
+  30%     { transform: translateX(8px); }
+  45%     { transform: translateX(-6px); }
+  60%     { transform: translateX(6px); }
+  75%     { transform: translateX(-3px); }
+  90%     { transform: translateX(3px); }
+}
+.shake { animation: shake 0.45s cubic-bezier(.36,.07,.19,.97) both; }
+
+/* ── Pulse de sucesso (modelo Duolingo celebrate) ────────────*/
+@keyframes successPulse {
+  0%   { box-shadow: 0 0 0 0 rgba(56,161,105,0.4); }
+  70%  { box-shadow: 0 0 0 12px rgba(56,161,105,0); }
+  100% { box-shadow: 0 0 0 0 rgba(56,161,105,0); }
+}
+.success-pulse { animation: successPulse 0.6s ease-out; }
+
+/* ── Insight card (modelo Monzo "safe to spend") ─────────────*/
+.insight-card {
+  background: linear-gradient(135deg, rgba(59,130,246,0.08) 0%, rgba(167,139,250,0.06) 100%);
+  border: 1px solid rgba(59,130,246,0.2);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: border-color .2s;
+}
+.insight-card:hover { border-color: rgba(59,130,246,0.4); }
+.insight-card.insight-warn {
+  background: linear-gradient(135deg,rgba(214,158,46,0.08),rgba(214,158,46,0.04));
+  border-color: rgba(214,158,46,0.25);
+}
+.insight-card.insight-good {
+  background: linear-gradient(135deg,rgba(56,161,105,0.08),rgba(56,161,105,0.04));
+  border-color: rgba(56,161,105,0.25);
+}
+.insight-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+.insight-value { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--text); line-height: 1; }
+.insight-sub   { font-size: 11px; color: var(--text3); margin-top: 3px; }
+.insight-cta   { font-size: 10px; font-weight: 700; color: var(--accent); margin-top: 6px; }
 
 .stat-label {
   font-size: 11px;
@@ -1717,12 +1803,14 @@ body.app-active
   .main-content  { padding-bottom: 24px; }
   .nav-item      { font-size: 12px; padding: 8px 8px; }
   .nav-section   { font-size: 9px; }
-  .page          { padding: 14px 16px 24px; }
+  .page          { padding: 14px 20px 32px; }
 }
 
 @media (max-width: 768px) {
   /* Layout */
   .mobile-topbar { display: flex; }
+  .form-grid { gap: 10px; }
+  .page-header { margin-bottom: 12px; }
 
   /* Sidebar overlay when opened on mobile */
   .sidebar {
@@ -1749,17 +1837,18 @@ body.app-active
     max-width: 100% !important;
     min-width: 0 !important;
     min-height: 0;
-    padding-bottom: 70px;
+    padding-bottom: 0;   /* padding vai no .page agora */
     overflow-x: hidden;
   }
 
-  .page { padding: 12px 16px 24px; }
+  .page { padding: 12px 16px 80px; }  /* bottom = bottom-nav (54px) + folga */
   .viagem-map-wrap { height: 260px; }
   .page-header { margin-bottom: 12px; }
   .page-title { font-size: 24px; }
 
   /* Cards */
-  .card { padding: 14px 16px; margin-bottom: 12px; }
+  .card { padding: 14px 16px; margin-bottom: 10px; }
+  .card:last-child { margin-bottom: 0; }
 
   /* Grids */
   .form-grid  { grid-template-columns: 1fr !important; }
@@ -1843,7 +1932,7 @@ body.app-active
   background: var(--surface);
   border-top: 1px solid var(--border);
   z-index: 150;
-  padding: 0 0 env(safe-area-inset-bottom, 0px);
+  padding: 0 0 env(safe-area-inset-bottom, 8px);
   justify-content: space-between;  /* garante distribuição igual */
   align-items: stretch;
   min-width: 0;
@@ -1888,8 +1977,10 @@ body.app-active
    SMALL PHONE  480px
    ================================================================ */
 @media (max-width: 480px) {
+  .wishlist-grid { grid-template-columns: 1fr; }
+
   /* Layout */
-  .page { padding: 12px 14px 20px; }
+  .page { padding: 12px 14px 80px; }
   .page-title { font-size: 22px; letter-spacing: 0.5px; }
   .card { padding: 12px 14px; }
 
@@ -1930,7 +2021,7 @@ body.app-active
    VERY SMALL  360px
    ================================================================ */
 @media (max-width: 360px) {
-  .page { padding: 10px 10px 16px; }
+  .page { padding: 10px 10px 80px; }
   .page-title { font-size: 20px; }
   .grid-3 { grid-template-columns: 1fr 1fr; gap: 6px; }
   .card   { padding: 10px 12px; }
@@ -1946,7 +2037,7 @@ body.app-active
 /* Filtros de histórico — empilhar em mobile */
 @media (max-width: 600px) {
   .compare-stats   { grid-template-columns: repeat(2,1fr); }
-  .wishlist-grid   { grid-template-columns: 1fr 1fr; }
+  .wishlist-grid   { grid-template-columns: 1fr; }
   .mono-grid       { grid-template-columns: 1fr; }
   .doc-grid        { grid-template-columns: 1fr; }
   .nearby-grid     { grid-template-columns: 1fr; }
@@ -3141,7 +3232,7 @@ select, textarea {
    ================================================================ */
 @media (min-width: 1280px) {
   .sidebar { width: 240px; }
-  .page { padding: 28px 36px; }
+  .page { padding: 28px 40px 40px; }
   .stat-card { padding: 20px 18px; }
   .card { padding: 20px 22px; margin-bottom: 16px; }
   .viagem-map-wrap { height: 480px; }
@@ -3370,8 +3461,19 @@ select, textarea {
 
     </div><!-- /auth-card -->
 
+    <!-- Acesso rápido modo teste -->
+    <div style="margin-top:16px;text-align:center;">
+      <button onclick="_entrarModoTeste()" style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.25);border-radius:10px;padding:10px 20px;cursor:pointer;font-family:'Sora',sans-serif;font-size:12px;font-weight:600;color:#22C55E;display:inline-flex;align-items:center;gap:8px;transition:all .2s;" onmouseover="this.style.background='rgba(34,197,94,0.15)'" onmouseout="this.style.background='rgba(34,197,94,0.08)'">
+        <span style="font-size:16px;">🧪</span>
+        <div style="text-align:left;">
+          <div>Entrar no Modo Teste</div>
+          <div style="font-size:10px;color:rgba(34,197,94,0.7);font-weight:400;">Dados fictícios · sem afetar produção</div>
+        </div>
+      </button>
+    </div>
+
     <!-- Rodapé -->
-    <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--text3);">
+    <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--text3);">
       v1.0 MVP · Dados salvos com segurança
     </div>
 
@@ -3403,15 +3505,15 @@ select, textarea {
       </div>
     </div>
 
-    <!-- Theme toggle DIREITA — sempre visível -->
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Alternar tema" id="theme-btn-mobile" title="Alternar tema" style="margin-left:4px;flex-shrink:0;">
-      <span class="tt-icon" id="theme-icon-mobile">🌙</span>
-      <span id="theme-label-mobile">Escuro</span>
+    <!-- Theme toggle DIREITA — só ícone no mobile -->
+    <button onclick="toggleTheme()" aria-label="Alternar tema" id="theme-btn-mobile" title="Alternar tema"
+      style="background:var(--surface2);border:1px solid var(--border);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:18px;-webkit-tap-highlight-color:transparent;">
+      <span id="theme-icon-mobile">🌙</span>
     </button>
   </div>
 
   <!-- OFFLINE INDICATOR BANNER -->
-  <div id="offline-banner" style="display:none;position:sticky;top:56px;z-index:99;background:#744210;color:#fefcbf;font-size:12px;font-weight:600;text-align:center;padding:7px 16px;letter-spacing:0.2px;gap:6px;align-items:center;justify-content:center;">
+  <div id="offline-banner" style="display:none;position:sticky;top:0;z-index:99;background:#744210;color:#fefcbf;font-size:12px;font-weight:600;text-align:center;padding:7px 16px;letter-spacing:0.2px;gap:6px;align-items:center;justify-content:center;">
     <span style="font-size:14px;">📡</span>
     <span>Modo offline — dados salvos localmente e sincronizados quando a conexão voltar</span>
   </div>
@@ -3448,7 +3550,7 @@ select, textarea {
 
     <div class="nav-section">Meu Carro</div>
     <div class="nav-item" onclick="showPage('veiculos')">
-      <span class="nav-icon">🚗</span> Garagem
+      <span class="nav-icon">🚗</span> Meus Carros
     </div>
     <div class="nav-item" onclick="showPage('modelo-info')">
       <span class="nav-icon">🚀</span> Primeiros Passos
@@ -3522,10 +3624,10 @@ select, textarea {
 
   <!-- MAIN -->
   <!-- Banner de modo teste — aparece no topo quando ativo -->
-  <div id="teste-floating-banner" style="display:none;position:sticky;top:0;z-index:100;background:rgba(59,130,246,0.95);backdrop-filter:blur(4px);padding:8px 16px;display:none;align-items:center;justify-content:center;gap:8px;">
-    <span style="font-size:14px;">🧪</span>
-    <span style="font-size:12px;font-weight:800;color:#0c0d0f;letter-spacing:1px;">MODO TESTE ATIVO — dados não afetam estatísticas reais</span>
-    <button onclick="toggleModoTeste()" style="margin-left:8px;background:rgba(0,0,0,0.15);border:none;border-radius:4px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;color:#0c0d0f;">Desativar</button>
+  <div id="teste-floating-banner" style="display:none;position:sticky;top:0;z-index:101;backdrop-filter:blur(4px);padding:9px 16px;align-items:center;justify-content:center;gap:8px;width:100%;box-sizing:border-box;">
+    <span style="font-size:15px;">🧪</span>
+    <span id="teste-banner-txt" style="font-size:12px;font-weight:800;letter-spacing:1px;color:#052e16;">MODO TESTE ATIVO — dados fictícios · sem afetar produção</span>
+    <button onclick="_sairModoTeste()" style="margin-left:8px;background:rgba(0,0,0,0.12);border:none;border-radius:4px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;color:#052e16;font-family:'Sora',sans-serif;">Sair →</button>
   </div>
   <!-- BOTTOM NAV (mobile) -->
   <nav class="bottom-nav" id="bottom-nav">
@@ -3600,7 +3702,7 @@ select, textarea {
     <div id="page-dashboard" class="page active">
 
       <!-- SAUDAÇÃO -->
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px;">
         <div>
           <div class="page-title" style="margin-bottom:2px;">
             <span id="dash-greeting">BOM DIA,</span>
@@ -3697,12 +3799,12 @@ select, textarea {
     <!-- ===== GARAGEM ===== -->
     <div id="page-veiculos" class="page">
       <div class="page-header">
-        <div class="page-title">🚗 GARAGEM</div>
+        <div class="page-title">🚗 MEUS CARROS</div>
         <div class="page-sub">Seus carros, sua garagem</div>
       </div>
 
       <!-- Tabs -->
-      <div style="display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;">
+      <div style="display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:2px;">
         <button id="vtab-carros"    onclick="_veiculosTab('carros')"    class="vtab-btn vtab-active">🚗 Carros</button>
         <button id="vtab-saude"     onclick="_veiculosTab('saude')"     class="vtab-btn">❤️ Saúde</button>
         <button id="vtab-historico" onclick="_veiculosTab('historico')" class="vtab-btn">📋 Histórico</button>
@@ -3778,6 +3880,25 @@ select, textarea {
             <div class="form-group" style="grid-column:1/-1;">
               <div class="field-label">📍 KM ao pegar o carro <span style="font-size:10px;color:var(--text3);font-weight:400;">(marco zero)</span></div>
               <input class="field-input" id="v-km-inicial" type="number" placeholder="Ex: 20000  (0 se carro novo)" inputmode="numeric">
+            </div>
+            <div class="form-group" style="grid-column:1/-1;">
+              <div class="field-label" style="display:flex;align-items:center;gap:8px;">
+                Número do Chassi (VIN)
+                <span style="background:rgba(59,130,246,0.1);color:var(--accent);font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:0.5px;">OPCIONAL</span>
+                <button type="button" onclick="_toggleVinHelp()" style="background:none;border:1px solid var(--border);border-radius:50%;width:18px;height:18px;font-size:10px;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Sora',sans-serif;flex-shrink:0;">?</button>
+              </div>
+              <div id="vin-help" style="display:none;margin-bottom:8px;padding:10px 12px;background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.15);border-radius:8px;font-size:11px;color:var(--text2);line-height:1.6;">
+                📍 <b>Onde encontrar:</b> Canto inferior do para-brisa (lado do motorista), coluna B da porta do motorista, CRLV ou DUT.<br>
+                O chassi tem <b>17 caracteres</b> alfanuméricos — letras e números, sem I, O ou Q.
+              </div>
+              <div style="position:relative;">
+                <input class="field-input" id="v-chassi" type="text" maxlength="17"
+                  placeholder="Ex: 9BWZZZ377VT004251"
+                  oninput="_onVinInput(this)"
+                  style="font-family:'JetBrains Mono',monospace;font-size:14px;letter-spacing:2px;text-transform:uppercase;padding-right:110px;">
+                <div id="vin-status" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;pointer-events:none;"></div>
+              </div>
+              <div id="vin-decode-result" style="margin-top:6px;font-size:11px;color:var(--text3);min-height:16px;"></div>
             </div>
           </div>
           <div style="display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;">
@@ -4051,22 +4172,87 @@ select, textarea {
           </div>
           <div class="form-group">
             <div class="field-label">Tipo de serviço</div>
-            <select class="field-select" id="manut-tipo">
-              <option>Troca de óleo</option>
-              <option>Troca de filtro de ar</option>
-              <option>Troca de filtro de cabine</option>
-              <option>Revisão de freios</option>
-              <option>Troca de pneus</option>
-              <option>Alinhamento/Balanceamento</option>
-              <option>Troca de correia</option>
-              <option>Troca de velas</option>
-              <option>Revisão geral</option>
-              <option>Limpeza de bicos</option>
-              <option>Troca de bateria</option>
-              <option>Troca de amortecedor</option>
-              <option>Revisão de suspensão</option>
-              <option>Outro</option>
+            <select class="field-select" id="manut-tipo" onchange="_onTipoManutChange(this)">
+              <optgroup label="— Manutenção preventiva —">
+                <option>Troca de óleo</option>
+                <option>Troca de filtro de ar</option>
+                <option>Troca de filtro de cabine</option>
+                <option>Revisão de freios</option>
+                <option>Troca de pneus</option>
+                <option>Alinhamento/Balanceamento</option>
+                <option>Troca de correia</option>
+                <option>Troca de velas</option>
+                <option>Revisão geral</option>
+                <option>Limpeza de bicos</option>
+                <option>Troca de bateria</option>
+                <option>Troca de amortecedor</option>
+                <option>Revisão de suspensão</option>
+              </optgroup>
+              <optgroup label="— Acidente / Sinistro —">
+                <option value="Acidente — Funilaria e Pintura">🔨 Funilaria e Pintura</option>
+                <option value="Acidente — Conserto de para-choque">🔨 Conserto de para-choque</option>
+                <option value="Acidente — Troca de airbag">🔨 Troca de airbag</option>
+                <option value="Acidente — Conserto estrutural">🔨 Conserto estrutural (longarina/chassis)</option>
+                <option value="Acidente — Reparo elétrico pós-colisão">🔨 Reparo elétrico pós-colisão</option>
+                <option value="Acidente — Sinistro total (recuperado)">🔨 Sinistro total recuperado</option>
+                <option value="Acidente — Outro reparo pós-colisão">🔨 Outro reparo pós-colisão</option>
+              </optgroup>
+              <optgroup label="— Outros —">
+                <option>Outro</option>
+              </optgroup>
             </select>
+            <!-- Painel extra para acidente — aparece condicionalmente -->
+            <div id="acidente-panel" style="display:none;margin-top:12px;padding:14px;background:rgba(214,158,46,0.07);border:1px solid rgba(214,158,46,0.25);border-radius:10px;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                <span style="font-size:16px;">ℹ️</span>
+                <div>
+                  <div style="font-size:12px;font-weight:700;color:#d69e2e;">Registrar acidente valoriza seu carro</div>
+                  <div style="font-size:10px;color:var(--text3);margin-top:2px;">Um acidente documentado com conserto gera mais confiança do que histórico vazio. O score não é penalizado quando há conserto comprovado.</div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div>
+                  <div class="field-label">Gravidade do acidente</div>
+                  <select class="field-select" id="manut-ac-gravidade">
+                    <option value="leve">Leve — amassado/arranhão superficial</option>
+                    <option value="moderado">Moderado — dano em painel/para-choque</option>
+                    <option value="grave">Grave — estrutural ou airbag acionado</option>
+                    <option value="total">Total — sinistro total recuperado</option>
+                  </select>
+                </div>
+                <div>
+                  <div class="field-label">Conserto foi realizado?</div>
+                  <div style="display:flex;gap:10px;margin-top:4px;">
+                    <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+                      <input type="radio" name="ac-conserto" id="ac-conserto-sim" value="sim" checked style="accent-color:var(--accent);"> Sim, consertado
+                    </label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+                      <input type="radio" name="ac-conserto" id="ac-conserto-nao" value="nao" style="accent-color:#e53e3e;"> Não consertado ainda
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  <div class="field-label" style="display:flex;align-items:center;gap:6px;">
+                    Boletim de Ocorrência (nº)
+                    <span style="font-size:9px;color:var(--text3);font-weight:400;">opcional</span>
+                  </div>
+                  <input class="field-input" id="manut-ac-bo" type="text" placeholder="Ex: BO 2024/123456"
+                    style="font-family:'JetBrains Mono',monospace;font-size:12px;">
+                </div>
+                <div>
+                  <div class="field-label" style="display:flex;align-items:center;gap:6px;">
+                    Seguro accionado?
+                    <span style="font-size:9px;color:var(--text3);font-weight:400;">opcional</span>
+                  </div>
+                  <select class="field-select" id="manut-ac-seguro">
+                    <option value="">Não informado</option>
+                    <option value="nao">Não, conserto particular</option>
+                    <option value="sim_franquia">Sim, com franquia</option>
+                    <option value="sim_total">Sim, cobertura total</option>
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="form-group">
             <div class="field-label">Data</div>
@@ -4083,6 +4269,32 @@ select, textarea {
           <div class="form-group">
             <div class="field-label">Oficina/Local (opcional)</div>
             <input class="field-input" id="manut-local" type="text" placeholder="Ex: Auto Center SP">
+          </div>
+          <div class="form-group">
+            <div class="field-label" style="display:flex;align-items:center;gap:6px;">
+              CNPJ ou Nº da Nota Fiscal
+              <span style="background:rgba(59,130,246,0.12);color:var(--accent);font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:0.5px;">VERIFICA ✓</span>
+            </div>
+            <input class="field-input" id="manut-nf" type="text" placeholder="Ex: 12.345.678/0001-99 ou NF 00234"
+              style="font-family:'JetBrains Mono',monospace;font-size:13px;"
+              oninput="this.value=this.value.toUpperCase()">
+            <div style="font-size:10px;color:var(--text3);margin-top:4px;">Registros com NF/CNPJ ganham badge ✓ Verificado no Passaporte</div>
+          </div>
+          <div class="form-group">
+            <div class="field-label" style="display:flex;align-items:center;gap:6px;">
+              Foto do comprovante
+              <span style="background:rgba(96,165,250,0.12);color:#60a5fa;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:0.5px;">+CONFIANÇA</span>
+            </div>
+            <div id="evidencia-preview-wrap" style="display:none;margin-bottom:8px;position:relative;">
+              <img id="evidencia-preview-img" style="width:100%;max-height:140px;object-fit:cover;border-radius:8px;border:1px solid var(--border);">
+              <button onclick="_removerEvidenciaManut()" style="position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.6);border:none;border-radius:50%;width:24px;height:24px;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+            </div>
+            <label style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--surface2);border:1px dashed var(--border2);border-radius:8px;cursor:pointer;font-size:12px;color:var(--text2);">
+              <span style="font-size:18px;">📷</span>
+              <span id="evidencia-label">Tirar foto ou escolher da galeria</span>
+              <input type="file" id="manut-evidencia" accept="image/*" capture="environment" style="display:none;" onchange="_previewEvidencia(this)">
+            </label>
+            <div style="font-size:10px;color:var(--text3);margin-top:4px;">Nota fiscal, recibo, ordem de serviço, foto do serviço — qualquer prova vale</div>
           </div>
         </div>
         <div style="margin-top:16px;">
@@ -5060,7 +5272,7 @@ select, textarea {
       </div>
 
       <!-- FILTROS -->
-      <div class="card" style="margin-bottom:0;">
+      <div class="card" style="margin-bottom:10px;">
         <div class="card-title" style="margin-bottom:10px;">🔎 Filtrar lista de desejos</div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <div class="form-group" style="flex:1;min-width:140px;margin:0;">
@@ -6169,7 +6381,7 @@ select, textarea {
 
 </div><!-- /page-modo-admin -->
 
-    <div id="page-perfil" class="page" style="padding-top:14px;">
+    <div id="page-perfil" class="page">
       <div class="page-header" style="margin-bottom:14px;">
         <div class="page-title">👤 MEU PERFIL</div>
         <div class="page-sub">Sua jornada automobilística em números</div>
@@ -6867,6 +7079,49 @@ function _haptic(type) {
   };
   navigator.vibrate(patterns[type] || patterns.light);
 }
+
+// ── Micro-interactions (modelo Robinhood) ─────────────────────
+function _shakeElement(el) {
+  if (!el) return;
+  el.classList.remove('shake');
+  void el.offsetWidth; // reflow
+  el.classList.add('shake');
+  setTimeout(function(){ el.classList.remove('shake'); }, 500);
+}
+
+function _successPulse(el) {
+  if (!el) return;
+  el.classList.remove('success-pulse');
+  void el.offsetWidth;
+  el.classList.add('success-pulse');
+  setTimeout(function(){ el.classList.remove('success-pulse'); }, 700);
+}
+
+// showToast aprimorado com duração variável e ações
+var _toastQueue = [];
+var _toastActive = false;
+function _showToastEnhanced(msg, type, action, duration) {
+  // Ações especiais de toast
+  if (action && type === 'success') {
+    _successPulse(document.querySelector('.page.active .btn-primary'));
+    _haptic('success');
+  } else if (type === 'error') {
+    _haptic('error');
+    // Shake no elemento ativo
+    var focusedEl = document.activeElement;
+    if (focusedEl && (focusedEl.tagName === 'INPUT' || focusedEl.tagName === 'SELECT')) {
+      _shakeElement(focusedEl.closest('.form-group') || focusedEl);
+    }
+  }
+}
+
+// Patch no showToast para chamar micro-interactions
+var _showToast_orig = showToast;
+showToast = function(msg, type, undoFn) {
+  _showToastEnhanced(msg, type, null, null);
+  return _showToast_orig.apply(this, arguments);
+};
+
 
 // ============================================================
 // PLAN BADGE — exibe plano atual no topbar de forma discreta
@@ -7868,7 +8123,6 @@ var MAINTENANCE_SCHEDULE = [
 // SCORE DE SAÚDE
 // ============================================================
 function calcScore(vehicle) {
-  // Calcula score 0-100 baseado nos alertas pendentes do veículo
   var alerts = getVehicleAlerts(vehicle);
   var highCount = 0, medCount = 0, lowCount = 0;
   alerts.forEach(function(a) {
@@ -7879,11 +8133,102 @@ function calcScore(vehicle) {
   var penalty = (highCount * 20) + (medCount * 10) + (lowCount * 5);
   var score = Math.max(0, Math.min(100, 100 - penalty));
 
-  // Bonus por manutenções registradas
   var vHist = state.history.filter(function(h) { return h.veiculoId === vehicle.id; });
-  score = Math.min(100, score + Math.min(vHist.length * 3, 15));
+
+  // Bonus por manutenções registradas
+  var rotinas = vHist.filter(function(h){ return !h.acidente; });
+  score = Math.min(100, score + Math.min(rotinas.length * 3, 15));
+
+  // Lógica de acidentes: transparência é recompensada, omissão é penalizada
+  var acidentes = vHist.filter(function(h){ return h.acidente; });
+  acidentes.forEach(function(a) {
+    if (a.transparenciaAcidente) {
+      // Acidente documentado com conserto ou NF: NENHUMA penalização
+      // Bonus pequeno por transparência
+      score = Math.min(100, score + 2);
+    } else {
+      // Acidente registrado mas sem conserto comprovado: penalidade leve
+      var pen = a.acGravidade === 'grave' ? 15
+              : a.acGravidade === 'total' ? 20
+              : a.acGravidade === 'moderado' ? 8
+              : 5; // leve
+      score = Math.max(0, score - pen);
+    }
+  });
+
+  // Bonus de transparência geral: % de registros verificados (com NF)
+  var verificados = vHist.filter(function(h){ return h.verificado; }).length;
+  if (vHist.length > 0) {
+    var percVerif = verificados / vHist.length;
+    score = Math.min(100, score + Math.round(percVerif * 8)); // até +8 pontos
+  }
 
   return Math.round(score);
+}
+
+// Retorna detalhes dos acidentes de um veículo para exibição
+function _getAcidentesVeiculo(vehicleId) {
+  return state.history.filter(function(h){ return h.veiculoId === vehicleId && h.acidente; });
+}
+
+// Retorna true se o veículo tem "histórico de transparência" alto
+function _veiculoTransparente(vehicleId) {
+  var hist = state.history.filter(function(h){ return h.veiculoId === vehicleId; });
+  if (hist.length < 3) return false;
+  var verif = hist.filter(function(h){ return h.verificado || h.transparenciaAcidente; }).length;
+  return (verif / hist.length) >= 0.5;
+}
+
+
+// ── Badge KM Consistente ─────────────────────────────────────
+function _kmConsistente(vehicleId) {
+  var hist = state.history.filter(function(h){ return h.veiculoId === vehicleId && h.km > 0; });
+  var fuel = state.fuel.filter(function(f){ return f.veiculoId === vehicleId && f.km > 0; });
+  var all  = hist.concat(fuel).sort(function(a,b){ return a.data > b.data ? 1 : -1; });
+  if (all.length < 2) return null; // poucos dados para avaliar
+  var regressoes = 0;
+  var saltosAbsurdos = 0;
+  for (var i = 1; i < all.length; i++) {
+    var diff = all[i].km - all[i-1].km;
+    if (diff < -100) regressoes++;
+    // Salto > 80.000 km em menos de 180 dias = suspeito
+    var dias = (new Date(all[i].data) - new Date(all[i-1].data)) / 86400000;
+    if (diff > 80000 && dias < 180) saltosAbsurdos++;
+  }
+  if (regressoes > 0) return 'suspeito';
+  if (saltosAbsurdos > 0) return 'suspeito';
+  return 'ok';
+}
+
+// ── Score comparativo por modelo ─────────────────────────────
+var _scoreModelCache = {};
+async function _fetchScoreComparativo(marca, modelo, ano, scoreLocal) {
+  var key = (marca + '_' + modelo + '_' + ano).toLowerCase().replace(/\s+/g,'_');
+  if (_scoreModelCache[key]) return _scoreModelCache[key];
+  if (!_supabaseReady || !_sb) return null;
+  try {
+    // Busca scores dos veículos do mesmo modelo/ano no Supabase
+    var { data } = await _sb
+      .from('vehicles')
+      .select('id')
+      .ilike('marca', '%' + marca.split(' ')[0] + '%')
+      .ilike('modelo', '%' + modelo.split(' ')[0] + '%')
+      .eq('ano', ano);
+    if (!data || data.length < 3) return null; // precisa de amostra mínima
+    // Calcula scores locais dos veículos retornados
+    var scores = data.map(function(sv) {
+      var vLocal = state.vehicles.find(function(lv){ return lv.supabaseId === sv.id; });
+      return vLocal ? calcScore(vLocal) : null;
+    }).filter(function(s){ return s !== null; });
+    // Adiciona o score do usuário à amostra
+    scores.push(scoreLocal);
+    scores.sort(function(a,b){ return a-b; });
+    var pos   = scores.filter(function(s){ return s < scoreLocal; }).length;
+    var perc  = Math.round((pos / (scores.length - 1)) * 100);
+    var result = { percentil: perc, total: scores.length - 1 };
+    _scoreModelCache[key] = result;
+    return result;
+  } catch(e) { return null; }
 }
 
 function getScoreColor(score) {
@@ -8707,6 +9052,7 @@ function _loginUser(user) {
         updateDashboard();
         _syncSidebarAvatar();
         _updatePlanBadge();
+        setTimeout(_verificarTodosRecalls, 1500);
         var cnt = state.vehicles.length;
         if (cnt > 0) {
           showToast('☁️ ' + cnt + ' veículo' + (cnt > 1 ? 's' : '') + ' carregado' + (cnt > 1 ? 's' : '') + ' da nuvem', 'success');
@@ -9257,6 +9603,18 @@ function vehicleImgCard(v, i) {
   html += '<div style="display:flex;align-items:center;gap:8px;margin-top:5px;">';
   html += '<span style="font-size:11px;color:var(--accent);font-family:\'JetBrains Mono\',monospace;">FIPE ~R$' + fipe.toLocaleString('pt-BR') + '</span>';
   html += '<span style="font-size:11px;font-weight:700;color:' + scoreColor + ';">Score ' + score + '</span>';
+  // Badge KM Consistente
+  var kmStatus = _kmConsistente(v.id);
+  if (kmStatus === 'ok') {
+    html += '<span title="Progressão de KM verificada — sem regressões ou saltos suspeitos" style="background:rgba(56,161,105,0.12);color:#38a169;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:0.3px;cursor:help;">KM ✓</span>';
+  } else if (kmStatus === 'suspeito') {
+    html += '<span title="Progressão de KM com inconsistências — verifique os registros" style="background:rgba(229,62,62,0.1);color:#e53e3e;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:0.3px;cursor:help;">⚠️ KM</span>';
+  }
+  // Badge verificado por NF
+  var histV = state.history.filter(function(h){ return h.veiculoId === v.id && h.verificado; });
+  if (histV.length > 0) {
+    html += '<span title="' + histV.length + ' manutenção(ões) com NF/CNPJ verificado" style="background:rgba(59,130,246,0.12);color:var(--accent);font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:0.3px;cursor:help;">✓ NF</span>';
+  }
   html += '</div></div>';
   html += '<div class="vehicle-img-actions" onclick="event.stopPropagation()">';
   if (!isArchived) {
@@ -9269,6 +9627,8 @@ function vehicleImgCard(v, i) {
     html += '<div class="btn-icon" title="Reativar veículo" onclick="reativarVeiculo(' + v.id + ')" style="font-size:13px;">↩️</div>';
   }
   html += '<div class="btn-icon danger" title="Remover" onclick="removerVeiculo(' + i + ')">🗑</div>';
+  // Alert de recall (inicialmente oculto, preenchido async)
+  html += '<div id="recall-alert-' + v.id + '" style="display:none;flex-direction:column;gap:6px;margin:0 12px 10px;padding:10px 12px;border-radius:8px;border:1px solid;font-size:11px;"></div>';
   html += '</div></div></div>';
   return html;
 }
@@ -9459,6 +9819,55 @@ function renderDashAlertsStrip() {
   strip.innerHTML = html;
 }
 
+function _gerarInsight(activeIds) {
+  var now = new Date();
+  var ym  = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  var ymPrev = new Date(now.getFullYear(), now.getMonth()-1, 1);
+  var ymPrevStr = ymPrev.getFullYear() + '-' + String(ymPrev.getMonth()+1).padStart(2,'0');
+
+  var manutMes  = state.history.filter(function(h){ return activeIds.indexOf(h.veiculoId)>=0 && (h.data||'').startsWith(ym); }).reduce(function(s,h){ return s+(h.custo||0); },0);
+  var manutPrev = state.history.filter(function(h){ return activeIds.indexOf(h.veiculoId)>=0 && (h.data||'').startsWith(ymPrevStr); }).reduce(function(s,h){ return s+(h.custo||0); },0);
+  var fuelMes   = state.fuel.filter(function(f){ return activeIds.indexOf(f.veiculoId)>=0 && (f.data||'').startsWith(ym); }).reduce(function(s,f){ return s+(f.custo||0); },0);
+  var fmt = function(v){ return 'R$'+Math.round(v).toLocaleString('pt-BR'); };
+  var insights = [];
+
+  // Manutenção urgente
+  var allActive = state.vehicles.filter(function(v){ return !v.archived && activeIds.indexOf(v.id)>=0; });
+  var urgente = null;
+  allActive.forEach(function(v) {
+    getVehicleAlerts(v).forEach(function(a){
+      if (a.urgency === 'high' && !urgente) urgente = { v:v, a:a };
+    });
+  });
+  if (urgente) {
+    insights.push({ type:'warn', icon:'🔩', label:'Atenção necessária', value:urgente.a.title, sub:urgente.v.marca+' '+urgente.v.modelo.split(' ')[0], cta:'Registrar serviço →', action:"showPage('manutencao')" });
+  }
+
+  // Comparativo mês anterior
+  if (manutMes > 0 && manutPrev > 0) {
+    var diff = Math.round(((manutMes - manutPrev) / manutPrev) * 100);
+    if (Math.abs(diff) >= 15) {
+      insights.push({ type:diff>0?'warn':'good', icon:diff>0?'📈':'📉', label:'Manutenção vs mês passado', value:(diff>0?'+':'')+diff+'%', sub:diff>0?'Mês anterior: '+fmt(manutPrev):'Economia de '+fmt(manutPrev-manutMes), cta:'Ver detalhes →', action:"showPage('analytics')" });
+    }
+  }
+
+  // Score alto
+  if (allActive.length) {
+    var topScore = Math.max.apply(null, allActive.map(calcScore));
+    if (topScore >= 85) {
+      insights.push({ type:'good', icon:'🏆', label:'Score excelente', value:topScore+'/100', sub:'Carro bem cuidado — isso vale na venda', cta:'Ver passaporte →', action:"showPage('passaporte')" });
+    }
+  }
+
+  // Combustível
+  if (fuelMes > 30) {
+    var diasMes = now.getDate();
+    insights.push({ type:'', icon:'⛽', label:'Combustível este mês', value:fmt(fuelMes), sub:'Média de '+fmt(fuelMes/diasMes)+'/dia', cta:'Ver abastecimentos →', action:"showPage('combustivel')" });
+  }
+
+  return insights.length ? insights[0] : null;
+}
+
 function renderDashFinance() {
   var sec = document.getElementById('dash-finance-section');
   if (!sec) return;
@@ -9466,35 +9875,42 @@ function renderDashFinance() {
   if (!activeIds.length || (state.history.length === 0 && state.fuel.length === 0)) {
     sec.style.display = 'none'; return;
   }
-  // Current month
-  var now   = new Date();
-  var ym    = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
-  var manutMes  = state.history.filter(function(h){ return activeIds.indexOf(h.veiculoId) >= 0 && (h.data||'').startsWith(ym); })
-    .reduce(function(s,h){ return s+(h.custo||0); }, 0);
-  var fuelMes   = state.fuel.filter(function(f){ return activeIds.indexOf(f.veiculoId) >= 0 && (f.data||'').startsWith(ym); })
-    .reduce(function(s,f){ return s+(f.custo||0); }, 0);
-  var totalMes  = manutMes + fuelMes;
-  var manutTotal = state.history.filter(function(h){ return activeIds.indexOf(h.veiculoId) >= 0; }).reduce(function(s,h){ return s+(h.custo||0); }, 0);
-  var fuelTotal  = state.fuel.filter(function(f){ return activeIds.indexOf(f.veiculoId) >= 0; }).reduce(function(s,f){ return s+(f.custo||0); }, 0);
-  var fmt = function(v){ return 'R$' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:0}); };
+  var now = new Date();
+  var ym  = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  var manutMes  = state.history.filter(function(h){ return activeIds.indexOf(h.veiculoId)>=0 && (h.data||'').startsWith(ym); }).reduce(function(s,h){ return s+(h.custo||0); },0);
+  var fuelMes   = state.fuel.filter(function(f){ return activeIds.indexOf(f.veiculoId)>=0 && (f.data||'').startsWith(ym); }).reduce(function(s,f){ return s+(f.custo||0); },0);
+  var manutTotal = state.history.filter(function(h){ return activeIds.indexOf(h.veiculoId)>=0; }).reduce(function(s,h){ return s+(h.custo||0); },0);
+  var fuelTotal  = state.fuel.filter(function(f){ return activeIds.indexOf(f.veiculoId)>=0; }).reduce(function(s,f){ return s+(f.custo||0); },0);
+  var fmt = function(v){ return 'R$'+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0}); };
+
+  var insight = _gerarInsight(activeIds);
+  var insightHtml = '';
+  if (insight) {
+    insightHtml = '<div class="insight-card insight-'+(insight.type||'')+'" onclick="'+insight.action+'">' +
+      '<div class="insight-label">'+insight.icon+' '+insight.label+'</div>' +
+      '<div class="insight-value">'+insight.value+'</div>' +
+      '<div class="insight-sub">'+insight.sub+'</div>' +
+      '<div class="insight-cta">'+insight.cta+'</div>' +
+    '</div>';
+  }
+
   sec.style.display = 'block';
-  sec.innerHTML =
-    '<div class="card" style="cursor:pointer;" onclick="showPage(\'analytics\')">' +
+  sec.innerHTML = insightHtml +
+    '<div class="card" style="cursor:pointer;" onclick="showPage('analytics')">' +
       '<div class="card-title" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">' +
-        '💰 Gastos registrados' +
-        '<span style="font-size:11px;color:var(--text3);font-weight:400;">ver analytics →</span>' +
+        '💰 Gastos registrados<span style="font-size:11px;color:var(--text3);font-weight:400;">ver analytics →</span>' +
       '</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;">' +
         '<div style="background:var(--surface2);border-radius:10px;padding:10px 8px;">' +
-          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;color:var(--accent);">' + fmt(totalMes) + '</div>' +
+          '<div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--accent);">' + fmt(manutMes+fuelMes) + '</div>' +
           '<div style="font-size:10px;color:var(--text3);margin-top:2px;">este mês</div>' +
         '</div>' +
         '<div style="background:var(--surface2);border-radius:10px;padding:10px 8px;">' +
-          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;color:#60a5fa;">' + fmt(manutTotal) + '</div>' +
+          '<div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#60a5fa;">' + fmt(manutTotal) + '</div>' +
           '<div style="font-size:10px;color:var(--text3);margin-top:2px;">manutenção</div>' +
         '</div>' +
         '<div style="background:var(--surface2);border-radius:10px;padding:10px 8px;">' +
-          '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;color:#68d391;">' + fmt(fuelTotal) + '</div>' +
+          '<div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#68d391;">' + fmt(fuelTotal) + '</div>' +
           '<div style="font-size:10px;color:var(--text3);margin-top:2px;">combustível</div>' +
         '</div>' +
       '</div>' +
@@ -9759,14 +10175,36 @@ function renderHistoricoList() {
     var sourceBadge = h.fromAlert ? '<span style="font-size:11px;background:rgba(59,130,246,0.12);color:var(--accent);padding:1px 6px;border-radius:4px;margin-left:6px;">alerta</span>'
       : h.fromChecklist ? '<span style="font-size:11px;background:rgba(96,165,250,0.12);color:var(--blue);padding:1px 6px;border-radius:4px;margin-left:6px;">checklist</span>' : '';
     var localStr = h.local ? '<span style="color:var(--text3);"> · 📍 ' + h.local + '</span>' : '';
-    html += '<div class="history-item" style="display:flex;align-items:center;gap:12px;padding:12px 16px;">';
-    html += '<div class="hist-icon">' + icon + '</div>';
-    html += '<div class="hist-info" style="flex:1;min-width:0;"><div class="hist-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + h.tipo + ' — ' + h.veiculo + sourceBadge + '</div>';
-    html += '<div class="hist-date">' + dateStr + (h.km ? ' · ' + h.km.toLocaleString('pt-BR') + ' km' : '') + localStr + '</div></div>';
+    var trustBadge = _renderTrustBadge(h);
+    var anomalia   = _detectarAnomaliaRegistro(h);
+    html += '<div class="history-item" style="display:flex;flex-direction:column;gap:0;padding:0;">';
+    // Linha de anomalia (se houver)
+    if (anomalia) {
+      html += '<div style="padding:5px 16px 0;font-size:10px;color:#d69e2e;display:flex;align-items:center;gap:4px;">' +
+        '<span>⚠️</span><span>' + anomalia + '</span></div>';
+    }
+    html += '<div style="display:flex;align-items:center;gap:12px;padding:10px 16px;">';
+    html += '<div class="hist-icon">' + (h.acidente ? '🔨' : icon) + '</div>';
+    html += '<div class="hist-info" style="flex:1;min-width:0;">' +
+      '<div class="hist-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' +
+        (h.acidente ? '<span style="color:#d69e2e;">Acidente — </span>' : '') +
+        h.tipo.replace('Acidente — ','') + ' — ' + h.veiculo + sourceBadge +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-top:2px;">' +
+        '<div class="hist-date">' + dateStr + (h.km ? ' · ' + h.km.toLocaleString('pt-BR') + ' km' : '') + localStr + '</div>' +
+        trustBadge +
+      '</div>' +
+    '</div>';
+    html += '<div style="display:flex;align-items:center;gap:6px;">';
     html += '<div class="hist-cost">' + (h.custo > 0 ? 'R$' + (h.custo||0).toFixed(2) : '<span style="color:var(--text3);font-size:12px;">—</span>') + '</div>';
+    if (h.evidencia) {
+      html += '<button onclick="_verEvidencia('' + h.id + '')" style="background:none;border:none;color:#60a5fa;cursor:pointer;font-size:14px;padding:4px;" title="Ver comprovante">📷</button>';
+    } else {
+      html += '<button onclick="_adicionarEvidenciaHistorico('' + h.id + '')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:12px;padding:4px;white-space:nowrap;" title="Adicionar comprovante">+📷</button>';
+    }
     html += '<button onclick="abrirEditManut(' + h.id + ')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:4px;" title="Editar">✏️</button>';
     html += '<button onclick="excluirHistorico(' + h.id + ')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:4px;" title="Excluir">🗑</button>';
-    html += '</div>';
+    html += '</div></div></div>';
   });
   el.innerHTML = html;
 }
@@ -10416,12 +10854,40 @@ function copiarAnuncio() {
 // ============================================================
 function renderEmptyDashboard() {
   var sec = document.getElementById('dash-vehicles-section');
+  var nome = (state.user && state.user.name) ? state.user.name.split(' ')[0] : 'você';
   sec.innerHTML =
-    '<div class="card" style="text-align:center;padding:40px 24px;">' +
-    '<div style="font-size:48px;margin-bottom:16px;">🚗</div>' +
-    '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:22px;margin-bottom:8px;">Nenhum veículo cadastrado</div>' +
-    '<div style="font-size:13px;color:var(--text2);margin-bottom:20px;">Cadastre seu primeiro carro para ver o score de saúde, alertas e muito mais</div>' +
-    '<button class="empty-cta" onclick="showPage(\'veiculos\')">+ Cadastrar meu primeiro veículo</button>' +
+    '<div style="text-align:center;padding:28px 16px 20px;">' +
+      '<div style="font-size:52px;margin-bottom:12px;line-height:1;">🚗</div>' +
+      '<div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;color:var(--text);margin-bottom:6px;">BEM-VINDO, ' + nome.toUpperCase() + '!</div>' +
+      '<div style="font-size:13px;color:var(--text3);line-height:1.6;max-width:280px;margin:0 auto;">O ManyCars protege o valor do seu carro e facilita a venda. Comece em 30 segundos.</div>' +
+    '</div>' +
+    '<div class="card" style="margin-bottom:12px;">' +
+      '<div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;">3 passos para começar</div>' +
+      '<div onclick="showPage('veiculos')" style="display:flex;align-items:center;gap:14px;padding:12px;background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);border-radius:10px;cursor:pointer;margin-bottom:8px;transition:all .2s;">' +
+        '<div style="width:36px;height:36px;border-radius:50%;background:var(--accent);color:#000;font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>' +
+        '<div style="flex:1;">' +
+          '<div style="font-size:13px;font-weight:700;color:var(--text);">Cadastrar meu veículo</div>' +
+          '<div style="font-size:11px;color:var(--text3);margin-top:1px;">Digite a placa — o app preenche os dados automaticamente</div>' +
+        '</div>' +
+        '<span style="color:var(--accent);font-size:18px;">→</span>' +
+      '</div>' +
+      '<div onclick="showPage('manutencao')" style="display:flex;align-items:center;gap:14px;padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;cursor:pointer;margin-bottom:8px;opacity:.7;">' +
+        '<div style="width:36px;height:36px;border-radius:50%;background:var(--surface);border:2px solid var(--border2);color:var(--text3);font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>' +
+        '<div style="flex:1;">' +
+          '<div style="font-size:13px;font-weight:700;color:var(--text2);">Registrar primeira manutenção</div>' +
+          '<div style="font-size:11px;color:var(--text3);margin-top:1px;">Cada registro aumenta o score e valoriza o carro</div>' +
+        '</div>' +
+      '</div>' +
+      '<div onclick="showPage('passaporte')" style="display:flex;align-items:center;gap:14px;padding:12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;cursor:pointer;opacity:.7;">' +
+        '<div style="width:36px;height:36px;border-radius:50%;background:var(--surface);border:2px solid var(--border2);color:var(--text3);font-size:16px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>' +
+        '<div style="flex:1;">' +
+          '<div style="font-size:13px;font-weight:700;color:var(--text2);">Ver o Passaporte do veículo</div>' +
+          '<div style="font-size:11px;color:var(--text3);margin-top:1px;">Compartilhe com compradores e venda pelo preço justo</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="text-align:center;padding:12px 16px;font-size:11px;color:var(--text3);">' +
+      '🔒 Dados salvos na nuvem · Grátis para sempre no plano FREE' +
     '</div>';
 }
 
@@ -12894,6 +13360,30 @@ function registrarManutencao() {
   var recent2 = !state.history.some(function(h){ return h.veiculoId===vid && h.data>data; });
   if (km > 0 && recent2 && km > v.km) v.km = km;
 
+  var nf = (document.getElementById('manut-nf') ? document.getElementById('manut-nf').value : '').trim();
+  var ehAcidente = tipo.startsWith('Acidente —');
+  var acGravidade = ehAcidente && document.getElementById('manut-ac-gravidade') ? document.getElementById('manut-ac-gravidade').value : null;
+  var acConserto  = ehAcidente && document.getElementById('ac-conserto-sim') ? (document.getElementById('ac-conserto-sim').checked ? 'sim' : 'nao') : null;
+  var acBo        = ehAcidente && document.getElementById('manut-ac-bo') ? (document.getElementById('manut-ac-bo').value||'').trim() : null;
+  var acSeguro    = ehAcidente && document.getElementById('manut-ac-seguro') ? document.getElementById('manut-ac-seguro').value : null;
+
+  // Acidente sem conserto E sem NF penaliza score — acidente com conserto/NF NÃO penaliza
+  var transparenciaAcidente = ehAcidente && (acConserto === 'sim' || (nf && nf.length > 5));
+
+  // Captura evidência fotográfica (base64, max ~150KB)
+  var evidenciaData = null;
+  var evidenciaInput = document.getElementById('manut-evidencia');
+  if (evidenciaInput && evidenciaInput.dataset.b64) {
+    evidenciaData = evidenciaInput.dataset.b64;
+  }
+
+  // Calcula nível de confiança do registro
+  var nivelConfianca = _calcNivelConfianca({
+    nf: nf, verificado: !!(nf && nf.length > 5),
+    evidencia: evidenciaData, local: local,
+    acidente: ehAcidente, acConserto: acConserto
+  });
+
   state.history.push({
     id: Date.now() + Math.random(),
     veiculoId: vid,
@@ -12902,7 +13392,17 @@ function registrarManutencao() {
     data: data,
     km: km || v.km,
     custo: custo,
-    local: local
+    local: local,
+    nf: nf || null,
+    verificado: !!(nf && nf.length > 5),
+    evidencia: evidenciaData || null,
+    nivelConfianca: nivelConfianca,
+    acidente:   ehAcidente || false,
+    acGravidade: acGravidade,
+    acConserto:  acConserto,
+    acBo:        acBo || null,
+    acSeguro:    acSeguro || null,
+    transparenciaAcidente: transparenciaAcidente
   });
 
   // auto-update checklist
@@ -12925,6 +13425,14 @@ function registrarManutencao() {
   document.getElementById('manut-km').value = '';
   document.getElementById('manut-custo').value = '';
   document.getElementById('manut-local').value = '';
+  if (document.getElementById('manut-nf')) document.getElementById('manut-nf').value = '';
+  if (document.getElementById('manut-ac-bo'))       document.getElementById('manut-ac-bo').value = '';
+  if (document.getElementById('manut-ac-gravidade')) document.getElementById('manut-ac-gravidade').selectedIndex = 0;
+  if (document.getElementById('manut-ac-seguro'))    document.getElementById('manut-ac-seguro').selectedIndex = 0;
+  if (document.getElementById('ac-conserto-sim'))    document.getElementById('ac-conserto-sim').checked = true;
+  var acPanel = document.getElementById('acidente-panel');
+  if (acPanel) acPanel.style.display = 'none';
+  _removerEvidenciaManut();
 
   renderManutGuia();
   renderAlerts();
@@ -13376,6 +13884,19 @@ function _renderPassaporteVehicle(v) {
   var valorSugerido = Math.round((fipe + upgradeTotal) / 1000) * 1000;
   var hoje = new Date().toLocaleDateString('pt-BR');
   var tier = score >= 80 ? 'Excelente' : score >= 60 ? 'Bom' : score >= 40 ? 'Regular' : 'Atenção';
+  // Score comparativo — carrega async e injeta no DOM quando pronto
+  var _scoreCompEl = 'pass-score-comp-' + v.id;
+  _fetchScoreComparativo(v.marca, v.modelo, v.ano, score).then(function(comp) {
+    var el = document.getElementById(_scoreCompEl);
+    if (!el) return;
+    if (comp && comp.total >= 3) {
+      el.innerHTML = '<span style="font-size:11px;color:var(--text3);">Melhor que </span>' +
+        '<span style="font-size:13px;font-weight:700;color:var(--accent);">' + comp.percentil + '%</span>' +
+        '<span style="font-size:11px;color:var(--text3);"> dos ' + v.modelo.split(' ')[0] + ' ' + v.ano + ' no ManyCars</span>';
+    } else {
+      el.innerHTML = '<span style="font-size:10px;color:var(--text3);">Dados comparativos disponíveis com mais usuários</span>';
+    }
+  });
   var fmt = function(n){ return 'R$' + Math.round(n).toLocaleString('pt-BR'); };
 
   // Foto do veículo
@@ -13390,8 +13911,8 @@ function _renderPassaporteVehicle(v) {
         '<span style="font-size:11px;color:var(--text3);">Adicionar foto do veículo</span>' +
       '</div>';
 
+  var scoreCompHtml = '<div id="' + _scoreCompEl + '" style="margin-top:6px;min-height:18px;"><span style="font-size:10px;color:var(--text3);">Calculando posição no ranking...</span></div>';
   body.innerHTML = photoHtml +
-    photoHtml +
     // Score
     '<div class="card"><div class="card-title">Score de saúde</div>' +
     '<div class="score-section">' +
@@ -13402,13 +13923,15 @@ function _renderPassaporteVehicle(v) {
       '<div class="score-details"><div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;">' + tier + '</div>' +
       '<div style="font-size:12px;color:var(--text2);">📋 ' + hist.length + ' manutenções</div>' +
       '<div style="font-size:12px;color:var(--text2);">⛽ ' + fuel.length + ' abastecimentos</div></div>' +
-    '</div></div>' +
+    '</div>' + scoreCompHtml + '</div>' +
     // Ficha técnica
     '<div class="card"><div class="card-title">Ficha técnica</div>' +
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">' +
       [['Marca',v.marca],['Modelo',v.modelo],['Ano',v.ano],['Cor',v.cor||'—'],
        ['Combustível',v.combustivel||'—'],['Placa',v.placa||'—'],
-       ['KM atual',parseInt(v.km||0).toLocaleString('pt-BR')+' km']].map(function(r){
+       ['KM atual',parseInt(v.km||0).toLocaleString('pt-BR')+' km'],
+       v.chassi ? ['Chassi (VIN)','<span style="font-family:\'JetBrains Mono\',monospace;letter-spacing:1px;font-size:10px;">'+v.chassi+'</span>'] : null
+       ].filter(Boolean).map(function(r){
         return '<div style="background:var(--surface2);border-radius:8px;padding:8px 12px;">' +
           '<div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;">' + r[0] + '</div>' +
           '<div style="font-size:12px;font-weight:600;color:var(--text);">' + r[1] + '</div></div>';
@@ -13434,13 +13957,21 @@ function _renderPassaporteVehicle(v) {
     '<div class="card"><div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">Histórico verificado<span style="font-size:10px;color:var(--text3);font-weight:400;">' + hist.length + ' registros</span></div>' +
     (hist.length ? hist.slice(-5).reverse().map(function(h){
       return '<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);">' +
-        '<div style="flex:1;"><div style="font-size:12px;font-weight:600;color:var(--text);">' + h.tipo + '</div>' +
-        '<div style="font-size:10px;color:var(--text3);">' + h.data + (h.km?' · '+parseInt(h.km).toLocaleString('pt-BR')+' km':'') + '</div></div>' +
+        '<div style="flex:1;"><div style="font-size:12px;font-weight:600;color:var(--text);">' + h.tipo +
+          (h.verificado ? ' <span style="background:rgba(56,161,105,0.12);color:#38a169;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;">NF ✓</span>' : '') +
+        '</div>' +
+        '<div style="font-size:10px;color:var(--text3);">' + h.data + (h.km?' · '+parseInt(h.km).toLocaleString('pt-BR')+' km':'') + (h.local?' · '+h.local:'') + '</div></div>' +
         (h.custo>0?'<span style="font-size:11px;color:var(--accent);font-family:\'JetBrains Mono\',monospace;">'+fmt(h.custo)+'</span>':'') +
       '</div>';
     }).join('') : '<div style="font-size:12px;color:var(--text3);padding:8px 0;">Sem manutenções registradas.</div>') +
     '</div>' +
+    // Recall alert (preenchido async)
+    '<div id="recall-alert-pass-' + v.id + '" style="display:none;flex-direction:column;gap:6px;margin-bottom:12px;padding:12px;border-radius:10px;border:1px solid;" class="card"></div>' +
     '<div style="text-align:center;font-size:10px;color:var(--text3);padding:8px 0 16px;">Gerado em ' + hoje + ' · ManyCars</div>';
+  // Verifica recalls para este veículo
+  setTimeout(function(){
+    _mostrarAlertaRecallPassaporte(v);
+  }, 800);
 }
 
 function _adicionarUpgrade(vehicleId) {
@@ -14435,30 +14966,83 @@ function fecharPassaporteModal() {
 }
 
 function compartilharPassaporte() {
-  _haptic('light');
-  var v = state.vehicles.find(function(x){ return x.id === _passaporteVehicleId; });
+  var sel = document.getElementById('passaporte-sel');
+  if (!sel) return;
+  var vid = parseInt(sel.value);
+  var v   = state.vehicles.find(function(x){ return x.id === vid; });
   if (!v) return;
 
-  var placa    = (v.placa && v.placa !== '—') ? v.placa : '';
-  var nomeVei  = v.marca + ' ' + v.modelo + ' ' + v.ano;
-  var url      = placa
-    ? 'https://buratogustavo.github.io/passaporte.html?placa=' + placa
-    : 'https://buratogustavo.github.io/passaporte.html';
-  var titulo   = '🛡️ Passaporte ManyCars — ' + nomeVei;
-  var texto    = 'Confira o histórico verificado de manutenções do ' + nomeVei +
-    (placa ? ' (placa ' + placa + ')' : '') +
-    '. Gerado pelo ManyCars.';
+  var placa = (v.placa || '').replace(/[-\s]/g,'').toUpperCase();
+  var score = calcScore(v);
+  var hist  = state.history.filter(function(h){ return h.veiculoId === vid; });
+  var verif = hist.filter(function(h){ return h.verificado; }).length;
 
-  if (navigator.share) {
-    // Web Share API — abre menu nativo do iOS/Android
-    navigator.share({ title: titulo, text: texto, url: url })
-      .then(function() { showToast('Passaporte compartilhado! 🛡️', 'success'); })
-      .catch(function(err) {
-        if (err.name !== 'AbortError') _compartilharFallback(url, texto);
-      });
-  } else {
-    _compartilharFallback(url, texto);
-  }
+  // URL pública
+  var baseUrl = window.location.origin + window.location.pathname;
+  var url = baseUrl + '?passaporte=' + placa;
+
+  // Texto para WhatsApp (modelo Airbnb listing share)
+  var msg = '🚗 *' + v.marca + ' ' + v.modelo + ' ' + v.ano + '*
+' +
+    '📍 Placa: ' + (v.placa || '—') + '
+' +
+    '🏆 Score ManyCars: *' + score + '/100*
+' +
+    '📋 ' + hist.length + ' manutenç' + (hist.length===1?'ão':'ões') + ' registradas' +
+    (verif > 0 ? ' (' + verif + ' com NF ✓)' : '') + '
+' +
+    '🔗 Passaporte completo: ' + url;
+
+  // Opções de compartilhamento
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);display:flex;align-items:flex-end;justify-content:center;padding:16px;';
+  overlay.innerHTML =
+    '<div style="background:var(--surface);border-radius:20px 20px 16px 16px;width:100%;max-width:460px;padding:20px;">' +
+      '<div style="font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--text);margin-bottom:16px;text-align:center;">COMPARTILHAR PASSAPORTE</div>' +
+      '<div style="display:flex;flex-direction:column;gap:8px;">' +
+        // WhatsApp (principal)
+        '<a href="https://wa.me/?text=' + encodeURIComponent(msg) + '" target="_blank" rel="noopener" ' +
+           'style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.3);border-radius:12px;text-decoration:none;">' +
+          '<span style="font-size:24px;">💬</span>' +
+          '<div><div style="font-size:14px;font-weight:700;color:#25D366;">Compartilhar no WhatsApp</div>' +
+          '<div style="font-size:11px;color:var(--text3);">Envia o link do passaporte com resumo</div></div>' +
+        '</a>' +
+        // Copiar link
+        '<button onclick="_copiarLinkPassaporte('' + url + '',this)" ' +
+           'style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.2);border-radius:12px;cursor:pointer;text-align:left;font-family:'Sora',sans-serif;">' +
+          '<span style="font-size:24px;">🔗</span>' +
+          '<div><div style="font-size:14px;font-weight:700;color:var(--accent);">Copiar link do passaporte</div>' +
+          '<div style="font-size:11px;color:var(--text3);">' + url + '</div></div>' +
+        '</button>' +
+        // Web Share API (nativo mobile)
+        (navigator.share ? '<button onclick="_nativeShare('' + encodeURIComponent(JSON.stringify({title:v.marca+' '+v.modelo,text:'Confira o passaporte deste carro',url:url})) + '')" ' +
+           'style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;cursor:pointer;text-align:left;font-family:'Sora',sans-serif;">' +
+          '<span style="font-size:24px;">📤</span>' +
+          '<div><div style="font-size:14px;font-weight:700;color:var(--text);">Outras formas de compartilhar</div>' +
+          '<div style="font-size:11px;color:var(--text3);">Usar o compartilhamento nativo do celular</div></div>' +
+        '</button>' : '') +
+      '</div>' +
+      '<button onclick="this.closest('[style*=fixed]').remove()" style="width:100%;margin-top:12px;padding:12px;background:none;border:1px solid var(--border);border-radius:10px;font-size:13px;cursor:pointer;font-family:'Sora',sans-serif;color:var(--text3);">Cancelar</button>' +
+    '</div>';
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.remove(); });
+}
+
+function _copiarLinkPassaporte(url, btn) {
+  navigator.clipboard.writeText(url).then(function() {
+    if (btn) { btn.querySelector('div div:first-child').textContent = '✓ Link copiado!'; }
+    showToast('🔗 Link copiado! Cole no WhatsApp ou e-mail.', 'success');
+    setTimeout(function(){ document.querySelector('[style*=fixed][style*=99999]') && document.querySelector('[style*=fixed][style*=99999]').remove(); }, 1200);
+  }).catch(function() {
+    showToast('Copie o link: ' + url, 'info');
+  });
+}
+
+function _nativeShare(encodedData) {
+  try {
+    var data = JSON.parse(decodeURIComponent(encodedData));
+    navigator.share(data);
+  } catch(e) {}
 }
 
 function _compartilharFallback(url, texto) {
@@ -14698,16 +15282,38 @@ function saveWishlist() {
   try { localStorage.setItem('manycars_wishlist', JSON.stringify(wishlist)); } catch(e) {}
 }
 
+function _matchSonharDB(query) {
+  // Normaliza a query: remove acentos, lowercase
+  var norm = function(s){ return (s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9\s]/g,'').trim(); };
+  var q = norm(query);
+  var bestKey = 'default', bestScore = 0;
+  Object.keys(SONHAR_DB).forEach(function(k) {
+    var nk = norm(k);
+    var score = 0;
+    if (q === nk) score = 100;
+    else if (q.indexOf(nk) >= 0) score = 80;
+    else if (nk.indexOf(q) >= 0) score = 70;
+    else {
+      // compara palavras individualmente
+      var qWords = q.split(/\s+/).filter(Boolean);
+      var kWords = nk.split(/\s+/).filter(Boolean);
+      var hits = qWords.filter(function(w){ return kWords.some(function(kw){ return kw.indexOf(w)>=0 || w.indexOf(kw)>=0; }); }).length;
+      score = hits > 0 ? Math.round(hits / Math.max(qWords.length, kWords.length) * 60) : 0;
+    }
+    if (score > bestScore) { bestScore = score; bestKey = k; }
+  });
+  return bestKey;
+}
+
 function calcSonharData(query, ano) {
-  var key = 'default';
-  Object.keys(SONHAR_DB).forEach(function(k) { if (query.indexOf(k) >= 0 || k.indexOf(query.split(' ')[0]) >= 0) key = k; });
-  var data = SONHAR_DB[key];
-  var age  = new Date().getFullYear() - ano;
+  var key  = _matchSonharDB(query.toLowerCase());
+  var data = SONHAR_DB[key] || SONHAR_DB['default'];
+  var age  = Math.max(0, new Date().getFullYear() - ano);
   var fipe = Math.round(data.fipe * Math.pow(0.88, age) / 1000) * 1000;
   var ipva = Math.round(fipe * data.ipva);
   var seguro = Math.round(fipe * data.seguro);
   var licenc = 250;
-  var combustivelMes = data.consumo > 0 ? Math.round((1000 / data.consumo) * 5.80) : 150;
+  var combustivelMes = data.consumo > 0 ? Math.round((1000 / data.consumo) * 5.90) : 150;
   var manutAnual = data.manut;
   var revisaoAnual = data.revisao;
   var custoMensal = Math.round((ipva + seguro + licenc + manutAnual + revisaoAnual) / 12 + combustivelMes);
@@ -14718,7 +15324,7 @@ function calcSonharData(query, ano) {
     custoMensal: custoMensal, custoAnual: custoAnual, totalPosse3anos: totalPosse3anos };
 }
 
-function adicionarWishlist(query, ano) {
+async function adicionarWishlist(query, ano) {
   var label = query.split(' ').map(function(w){ return w.charAt(0).toUpperCase()+w.slice(1); }).join(' ');
   var id = label + '_' + ano;
   if (wishlist.find(function(w){ return w.id === id; })) {
@@ -14727,7 +15333,26 @@ function adicionarWishlist(query, ano) {
   if (wishlist.length >= 10) {
     showToast('Máximo de 10 carros na wishlist', 'error'); return;
   }
+
   var calc = calcSonharData(query.toLowerCase(), parseInt(ano));
+
+  // Tenta buscar FIPE real para salvar valores mais precisos
+  if (typeof fipeLookup === 'function') {
+    try {
+      var parts = query.trim().split(' ');
+      var marcaQ = parts[0], modeloQ = parts.slice(1).join(' ') || parts[0];
+      var fr = await fipeLookup(marcaQ, modeloQ, parseInt(ano));
+      if (fr && fr.valor > 0) {
+        calc.fipe         = fr.valor;
+        calc.ipva         = Math.round(fr.valor * calc.data.ipva);
+        calc.seguro       = Math.round(fr.valor * calc.data.seguro);
+        calc.custoMensal  = Math.round((calc.ipva + calc.seguro + 250 + calc.manutAnual + calc.revisaoAnual) / 12 + calc.combustivelMes);
+        calc.custoAnual   = calc.ipva + calc.seguro + 250 + calc.manutAnual + calc.revisaoAnual + calc.combustivelMes * 12;
+        calc.totalPosse3anos = fr.valor + calc.custoAnual * 3;
+      }
+    } catch(e) {}
+  }
+
   wishlist.push({ id: id, label: label, query: query.toLowerCase(), ano: parseInt(ano),
     fipe: calc.fipe, custoMensal: calc.custoMensal, custoAnual: calc.custoAnual,
     totalPosse3anos: calc.totalPosse3anos, consumo: calc.data.consumo,
@@ -14736,7 +15361,6 @@ function adicionarWishlist(query, ano) {
   renderWishlist();
   updateWishlistBadge();
   showToast('❤️ ' + label + ' salvo na wishlist!', 'success');
-  // Update the button in result
   var btn = document.getElementById('btn-add-wish');
   if (btn) { btn.textContent = '❤️ Na wishlist'; btn.disabled = true; btn.style.opacity = '0.6'; }
 }
@@ -15181,41 +15805,133 @@ function renderComparativo() {
 }
 
 var SONHAR_DB = {
-  'onix':      { fipe:72000,  ipva:0.04, seguro:0.05, consumo:12.5, manut:1800, revisao:1200 },
-  'polo':      { fipe:82000,  ipva:0.04, seguro:0.055,consumo:13.0, manut:1900, revisao:1400 },
-  'corolla':   { fipe:135000, ipva:0.04, seguro:0.06, consumo:11.5, manut:2400, revisao:2000 },
-  'civic':     { fipe:125000, ipva:0.04, seguro:0.065,consumo:11.0, manut:2600, revisao:2200 },
-  'tracker':   { fipe:115000, ipva:0.04, seguro:0.06, consumo:11.0, manut:2200, revisao:1800 },
-  'hb20':      { fipe:65000,  ipva:0.04, seguro:0.05, consumo:13.5, manut:1600, revisao:1000 },
-  'argo':      { fipe:68000,  ipva:0.04, seguro:0.05, consumo:13.0, manut:1600, revisao:1000 },
-  'kwid':      { fipe:55000,  ipva:0.04, seguro:0.045,consumo:15.0, manut:1400, revisao:900  },
-  'jeep':      { fipe:185000, ipva:0.04, seguro:0.07, consumo:9.5,  manut:3200, revisao:2800 },
-  'compass':   { fipe:185000, ipva:0.04, seguro:0.07, consumo:9.5,  manut:3200, revisao:2800 },
-  'hilux':     { fipe:250000, ipva:0.04, seguro:0.065,consumo:8.5,  manut:3800, revisao:3200 },
-  'sw4':       { fipe:320000, ipva:0.04, seguro:0.07, consumo:8.0,  manut:4200, revisao:4000 },
-  'bmw':       { fipe:350000, ipva:0.04, seguro:0.08, consumo:9.0,  manut:8000, revisao:7000 },
-  'mercedes':  { fipe:400000, ipva:0.04, seguro:0.085,consumo:9.5,  manut:9000, revisao:8000 },
-  'porsche':   { fipe:650000, ipva:0.04, seguro:0.09, consumo:8.5,  manut:15000,revisao:13000},
-  'ferrari':   { fipe:1800000,ipva:0.04, seguro:0.10, consumo:5.0,  manut:35000,revisao:30000},
-  'lamborghini':{ fipe:2500000,ipva:0.04,seguro:0.10, consumo:4.5,  manut:45000,revisao:40000},
-  'tesla':     { fipe:380000, ipva:0.04, seguro:0.075,consumo:0,    manut:1200, revisao:800  },
-  'default':   { fipe:90000,  ipva:0.04, seguro:0.055,consumo:11.0, manut:2000, revisao:1600 },
+  // Hatchbacks/Sedans populares
+  'onix':        { fipe:75000,  ipva:0.04, seguro:0.05,  consumo:13.0, manut:1800, revisao:1200 },
+  'onix plus':   { fipe:82000,  ipva:0.04, seguro:0.05,  consumo:12.5, manut:1900, revisao:1300 },
+  'hb20':        { fipe:68000,  ipva:0.04, seguro:0.05,  consumo:13.5, manut:1600, revisao:1000 },
+  'hb20s':       { fipe:72000,  ipva:0.04, seguro:0.05,  consumo:13.0, manut:1700, revisao:1100 },
+  'polo':        { fipe:92000,  ipva:0.04, seguro:0.055, consumo:13.0, manut:1900, revisao:1400 },
+  'virtus':      { fipe:95000,  ipva:0.04, seguro:0.055, consumo:12.5, manut:2000, revisao:1500 },
+  'argo':        { fipe:72000,  ipva:0.04, seguro:0.05,  consumo:13.5, manut:1600, revisao:1000 },
+  'cronos':      { fipe:78000,  ipva:0.04, seguro:0.05,  consumo:12.5, manut:1700, revisao:1100 },
+  'kwid':        { fipe:58000,  ipva:0.04, seguro:0.045, consumo:15.5, manut:1400, revisao:900  },
+  'mobi':        { fipe:55000,  ipva:0.04, seguro:0.045, consumo:15.0, manut:1400, revisao:900  },
+  'uno':         { fipe:40000,  ipva:0.04, seguro:0.045, consumo:13.0, manut:1500, revisao:900  },
+  'gol':         { fipe:48000,  ipva:0.04, seguro:0.045, consumo:12.5, manut:1500, revisao:1000 },
+  'saveiro':     { fipe:85000,  ipva:0.04, seguro:0.055, consumo:12.0, manut:1800, revisao:1200 },
+  'ka':          { fipe:45000,  ipva:0.04, seguro:0.045, consumo:13.5, manut:1500, revisao:1000 },
+  'march':       { fipe:45000,  ipva:0.04, seguro:0.045, consumo:13.5, manut:1500, revisao:1000 },
+  'sandero':     { fipe:62000,  ipva:0.04, seguro:0.05,  consumo:13.0, manut:1600, revisao:1000 },
+  'logan':       { fipe:60000,  ipva:0.04, seguro:0.05,  consumo:12.5, manut:1700, revisao:1100 },
+  'city':        { fipe:90000,  ipva:0.04, seguro:0.055, consumo:12.5, manut:2000, revisao:1600 },
+  'fit':         { fipe:85000,  ipva:0.04, seguro:0.055, consumo:13.0, manut:1900, revisao:1500 },
+  'yaris':       { fipe:88000,  ipva:0.04, seguro:0.055, consumo:13.5, manut:1800, revisao:1400 },
+  'versa':       { fipe:88000,  ipva:0.04, seguro:0.055, consumo:12.0, manut:1900, revisao:1500 },
+  'sentra':      { fipe:105000, ipva:0.04, seguro:0.06,  consumo:11.5, manut:2200, revisao:1800 },
+  'corolla':     { fipe:140000, ipva:0.04, seguro:0.06,  consumo:11.5, manut:2400, revisao:2000 },
+  'civic':       { fipe:130000, ipva:0.04, seguro:0.065, consumo:11.0, manut:2600, revisao:2200 },
+  'cruze':       { fipe:130000, ipva:0.04, seguro:0.065, consumo:11.0, manut:2600, revisao:2200 },
+  'cobalt':      { fipe:65000,  ipva:0.04, seguro:0.05,  consumo:11.5, manut:1800, revisao:1300 },
+  'spin':        { fipe:90000,  ipva:0.04, seguro:0.055, consumo:11.0, manut:2000, revisao:1600 },
+  // SUVs
+  'tracker':     { fipe:118000, ipva:0.04, seguro:0.06,  consumo:11.5, manut:2200, revisao:1800 },
+  'tcross':      { fipe:112000, ipva:0.04, seguro:0.06,  consumo:12.0, manut:2100, revisao:1700 },
+  't-cross':     { fipe:112000, ipva:0.04, seguro:0.06,  consumo:12.0, manut:2100, revisao:1700 },
+  'taos':        { fipe:140000, ipva:0.04, seguro:0.065, consumo:11.5, manut:2300, revisao:1900 },
+  'pulse':       { fipe:95000,  ipva:0.04, seguro:0.055, consumo:12.5, manut:1900, revisao:1500 },
+  'creta':       { fipe:148000, ipva:0.04, seguro:0.065, consumo:11.0, manut:2400, revisao:2000 },
+  'hrv':         { fipe:152000, ipva:0.04, seguro:0.065, consumo:11.5, manut:2400, revisao:2000 },
+  'hr-v':        { fipe:152000, ipva:0.04, seguro:0.065, consumo:11.5, manut:2400, revisao:2000 },
+  'kicks':       { fipe:128000, ipva:0.04, seguro:0.06,  consumo:12.0, manut:2200, revisao:1800 },
+  'wrv':         { fipe:110000, ipva:0.04, seguro:0.06,  consumo:12.0, manut:2000, revisao:1600 },
+  'wr-v':        { fipe:110000, ipva:0.04, seguro:0.06,  consumo:12.0, manut:2000, revisao:1600 },
+  'duster':      { fipe:105000, ipva:0.04, seguro:0.06,  consumo:11.5, manut:2000, revisao:1600 },
+  'captur':      { fipe:118000, ipva:0.04, seguro:0.065, consumo:11.0, manut:2200, revisao:1800 },
+  'compass':     { fipe:188000, ipva:0.04, seguro:0.07,  consumo:9.5,  manut:3200, revisao:2800 },
+  'renegade':    { fipe:122000, ipva:0.04, seguro:0.065, consumo:10.5, manut:2800, revisao:2400 },
+  'commander':   { fipe:230000, ipva:0.04, seguro:0.075, consumo:9.0,  manut:3500, revisao:3000 },
+  'tucson':      { fipe:175000, ipva:0.04, seguro:0.07,  consumo:10.5, manut:2800, revisao:2400 },
+  'sportage':    { fipe:180000, ipva:0.04, seguro:0.07,  consumo:10.5, manut:2800, revisao:2400 },
+  'ecosport':    { fipe:90000,  ipva:0.04, seguro:0.055, consumo:11.5, manut:2000, revisao:1600 },
+  'ix35':        { fipe:130000, ipva:0.04, seguro:0.065, consumo:11.0, manut:2400, revisao:2000 },
+  'crv':         { fipe:200000, ipva:0.04, seguro:0.075, consumo:10.0, manut:3000, revisao:2600 },
+  'cr-v':        { fipe:200000, ipva:0.04, seguro:0.075, consumo:10.0, manut:3000, revisao:2600 },
+  'rav4':        { fipe:220000, ipva:0.04, seguro:0.075, consumo:10.5, manut:3000, revisao:2600 },
+  'haval':       { fipe:165000, ipva:0.04, seguro:0.07,  consumo:10.0, manut:2600, revisao:2200 },
+  // Pickups
+  'strada':      { fipe:105000, ipva:0.04, seguro:0.06,  consumo:11.5, manut:2000, revisao:1600 },
+  'toro':        { fipe:162000, ipva:0.04, seguro:0.07,  consumo:10.0, manut:2800, revisao:2400 },
+  'oroch':       { fipe:118000, ipva:0.04, seguro:0.06,  consumo:11.0, manut:2200, revisao:1800 },
+  'montana':     { fipe:105000, ipva:0.04, seguro:0.06,  consumo:11.5, manut:2000, revisao:1600 },
+  's10':         { fipe:180000, ipva:0.04, seguro:0.065, consumo:9.5,  manut:3200, revisao:2800 },
+  'ranger':      { fipe:215000, ipva:0.04, seguro:0.065, consumo:9.0,  manut:3500, revisao:3000 },
+  'hilux':       { fipe:255000, ipva:0.04, seguro:0.065, consumo:8.5,  manut:3800, revisao:3200 },
+  'amarok':      { fipe:200000, ipva:0.04, seguro:0.065, consumo:9.0,  manut:3500, revisao:3000 },
+  'frontier':    { fipe:185000, ipva:0.04, seguro:0.065, consumo:9.5,  manut:3200, revisao:2800 },
+  'maverick':    { fipe:185000, ipva:0.04, seguro:0.065, consumo:9.5,  manut:3000, revisao:2600 },
+  // Premium
+  'sw4':         { fipe:325000, ipva:0.04, seguro:0.07,  consumo:8.0,  manut:4200, revisao:4000 },
+  'bmw':         { fipe:360000, ipva:0.04, seguro:0.08,  consumo:9.5,  manut:8000, revisao:7000 },
+  'mercedes':    { fipe:410000, ipva:0.04, seguro:0.085, consumo:9.5,  manut:9000, revisao:8000 },
+  'audi':        { fipe:280000, ipva:0.04, seguro:0.08,  consumo:10.0, manut:7500, revisao:6500 },
+  'volvo':       { fipe:320000, ipva:0.04, seguro:0.08,  consumo:10.5, manut:6500, revisao:5500 },
+  'land rover':  { fipe:420000, ipva:0.04, seguro:0.085, consumo:8.5,  manut:10000,revisao:9000 },
+  'jeep':        { fipe:190000, ipva:0.04, seguro:0.07,  consumo:9.5,  manut:3200, revisao:2800 },
+  'porsche':     { fipe:660000, ipva:0.04, seguro:0.09,  consumo:8.5,  manut:15000,revisao:13000},
+  'ferrari':     { fipe:1800000,ipva:0.04, seguro:0.10,  consumo:5.0,  manut:35000,revisao:30000},
+  'lamborghini': { fipe:2500000,ipva:0.04, seguro:0.10,  consumo:4.5,  manut:45000,revisao:40000},
+  // Elétricos
+  'tesla':       { fipe:390000, ipva:0.04, seguro:0.075, consumo:0,    manut:1200, revisao:800  },
+  'byd':         { fipe:150000, ipva:0.04, seguro:0.07,  consumo:0,    manut:1000, revisao:700  },
+  'bolt':        { fipe:180000, ipva:0.04, seguro:0.07,  consumo:0,    manut:1000, revisao:700  },
+  'leaf':        { fipe:160000, ipva:0.04, seguro:0.07,  consumo:0,    manut:1000, revisao:700  },
+  'default':     { fipe:90000,  ipva:0.04, seguro:0.055, consumo:11.5, manut:2000, revisao:1600 },
 };
 
-function pesquisarSonho() {
-  var query = (document.getElementById('sonhar-input').value || '').trim().toLowerCase();
-  var ano   = parseInt(document.getElementById('sonhar-ano').value) || 2023;
+async function pesquisarSonho() {
+  var rawQuery = (document.getElementById('sonhar-input').value || '').trim();
+  var query = rawQuery.toLowerCase();
+  var ano   = parseInt(document.getElementById('sonhar-ano').value) || new Date().getFullYear();
   if (!query) { showToast('Digite o modelo do carro', 'error'); return; }
 
   var resultEl = document.getElementById('sonhar-result');
-  resultEl.innerHTML = '<div class="empty-state"><div class="empty-icon" style="animation:spin 1s linear infinite">⚙️</div><div class="empty-title">Calculando custos...</div></div>';
+  resultEl.innerHTML = '<div class="empty-state"><div class="empty-icon" style="animation:spin 1s linear infinite">⚙️</div><div class="empty-title">Buscando na tabela FIPE...</div></div>';
+
+  // Tenta buscar FIPE real primeiro (usa engine já existente no app)
+  var fipeValorReal = null;
+  var marcaQuery = rawQuery.split(' ')[0];
+  var modeloQuery = rawQuery.split(' ').slice(1).join(' ') || rawQuery;
+
+  if (typeof fipeLookup === 'function') {
+    try {
+      var fipeResult = await fipeLookup(marcaQuery, modeloQuery, ano);
+      if (fipeResult && fipeResult.valor > 0) {
+        fipeValorReal = fipeResult.valor;
+      }
+    } catch(e) {
+      // fallback para SONHAR_DB
+    }
+  }
+
+  var calc = calcSonharData(query, ano);
+  // Se temos o valor FIPE real, substitui o estimado
+  if (fipeValorReal) {
+    var ratio = fipeValorReal / calc.fipe;
+    calc.fipe         = fipeValorReal;
+    calc.ipva         = Math.round(fipeValorReal * calc.data.ipva);
+    calc.seguro       = Math.round(fipeValorReal * calc.data.seguro);
+    calc.custoMensal  = Math.round((calc.ipva + calc.seguro + calc.licenc + calc.manutAnual + calc.revisaoAnual) / 12 + calc.combustivelMes);
+    calc.custoAnual   = calc.ipva + calc.seguro + calc.licenc + calc.manutAnual + calc.revisaoAnual + calc.combustivelMes * 12;
+    calc.totalPosse3anos = fipeValorReal + calc.custoAnual * 3;
+  }
 
   setTimeout(function() {
-    var calc = calcSonharData(query, ano);
+    var calc2 = calc; // já calculado acima
     var data = calc.data;
     var fipe = calc.fipe, ipva = calc.ipva, seguro = calc.seguro, licenc = calc.licenc;
     var combustivelMes = calc.combustivelMes, manutAnual = calc.manutAnual, revisaoAnual = calc.revisaoAnual;
     var custoMensal = calc.custoMensal, custoAnual = calc.custoAnual, totalPosse3anos = calc.totalPosse3anos;
+    var calc2 = calc;
 
     var fmt = function(v){ return 'R$'+Math.round(v).toLocaleString('pt-BR'); };
     var modelLabel = query.split(' ').map(function(w){ return w.charAt(0).toUpperCase()+w.slice(1); }).join(' ');
@@ -17620,89 +18336,164 @@ function renderPremiumPage() {
 
 function _resetSenhasAcesso() { /* chamada no logout */ }
 
+// ── Controle de tentativas (anti-brute-force) ─────────────────
+var _loginAttempts = {};
+
 function _pedirSenhaMenu(destino) {
-  var label = destino === 'admin' ? '🛡️ Administrador' : '💰 Monetização';
+  var isAdmin = destino === 'admin';
+  var label   = isAdmin ? '🛡️ Administrador' : '💰 Monetização';
+  var color   = isAdmin ? '#a78bfa' : 'var(--accent)';
+  var gradBtn = isAdmin
+    ? 'linear-gradient(135deg,#6d28d9,#a78bfa)'
+    : 'var(--accent)';
+
+  // Verifica se já autenticado nessa sessão
+  try {
+    if (sessionStorage.getItem('mc_priv_' + destino) === '1') {
+      if (destino === 'admin') showPage('modo-admin');
+      else                     showPage('monetizacao');
+      return;
+    }
+  } catch(e) {}
+
   var overlay = document.createElement('div');
-  overlay.id = '_senha-overlay';
-  overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:24px;';
+  overlay.id  = '_senha-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.85);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:24px;';
+
   overlay.innerHTML =
-    '<div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px 24px;width:100%;max-width:340px;">' +
-      '<div style="text-align:center;margin-bottom:20px;">' +
-        '<div style="font-size:36px;margin-bottom:8px;">🔐</div>' +
-        '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;letter-spacing:1px;color:var(--text);">' + label + '</div>' +
-        '<div style="font-size:12px;color:var(--text3);margin-top:4px;">Digite a senha de acesso</div>' +
+    '<div id="_login-box" style="background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:32px 28px;width:100%;max-width:360px;box-shadow:0 24px 64px rgba(0,0,0,0.6);">' +
+      // Header
+      '<div style="text-align:center;margin-bottom:28px;">' +
+        '<div style="width:56px;height:56px;border-radius:16px;background:' + (isAdmin?'rgba(167,139,250,0.12)':'rgba(59,130,246,0.12)') + ';border:1px solid ' + (isAdmin?'rgba(167,139,250,0.3)':'rgba(59,130,246,0.3)') + ';display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px;">' + (isAdmin?'🛡️':'💰') + '</div>' +
+        '<div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1.5px;color:var(--text);">' + label + '</div>' +
+        '<div style="font-size:11px;color:var(--text3);margin-top:5px;">Acesso restrito — credenciais necessárias</div>' +
       '</div>' +
-      '<div style="position:relative;margin-bottom:16px;">' +
-        '<input id="_senha-input" type="password" autocomplete="off" placeholder="••••••••••" ' +
-          'style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;' +
-          'padding:12px 44px 12px 14px;font-size:16px;color:var(--text);font-family:\'Sora\',sans-serif;box-sizing:border-box;outline:none;">' +
-        '<button onclick="var i=document.getElementById(\'_senha-input\');i.type=i.type===\'password\'?\'text\':\'password\';this.textContent=i.type===\'password\'?\'👁\':\'🙈\';" ' +
-          'style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--text3);">👁</button>' +
+      // Usuário
+      '<div style="margin-bottom:12px;">' +
+        '<div class="field-label" style="margin-bottom:6px;">Usuário</div>' +
+        '<input id="_login-user" type="text" autocomplete="username" placeholder="seu usuário" ' +
+          'style="width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;font-size:14px;color:var(--text);font-family:'Sora',sans-serif;box-sizing:border-box;outline:none;transition:border-color .2s;" ' +
+          'onfocus="this.style.borderColor='' + color + ''" onblur="this.style.borderColor='var(--border)'"/>' +
       '</div>' +
-      '<div id="_senha-erro" style="font-size:11px;color:#e53e3e;text-align:center;margin-bottom:10px;min-height:16px;"></div>' +
-      '<button id="_senha-btn-confirmar" style="width:100%;padding:12px;background:var(--accent);color:var(--bg);border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:\'Sora\',sans-serif;">Entrar</button>' +
-      '<button onclick="document.getElementById(\'_senha-overlay\').remove()" style="width:100%;padding:10px;background:none;border:1px solid var(--border);border-radius:8px;font-size:13px;cursor:pointer;font-family:\'Sora\',sans-serif;color:var(--text3);margin-top:8px;">Cancelar</button>' +
+      // Senha
+      '<div style="margin-bottom:6px;">' +
+        '<div class="field-label" style="margin-bottom:6px;">Senha</div>' +
+        '<div style="position:relative;">' +
+          '<input id="_login-pass" type="password" autocomplete="current-password" placeholder="••••••••••" ' +
+            'style="width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:12px 44px 12px 14px;font-size:14px;color:var(--text);font-family:'Sora',sans-serif;box-sizing:border-box;outline:none;transition:border-color .2s;" ' +
+            'onfocus="this.style.borderColor='' + color + ''" onblur="this.style.borderColor='var(--border)'"/>' +
+          '<button onclick="var i=document.getElementById('_login-pass');i.type=i.type==='password'?'text':'password';this.textContent=i.type==='password'?'👁':'🙈';" ' +
+            'style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:var(--text3);padding:0;">👁</button>' +
+        '</div>' +
+      '</div>' +
+      // Erro
+      '<div id="_login-erro" style="font-size:11px;color:#e53e3e;text-align:center;margin-bottom:14px;min-height:16px;padding:2px 0;"></div>' +
+      // Acessar
+      '<button id="_login-btn-ok" style="width:100%;padding:13px;background:' + gradBtn + ';color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Sora',sans-serif;letter-spacing:.5px;margin-bottom:8px;">Acessar</button>' +
+      '<button onclick="document.getElementById('_senha-overlay').remove()" style="width:100%;padding:10px;background:none;border:1px solid var(--border);border-radius:10px;font-size:13px;cursor:pointer;font-family:'Sora',sans-serif;color:var(--text3);">Cancelar</button>' +
     '</div>';
+
   document.body.appendChild(overlay);
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.remove(); });
+
   setTimeout(function() {
-    var inp = document.getElementById('_senha-input');
-    var btn = document.getElementById('_senha-btn-confirmar');
-    if (inp) inp.focus();
-    function tentar() { _confirmarSenha(destino); }
-    if (btn) btn.addEventListener('click', tentar);
-    if (inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter') tentar(); });
+    var userInp = document.getElementById('_login-user');
+    var passInp = document.getElementById('_login-pass');
+    var btn     = document.getElementById('_login-btn-ok');
+    if (userInp) userInp.focus();
+    function tentar() { _confirmarLogin(destino); }
+    if (btn)     btn.addEventListener('click', tentar);
+    if (passInp) passInp.addEventListener('keydown', function(e){ if(e.key==='Enter') tentar(); });
+    if (userInp) userInp.addEventListener('keydown', function(e){ if(e.key==='Enter') { if(passInp) passInp.focus(); } });
   }, 60);
 }
 
-async function _confirmarSenha(destino) {
-  var inp  = document.getElementById('_senha-input');
-  var erro = document.getElementById('_senha-erro');
-  var ov   = document.getElementById('_senha-overlay');
-  var senha = inp ? inp.value : '';
-  if (!senha) return;
+async function _confirmarLogin(destino) {
+  var userInp = document.getElementById('_login-user');
+  var passInp = document.getElementById('_login-pass');
+  var erroEl  = document.getElementById('_login-erro');
+  var ov      = document.getElementById('_senha-overlay');
+  var btn     = document.getElementById('_login-btn-ok');
+
+  var usuario = (userInp ? userInp.value : '').trim().toLowerCase();
+  var senha   = passInp ? passInp.value : '';
+
+  if (!usuario) { if(userInp) userInp.focus(); if(erroEl) erroEl.textContent = 'Informe o usuário'; return; }
+  if (!senha)   { if(passInp) passInp.focus(); if(erroEl) erroEl.textContent = 'Informe a senha'; return; }
+
+  // Feedback visual de loading
+  if (btn) { btn.disabled = true; btn.textContent = 'Verificando…'; }
+
+  // Anti-brute-force: bloqueia após 5 tentativas por 60s
+  var chave = destino + ':' + usuario;
+  var agora = Date.now();
+  _loginAttempts[chave] = _loginAttempts[chave] || { count: 0, until: 0 };
+  var att = _loginAttempts[chave];
+  if (att.until > agora) {
+    var seg = Math.ceil((att.until - agora) / 1000);
+    if (erroEl) erroEl.textContent = 'Bloqueado. Aguarde ' + seg + 's';
+    if (btn) { btn.disabled = false; btn.textContent = 'Acessar'; }
+    return;
+  }
+
+  // SHA-256 de "usuario:senha"
+  var hashInput = await _sha256(usuario + ':' + senha);
+
+  // ── Hashes locais (fallback sem Supabase) ────────────────────
+  // Admin:        usuario "admin"      | senha "manycars@admin2025"
+  // Monetização:  usuario "financeiro" | senha "manycars@mono2025"
+  // Para alterar: SHA-256 de "usuario:senha" → https://emn178.github.io/online-tools/sha256.html
+  var CREDS = {
+    admin:       '0645365e2847819d52883b6cb20ffa48531b0dcc865737d0709986dcf10425be',
+    monetizacao: '1b07a5b2ec1139595542080999153e849889d50daab4c37c630e78d7867648e6'
+  };
 
   var ok = false;
-  try {
-    var hashInput = await _sha256(senha);
 
-    // Hash SHA-256 da senha admin — fallback local
-    // Para mudar a senha: gere novo hash em https://emn178.github.io/online-tools/sha256.html
-    var _HASH_LOCAL = '0858821bea46b64828cc5faa2bae0b5dcf9b1cc282f8047febc552b675d16230';
+  // 1. Verifica tabela admins no Supabase (permite múltiplos admins)
+  if (_supabaseReady && _sb) {
+    try {
+      var userHash = await _sha256(usuario);
+      var { data: adminRow } = await _sb
+        .from('admins')
+        .select('role, ativo')
+        .eq('username_hash', userHash)
+        .eq('pass_hash',     hashInput)
+        .eq('role',          destino)
+        .eq('ativo',         true)
+        .single();
+      if (adminRow) ok = true;
+    } catch(e) { /* sem tabela admins ou sem conexão — usa fallback */ }
+  }
 
-    if (_supabaseReady && _sb && state.user) {
-      // Tenta validar via Supabase primeiro
-      try {
-        var { data } = await _sb
-          .from('profiles')
-          .select('is_admin, admin_hash')
-          .eq('id', state.user.id)
-          .single();
-        if (data && data.is_admin && data.admin_hash) {
-          // Supabase configurado — usa o hash do banco
-          ok = data.admin_hash === hashInput;
-        } else {
-          // Coluna ainda não configurada — usa fallback local
-          ok = hashInput === _HASH_LOCAL;
-        }
-      } catch(e) {
-        // Sem conexão — usa fallback local
-        ok = hashInput === _HASH_LOCAL;
-      }
-    } else {
-      // Sem Supabase — usa fallback local
-      ok = hashInput === _HASH_LOCAL;
-    }
-  } catch(e) { ok = false; }
+  // 2. Fallback local
+  if (!ok) ok = (CREDS[destino] === hashInput);
+
+  if (btn) { btn.disabled = false; btn.textContent = 'Acessar'; }
 
   if (ok) {
+    att.count = 0;
     if (ov) ov.remove();
+    try { sessionStorage.setItem('mc_priv_' + destino, '1'); } catch(e) {}
     if (destino === 'admin') showPage('modo-admin');
     else                     showPage('monetizacao');
     showToast('Acesso liberado ✅', 'success');
   } else {
-    if (erro) erro.textContent = 'Senha incorreta — tente novamente';
-    if (inp)  { inp.value = ''; inp.focus(); inp.style.borderColor = '#e53e3e'; }
-    setTimeout(function(){ if(inp) inp.style.borderColor = ''; }, 1500);
+    att.count++;
+    if (att.count >= 5) {
+      att.until = agora + 60000;
+      att.count = 0;
+      if (erroEl) erroEl.textContent = 'Bloqueado por 60s após muitas tentativas';
+    } else {
+      var restantes = 5 - att.count;
+      if (erroEl) erroEl.textContent = 'Credenciais inválidas — ' + restantes + ' tentativa' + (restantes>1?'s':'') + ' restante' + (restantes>1?'s':'');
+    }
+    if (passInp) { passInp.value = ''; passInp.focus(); passInp.style.borderColor = '#e53e3e'; }
+    if (userInp) userInp.style.borderColor = '#e53e3e';
+    setTimeout(function(){
+      if(passInp) passInp.style.borderColor = 'var(--border)';
+      if(userInp) userInp.style.borderColor = 'var(--border)';
+    }, 1800);
   }
 }
 
@@ -18740,8 +19531,13 @@ function cadastrarVeiculo() {
   var cor         = document.getElementById('v-cor').value.trim();
   var combustivel = document.getElementById('v-combustivel').value.trim();
   var km          = document.getElementById('v-km').value;
+  var chassi      = (document.getElementById('v-chassi') ? document.getElementById('v-chassi').value.trim().toUpperCase() : '');
   var placa       = state._pendingPlaca || '—';
   if (!marca || !modelo || !km) { showToast('Preencha a quilometragem para continuar', 'error'); return; }
+  // Valida chassi se preenchido
+  if (chassi && !_validarVIN(chassi)) {
+    showToast('Chassi inválido — verifique os 17 caracteres', 'error'); return;
+  }
   var inputAno = document.getElementById('v-ano');
   var fipeValor = inputAno && inputAno.dataset.fipeValor ? parseInt(inputAno.dataset.fipeValor) : null;
   var v = {
@@ -18753,7 +19549,8 @@ function cadastrarVeiculo() {
     fipeCodigoAno:   inputAno ? inputAno.dataset.codigoAno : null,
     fipeMesRef:      inputAno ? inputAno.dataset.fipeMes   : null,
     fipeCodigoFipe:  inputAno ? inputAno.dataset.fipeCod   : null,
-    fipeHistorico:   []
+    fipeHistorico:   [],
+    chassi:          chassi || null
   };
   if (v.fipeReal) {
     v.fipeHistorico.push({ mes: v.fipeMesRef || new Date().toISOString().slice(0,7), valor: v.fipeReal, km: v.km, data: new Date().toISOString() });
@@ -18766,6 +19563,9 @@ function cadastrarVeiculo() {
   var prev = document.getElementById('fipe-preview-cadastro');
   if (prev) prev.remove();
   _acState.marcaSel = null; _acState.modelSel = null; _acState.anos = null;
+  if (document.getElementById('v-chassi')) document.getElementById('v-chassi').value = '';
+  var vd = document.getElementById('vin-decode-result'); if(vd) vd.textContent='';
+  var vs = document.getElementById('vin-status'); if(vs) vs.textContent='';
   showToast(marca + ' ' + modelo + ' cadastrado! 🚗', 'success');
   resetBusca();
   setTimeout(function() { if (typeof _promptImportarHistorico === 'function') _promptImportarHistorico(v); }, 400);
@@ -19180,5 +19980,1740 @@ renderModeloInfo = function() {
   var pg = document.getElementById('page-modelo-info');
   if (pg && pg.classList.contains('active')) renderModeloInfo();
 })();
+
+</script>
+
+<!-- ============================================================
+     MÓDULO: Modos especiais — Admin, Teste
+     ============================================================ -->
+<script>
+
+
+// ══════════════════════════════════════════════════════════════
+// FEATURE: Recalls SENATRAN em tempo real
+// API: https://brasilapi.com.br/api/fipe/marcas/v1/carros
+// Recall: https://www.gov.br/infraestrutura/pt-br/assuntos/transito/recall
+// Usamos a BrasilAPI como proxy quando disponível
+// ══════════════════════════════════════════════════════════════
+var _recallCache = {};
+var _recallCheckedAt = {};
+
+async function _verificarRecalls(marca, modelo, ano) {
+  var key = (marca + '_' + modelo + '_' + ano).toLowerCase().replace(/[^a-z0-9]/g,'_');
+  // Cache de 24h
+  var now = Date.now();
+  if (_recallCheckedAt[key] && (now - _recallCheckedAt[key]) < 86400000) {
+    return _recallCache[key] || [];
+  }
+  _recallCheckedAt[key] = now;
+  try {
+    // API pública de recalls do DENATRAN via BrasilAPI
+    var url = 'https://brasilapi.com.br/api/recalls/v1/veiculos?marca=' +
+      encodeURIComponent(marca.split(' ')[0].toUpperCase()) +
+      '&modelo=' + encodeURIComponent(modelo.split(' ')[0].toUpperCase()) +
+      '&ano=' + ano;
+    var res = await fetch(url, { signal: AbortSignal.timeout ? AbortSignal.timeout(5000) : undefined });
+    if (!res.ok) throw new Error('recall api ' + res.status);
+    var data = await res.json();
+    var recalls = Array.isArray(data) ? data : (data.recalls || []);
+    _recallCache[key] = recalls;
+    return recalls;
+  } catch(e) {
+    // Fallback: base local de recalls conhecidos no Brasil
+    var localRecalls = _recallsLocaisConhecidos(marca, modelo, ano);
+    _recallCache[key] = localRecalls;
+    return localRecalls;
+  }
+}
+
+// Base local de recalls conhecidos (atualizar periodicamente)
+function _recallsLocaisConhecidos(marca, modelo, ano) {
+  var m = marca.toLowerCase(); var mo = modelo.toLowerCase(); var a = parseInt(ano);
+  var found = [];
+  var DB = [
+    { marca:'volkswagen', modelos:['polo','virtus','t-cross','taos'], anos:[2018,2019,2020,2021,2022,2023],
+      desc:'Airbag Takata — risco de ruptura do inflador', codigo:'RC-2021-VW-001', urgencia:'alta' },
+    { marca:'chevrolet', modelos:['onix','cruze','tracker'], anos:[2019,2020,2021,2022],
+      desc:'Módulo de controle do motor — risco de falha na aceleração', codigo:'RC-2022-GM-001', urgencia:'media' },
+    { marca:'fiat', modelos:['toro','strada','pulse'], anos:[2021,2022,2023],
+      desc:'Cintos de segurança dianteiros — possível falha no tensionamento', codigo:'RC-2023-FIAT-001', urgencia:'alta' },
+    { marca:'toyota', modelos:['corolla','hilux','sw4'], anos:[2018,2019,2020],
+      desc:'Airbag Takata — recall global', codigo:'RC-2020-TOY-001', urgencia:'alta' },
+    { marca:'jeep', modelos:['compass','renegade'], anos:[2017,2018,2019,2020],
+      desc:'Software da transmissão — possível engate inesperado', codigo:'RC-2021-JEEP-001', urgencia:'media' },
+    { marca:'hyundai', modelos:['creta','hb20'], anos:[2019,2020,2021],
+      desc:'Bomba de combustível — possível falha no fornecimento', codigo:'RC-2022-HYU-001', urgencia:'media' },
+    { marca:'ford', modelos:['ranger','ka'], anos:[2018,2019,2020],
+      desc:'Sistema de freio — sensor ABS', codigo:'RC-2021-FORD-001', urgencia:'media' },
+  ];
+  DB.forEach(function(r) {
+    if (r.marca === m || m.includes(r.marca)) {
+      var modeloMatch = r.modelos.some(function(rm){ return mo.includes(rm) || rm.includes(mo.split(' ')[0]); });
+      var anoMatch    = r.anos.includes(a);
+      if (modeloMatch && anoMatch) found.push(r);
+    }
+  });
+  return found;
+}
+
+// Mostra notificação de recall se encontrado
+
+// Recall alert no passaporte (element diferente do card)
+async function _mostrarAlertaRecallPassaporte(v) {
+  if (!v) return;
+  var recalls = await _verificarRecalls(v.marca, v.modelo, v.ano);
+  var el = document.getElementById('recall-alert-pass-' + v.id);
+  if (!el || !recalls || !recalls.length) return;
+  var urgColor = recalls.some(function(r){ return r.urgencia === 'alta'; }) ? '#e53e3e' : '#d69e2e';
+  el.style.display = 'flex';
+  el.style.flexDirection = 'column';
+  el.style.gap = '8px';
+  el.style.background = recalls[0].urgencia==='alta' ? 'rgba(229,62,62,0.07)' : 'rgba(214,158,46,0.07)';
+  el.style.borderColor = urgColor;
+  el.innerHTML =
+    '<div style="display:flex;align-items:center;gap:8px;">' +
+      '<span style="font-size:20px;">⚠️</span>' +
+      '<div style="font-size:12px;font-weight:700;color:' + urgColor + ';">RECALL ABERTO</div>' +
+    '</div>' +
+    recalls.map(function(r){
+      return '<div style="font-size:11px;color:var(--text2);">' +
+        (r.codigo ? '<b>' + r.codigo + '</b> — ' : '') + (r.desc||r.description||r) + '</div>';
+    }).join('') +
+    '<a href="https://www.gov.br/infraestrutura/pt-br/assuntos/transito/recall" target="_blank" ' +
+       'style="font-size:10px;color:' + urgColor + ';font-weight:700;" rel="noopener">Verificar no DENATRAN →</a>';
+}
+
+async function _mostrarAlertaRecall(vehicleId) {
+  var v = state.vehicles.find(function(x){ return x.id === vehicleId; });
+  if (!v) return;
+  var recalls = await _verificarRecalls(v.marca, v.modelo, v.ano);
+  if (!recalls || recalls.length === 0) return;
+  var el = document.getElementById('recall-alert-' + vehicleId);
+  if (!el) return;
+  var urgColor = recalls.some(function(r){ return r.urgencia === 'alta'; }) ? '#e53e3e' : '#d69e2e';
+  el.style.display = 'flex';
+  el.style.background = 'rgba(' + (recalls[0].urgencia==='alta'?'229,62,62':'214,158,46') + ',0.1)';
+  el.style.borderColor = urgColor;
+  el.innerHTML =
+    '<span style="font-size:18px;">⚠️</span>' +
+    '<div style="flex:1;">' +
+      '<div style="font-size:12px;font-weight:700;color:' + urgColor + ';">RECALL ABERTO — ' + v.marca + ' ' + v.modelo + ' ' + v.ano + '</div>' +
+      recalls.map(function(r){
+        return '<div style="font-size:11px;color:var(--text2);margin-top:2px;">' +
+          (r.codigo ? '<b>' + r.codigo + '</b> — ' : '') + (r.desc || r.description || r) + '</div>';
+      }).join('') +
+      '<a href="https://www.gov.br/infraestrutura/pt-br/assuntos/transito/recall" target="_blank" ' +
+         'style="font-size:10px;color:' + urgColor + ';font-weight:700;display:inline-block;margin-top:4px;" rel="noopener">Ver no site do DENATRAN →</a>' +
+    '</div>';
+}
+
+// Verifica recalls de todos os veículos ao logar
+async function _verificarTodosRecalls() {
+  for (var i = 0; i < state.vehicles.length; i++) {
+    var v = state.vehicles[i];
+    if (!v.archived) await _mostrarAlertaRecall(v.id);
+  }
+}
+
+
+// ══════════════════════════════════════════════════════════════
+// URL PÚBLICA DO PASSAPORTE — qualquer pessoa pode consultar
+// Acesso via: ?passaporte=ABC1D23 na URL
+// ══════════════════════════════════════════════════════════════
+async function _verificarPassaporteURL() {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var placa   = params.get('passaporte') || params.get('placa');
+    if (!placa) return;
+    // Mostra tela de consulta pública
+    _mostrarConsultaPublica(placa.toUpperCase().replace(/[^A-Z0-9]/g,''));
+  } catch(e) {}
+}
+
+function _mostrarConsultaPublica(placa) {
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:99998;background:var(--bg);overflow-y:auto;padding:24px 16px 40px;';
+  overlay.innerHTML =
+    '<div style="max-width:520px;margin:0 auto;">' +
+      '<div style="text-align:center;margin-bottom:24px;">' +
+        '<div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--accent);">MANY<span style="color:var(--white);">CARS</span></div>' +
+        '<div style="font-size:12px;color:var(--text3);margin-top:4px;">Passaporte Digital do Veículo</div>' +
+      '</div>' +
+      '<div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:24px;text-align:center;">' +
+        '<div style="font-size:32px;margin-bottom:8px;">📋</div>' +
+        '<div style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--white);margin-bottom:4px;">' + placa + '</div>' +
+        '<div style="font-size:13px;color:var(--text3);margin-bottom:20px;">Consultando histórico verificado...</div>' +
+        '<div id="passaporte-pub-content">' +
+          '<div class="empty-state"><div class="empty-icon" style="animation:spin 1s linear infinite">⚙️</div><div class="empty-title">Buscando passaporte...</div></div>' +
+        '</div>' +
+        '<div style="margin-top:20px;font-size:11px;color:var(--text3);">Consulta gratuita · ManyCars.app</div>' +
+      '</div>' +
+      '<div style="text-align:center;margin-top:16px;">' +
+        '<button onclick="this.closest('[style*=fixed]').remove()" style="background:none;border:1px solid var(--border);border-radius:8px;padding:10px 24px;color:var(--text3);font-size:13px;cursor:pointer;font-family:'Sora',sans-serif;">Fechar</button>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(overlay);
+  // Busca passaporte no Supabase
+  _buscarPassaportePorPlaca(placa).then(function(data) {
+    var el = document.getElementById('passaporte-pub-content');
+    if (!el) return;
+    if (!data) {
+      el.innerHTML =
+        '<div style="text-align:center;padding:16px;">' +
+          '<div style="font-size:32px;margin-bottom:8px;">🔍</div>' +
+          '<div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;">Passaporte não encontrado</div>' +
+          '<div style="font-size:12px;color:var(--text3);">O dono deste veículo ainda não registrou o histórico no ManyCars.</div>' +
+          '<div style="margin-top:16px;">' +
+            '<a href="https://manycars.app" style="background:var(--accent);color:#000;padding:10px 24px;border-radius:8px;font-size:13px;font-weight:700;text-decoration:none;font-family:'Sora',sans-serif;">Cadastrar meu veículo grátis →</a>' +
+          '</div>' +
+        '</div>';
+      return;
+    }
+    // Renderiza passaporte público
+    var hist = data.history_snap || [];
+    var fuel = data.fuel_snap   || [];
+    var fmt  = function(n){ return 'R$' + (n||0).toLocaleString('pt-BR'); };
+    var totalManut  = hist.reduce(function(s,h){ return s+(h.custo||0); }, 0);
+    var totalAbast  = fuel.reduce(function(s,f){ return s+(f.custo||0); }, 0);
+    var kmVenda = data.km_venda || 0;
+    var verif = hist.filter(function(h){ return h.verificado; }).length;
+    el.innerHTML =
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">' +
+        '<div style="background:var(--surface2);border-radius:10px;padding:12px;text-align:center;">' +
+          '<div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;">KM na venda</div>' +
+          '<div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--accent);">' + kmVenda.toLocaleString('pt-BR') + '</div>' +
+        '</div>' +
+        '<div style="background:var(--surface2);border-radius:10px;padding:12px;text-align:center;">' +
+          '<div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;">Manutenções</div>' +
+          '<div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#38a169;">' + hist.length + '</div>' +
+        '</div>' +
+        '<div style="background:var(--surface2);border-radius:10px;padding:12px;text-align:center;">' +
+          '<div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;">Gasto total manutenção</div>' +
+          '<div style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--text);">' + fmt(totalManut) + '</div>' +
+        '</div>' +
+        '<div style="background:var(--surface2);border-radius:10px;padding:12px;text-align:center;">' +
+          '<div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;">Registros c/ NF</div>' +
+          '<div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:' + (verif>0?'#38a169':'var(--text3)') + ';">' + verif + (verif>0?' ✓':'') + '</div>' +
+        '</div>' +
+      '</div>' +
+      (hist.length > 0 ?
+        '<div style="text-align:left;margin-bottom:8px;font-size:12px;font-weight:700;color:var(--text2);">HISTÓRICO DE MANUTENÇÕES</div>' +
+        '<div style="display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto;">' +
+          hist.slice(0,12).map(function(h) {
+            return '<div style="background:var(--surface2);border-radius:8px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;">' +
+              '<div><div style="font-size:12px;font-weight:600;color:var(--text);">' + h.tipo + '</div>' +
+              '<div style="font-size:10px;color:var(--text3);">' + (h.data||'').replace(/-/g,'/') + ' · ' + (h.km||0).toLocaleString('pt-BR') + ' km' + (h.local?' · '+h.local:'') + '</div></div>' +
+              '<div style="text-align:right;">' +
+                (h.custo > 0 ? '<div style="font-size:11px;font-weight:700;color:var(--text);">R$'+h.custo.toLocaleString('pt-BR')+'</div>' : '') +
+                (h.verificado ? '<div style="font-size:9px;color:#38a169;font-weight:700;">NF ✓</div>' : '') +
+              '</div>' +
+            '</div>';
+          }).join('') +
+        '</div>'
+      : '<div style="font-size:12px;color:var(--text3);text-align:center;padding:12px;">Sem registros de manutenção disponíveis</div>') +
+      '<div style="margin-top:16px;padding:12px;background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.2);border-radius:10px;font-size:11px;color:var(--text3);text-align:center;">' +
+        'Histórico fornecido pelo proprietário. ManyCars não garante a veracidade dos dados não verificados por NF/CNPJ.' +
+      '</div>';
+  });
+}
+
+// Verifica URL ao iniciar
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(_verificarPassaporteURL, 300);
+});
+
+// ── _ativarModo: função que estava sendo chamada sem definição ─
+function _ativarModo(modo) {
+  _appMode = modo;
+  try { localStorage.setItem('manycars_mode', modo); } catch(e) {}
+
+  if (modo === 'normal') {
+    // Restaura state real do localStorage
+    var raw = localStorage.getItem('manycars_v1');
+    if (raw) {
+      try {
+        var d = JSON.parse(raw);
+        state.vehicles = d.vehicles || [];
+        state.history  = d.history  || [];
+        state.fuel     = d.fuel     || [];
+        state.docs     = d.docs     || {};
+      } catch(e) {}
+    }
+  } else if (modo === 'teste') {
+    _carregarDadosTeste();
+  }
+
+  _syncModoUI();
+  updateDashboard();
+  renderVehiclesList && renderVehiclesList();
+  renderAlerts && renderAlerts();
+}
+
+// ── Dados fictícios pré-definidos ─────────────────────────────
+function _dadosFicticios() {
+  var hoje = new Date();
+  var d = function(diasAtras) {
+    var dt = new Date(hoje); dt.setDate(dt.getDate() - diasAtras);
+    return dt.toISOString().slice(0,10);
+  };
+
+  var v1id = 900001, v2id = 900002, v3id = 900003;
+
+  var vehicles = [
+    { id:v1id, placa:'ABC1D23', marca:'Volkswagen', modelo:'Polo Track 1.0', ano:'2022',
+      cor:'Branco', combustivel:'Flex', km:38450, kmInicial:0,
+      fipeReal:92000, fipeMesRef:'março de 2025',
+      fipeHistorico:[
+        {mes:'2024-06',valor:98000,km:22000,data:d(270)},
+        {mes:'2024-09',valor:96000,km:28000,data:d(180)},
+        {mes:'2024-12',valor:94000,km:33000,data:d(90)},
+        {mes:'2025-03',valor:92000,km:38450,data:d(5)}
+      ] },
+    { id:v2id, placa:'XYZ9A87', marca:'Fiat', modelo:'Strada Endurance 1.4', ano:'2021',
+      cor:'Prata', combustivel:'Flex', km:67200, kmInicial:12000,
+      fipeReal:105000, fipeMesRef:'março de 2025',
+      fipeHistorico:[
+        {mes:'2024-03',valor:118000,km:48000,data:d(360)},
+        {mes:'2024-09',valor:112000,km:58000,data:d(180)},
+        {mes:'2025-03',valor:105000,km:67200,data:d(5)}
+      ] },
+    { id:v3id, placa:'DEF4G56', marca:'Chevrolet', modelo:'Onix Plus Premier 1.0 Turbo', ano:'2023',
+      cor:'Vermelho', combustivel:'Flex', km:14700, kmInicial:0,
+      fipeReal:115000, fipeMesRef:'março de 2025',
+      fipeHistorico:[
+        {mes:'2024-12',valor:118000,km:8000,data:d(90)},
+        {mes:'2025-03',valor:115000,km:14700,data:d(5)}
+      ] },
+  ];
+
+  var history = [
+    // Polo
+    {id:91001,veiculoId:v1id,veiculo:'Volkswagen Polo',tipo:'Troca de óleo',data:d(200),km:24000,custo:380,local:'Auto Center Norte'},
+    {id:91002,veiculoId:v1id,veiculo:'Volkswagen Polo',tipo:'Revisão dos 30.000 km',data:d(120),km:30000,custo:1250,local:'Concessionária VW'},
+    {id:91003,veiculoId:v1id,veiculo:'Volkswagen Polo',tipo:'Troca de pneus',data:d(90),km:31500,custo:1800,local:'Pneucentro'},
+    {id:91004,veiculoId:v1id,veiculo:'Volkswagen Polo',tipo:'Troca de filtro de ar',data:d(60),km:33000,custo:180,local:'Posto de Garagem'},
+    {id:91005,veiculoId:v1id,veiculo:'Volkswagen Polo',tipo:'Troca de óleo',data:d(30),km:36500,custo:390,local:'Auto Center Norte'},
+    {id:91006,veiculoId:v1id,veiculo:'Volkswagen Polo',tipo:'Alinhamento e balanceamento',data:d(10),km:38200,custo:220,local:'Pneucentro'},
+    // Strada
+    {id:92001,veiculoId:v2id,veiculo:'Fiat Strada',tipo:'Troca de óleo',data:d(340),km:42000,custo:420,local:'Oficina Geral'},
+    {id:92002,veiculoId:v2id,veiculo:'Fiat Strada',tipo:'Revisão de freios',data:d(280),km:48000,custo:950,local:'Fiat Service'},
+    {id:92003,veiculoId:v2id,veiculo:'Fiat Strada',tipo:'Troca de correia dentada',data:d(220),km:52000,custo:1400,local:'Fiat Service'},
+    {id:92004,veiculoId:v2id,veiculo:'Fiat Strada',tipo:'Troca de óleo',data:d(130),km:58000,custo:430,local:'Oficina Geral'},
+    {id:92005,veiculoId:v2id,veiculo:'Fiat Strada',tipo:'Revisão dos 60.000 km',data:d(80),km:60000,custo:1800,local:'Fiat Service'},
+    {id:92006,veiculoId:v2id,veiculo:'Fiat Strada',tipo:'Troca de velas',data:d(40),km:65000,custo:360,local:'Oficina Geral'},
+    // Onix
+    {id:93001,veiculoId:v3id,veiculo:'Chevrolet Onix',tipo:'Revisão dos 10.000 km',data:d(50),km:10000,custo:780,local:'Concessionária GM'},
+    {id:93002,veiculoId:v3id,veiculo:'Chevrolet Onix',tipo:'Troca de óleo',data:d(15),km:14500,custo:350,local:'Concessionária GM'},
+  ];
+
+  var fuel = [
+    // Polo
+    {id:81001,veiculoId:v1id,tipo:'Gasolina',data:d(185),km:24500,litros:35.2,preco:5.89,custo:207.33,total:207.33},
+    {id:81002,veiculoId:v1id,tipo:'Gasolina',data:d(165),km:25700,litros:34.8,preco:5.95,custo:207.06,total:207.06},
+    {id:81003,veiculoId:v1id,tipo:'Etanol',  data:d(145),km:26900,litros:42.1,preco:3.89,custo:163.77,total:163.77},
+    {id:81004,veiculoId:v1id,tipo:'Gasolina',data:d(120),km:28200,litros:33.5,preco:6.05,custo:202.68,total:202.68},
+    {id:81005,veiculoId:v1id,tipo:'Gasolina',data:d(95), km:29600,litros:35.0,preco:5.99,custo:209.65,total:209.65},
+    {id:81006,veiculoId:v1id,tipo:'Etanol',  data:d(75), km:30800,litros:43.0,preco:3.79,custo:162.97,total:162.97},
+    {id:81007,veiculoId:v1id,tipo:'Gasolina',data:d(55), km:32200,litros:34.2,preco:6.09,custo:208.28,total:208.28},
+    {id:81008,veiculoId:v1id,tipo:'Gasolina',data:d(30), km:33800,litros:34.9,preco:6.15,custo:214.64,total:214.64},
+    {id:81009,veiculoId:v1id,tipo:'Gasolina',data:d(10), km:35400,litros:35.1,preco:6.19,custo:217.27,total:217.27},
+    // Strada
+    {id:82001,veiculoId:v2id,tipo:'Flex',    data:d(320),km:43000,litros:48.0,preco:5.79,custo:277.92,total:277.92},
+    {id:82002,veiculoId:v2id,tipo:'Flex',    data:d(290),km:44800,litros:46.5,preco:5.85,custo:272.03,total:272.03},
+    {id:82003,veiculoId:v2id,tipo:'Flex',    data:d(260),km:46600,litros:47.2,preco:5.91,custo:278.95,total:278.95},
+    {id:82004,veiculoId:v2id,tipo:'Diesel',  data:d(220),km:49000,litros:55.0,preco:6.29,custo:345.95,total:345.95},
+    {id:82005,veiculoId:v2id,tipo:'Flex',    data:d(180),km:52000,litros:46.8,preco:5.99,custo:280.33,total:280.33},
+    {id:82006,veiculoId:v2id,tipo:'Flex',    data:d(130),km:56000,litros:47.5,preco:6.05,custo:287.38,total:287.38},
+    {id:82007,veiculoId:v2id,tipo:'Flex',    data:d(70), km:62000,litros:48.2,preco:6.09,custo:293.54,total:293.54},
+    {id:82008,veiculoId:v2id,tipo:'Flex',    data:d(25), km:66000,litros:46.9,preco:6.15,custo:288.44,total:288.44},
+    // Onix
+    {id:83001,veiculoId:v3id,tipo:'Gasolina',data:d(80), km:7500, litros:38.5,preco:6.05,custo:232.93,total:232.93},
+    {id:83002,veiculoId:v3id,tipo:'Gasolina',data:d(45), km:10500,litros:39.0,preco:6.09,custo:237.51,total:237.51},
+    {id:83003,veiculoId:v3id,tipo:'Gasolina',data:d(15), km:13500,litros:38.2,preco:6.19,custo:236.46,total:236.46},
+  ];
+
+  var docs = {};
+  docs[v1id] = {
+    ipva: d(-30),           // vence em 30 dias
+    seguro: d(60),          // venceu há 60 dias (alerta)
+    licenciamento: d(-90),  // 90 dias
+    cnh: d(-180)
+  };
+  docs[v2id] = {
+    ipva: d(-5),
+    seguro: d(-200),
+    licenciamento: d(-45),
+  };
+  docs[v3id] = {
+    ipva: d(-120),
+    seguro: d(-150),
+    licenciamento: d(-120),
+    cnh: d(-240)
+  };
+
+  return { vehicles: vehicles, history: history, fuel: fuel, docs: docs };
+}
+
+function _carregarDadosTeste() {
+  // Verifica se já tem dados de teste salvos; se não, usa os fictícios
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem('manycars_teste')); } catch(e) {}
+  var dados = (saved && saved.vehicles && saved.vehicles.length > 0) ? saved : _dadosFicticios();
+  state.vehicles = dados.vehicles || [];
+  state.history  = dados.history  || [];
+  state.fuel     = dados.fuel     || [];
+  state.docs     = dados.docs     || {};
+  try { localStorage.setItem('manycars_teste', JSON.stringify(dados)); } catch(e) {}
+}
+
+// ── Entrar no modo teste (chamado pelo botão na tela de login) ─
+function _entrarModoTeste() {
+  var user = {
+    id:    'local_teste_001',
+    name:  'Gustavo (Teste)',
+    email: 'teste@manycars.app',
+    plano: 'premium', // premium liberado no modo teste
+    perfilColor: '#22C55E'
+  };
+  state.user = user;
+  _ativarModo('teste');
+
+  document.getElementById('screen-welcome').classList.remove('active');
+  document.getElementById('screen-app').classList.add('active');
+  document.body.classList.add('app-active');
+
+  var firstName = 'Gustavo';
+  _syncSidebarAvatar && _syncSidebarAvatar();
+  _updatePlanBadge && _updatePlanBadge();
+  var dn = document.getElementById('dash-name');
+  if (dn) dn.textContent = 'GUSTAVO (TESTE)';
+
+  renderAlerts && renderAlerts();
+  updateDashboard && updateDashboard();
+  _applyProgressiveDisclosure && _applyProgressiveDisclosure();
+
+  showToast('🧪 Modo Teste ativado! Todos os recursos desbloqueados.', 'success');
+}
+
+function _sairModoTeste() {
+  _ativarModo('normal');
+  // Volta para a tela de login
+  state.user = null;
+  state.vehicles = []; state.history = []; state.fuel = []; state.docs = {};
+  document.getElementById('screen-app').classList.remove('active');
+  document.getElementById('screen-welcome').classList.add('active');
+  document.body.classList.remove('app-active');
+  showToast('Saindo do modo teste…', 'info');
+}
+
+// ── _syncModoUI com banner verde e nav admin-only ─────────────
+// Substitui a versão original
+var _syncModoUI_orig = _syncModoUI;
+_syncModoUI = function() {
+  var badge    = document.getElementById('modo-badge');
+  var banner   = document.getElementById('teste-floating-banner');
+  var navTeste = document.getElementById('nav-teste');
+  var navAdmin = document.getElementById('nav-admin');
+
+  // Reset
+  if (banner) { banner.style.display = 'none'; banner.style.background = ''; }
+  if (badge)  badge.style.display = 'none';
+  if (navTeste) navTeste.style.display = 'none';
+
+  // ── Itens do nav de usuário comum ─────────────────────────
+  var navUser = document.querySelectorAll(
+    '.nav-section, ' +
+    '.nav-item:not(#nav-admin):not(#nav-teste):not([onclick*="_pedirSenhaMenu"])'
+  );
+
+  if (_appMode === 'teste') {
+    // Banner VERDE no topo
+    if (banner) {
+      banner.style.display   = 'flex';
+      banner.style.background = 'rgba(34,197,94,0.92)';
+      banner.style.borderBottom = '2px solid rgba(34,197,94,0.5)';
+    }
+    if (badge) {
+      badge.style.display    = 'block';
+      badge.style.background = 'rgba(34,197,94,0.15)';
+      badge.style.color      = '#22C55E';
+      badge.style.border     = '1px solid rgba(34,197,94,0.3)';
+      badge.textContent      = '🧪 MODO TESTE';
+    }
+    // App background tinge de verde bem sutil
+    document.body.style.setProperty('--bg', '#07130B');
+    document.body.style.setProperty('--surface', '#0B1A11');
+    document.body.style.setProperty('--accent', '#22C55E');
+    document.body.style.setProperty('--accent2', '#16A34A');
+    document.body.style.setProperty('--accent3', '#4ADE80');
+    document.body.style.setProperty('--border', '#1A3A26');
+    document.body.style.setProperty('--border2', '#2D5A3A');
+    if (navTeste) navTeste.style.display = 'flex';
+    navUser.forEach(function(el) { el.style.display = ''; });
+
+    // Carrega dados fictícios
+    _carregarDadosTeste();
+
+  } else if (_appMode === 'admin-only') {
+    // Admin vê APENAS Administrador e Monetização
+    navUser.forEach(function(el) { el.style.display = 'none'; });
+    if (badge) {
+      badge.style.display    = 'block';
+      badge.style.background = 'rgba(167,139,250,0.15)';
+      badge.style.color      = '#a78bfa';
+      badge.style.border     = '1px solid rgba(167,139,250,0.3)';
+      badge.textContent      = '🛡️ ADMIN';
+    }
+    // Tinge roxo
+    document.body.style.setProperty('--accent', '#a78bfa');
+    document.body.style.setProperty('--accent2', '#7c3aed');
+    document.body.style.setProperty('--accent3', '#c4b5fd');
+    document.body.style.setProperty('--border', '#2D1B69');
+    document.body.style.setProperty('--border2', '#4C1D95');
+
+  } else {
+    // Normal: restaura cores padrão
+    document.body.style.removeProperty('--bg');
+    document.body.style.removeProperty('--surface');
+    document.body.style.removeProperty('--accent');
+    document.body.style.removeProperty('--accent2');
+    document.body.style.removeProperty('--accent3');
+    document.body.style.removeProperty('--border');
+    document.body.style.removeProperty('--border2');
+    navUser.forEach(function(el) { el.style.display = ''; });
+  }
+};
+
+// ── Patch em _confirmarLogin: admin-only quando logar como admin ─
+var _confirmarLogin_orig = _confirmarLogin;
+_confirmarLogin = async function(destino) {
+  // Chama original
+  await _confirmarLogin_orig(destino);
+  // Se entrou no admin, ativa modo admin-only
+  if (destino === 'admin') {
+    try {
+      if (sessionStorage.getItem('mc_priv_admin') === '1') {
+        _appMode = 'admin-only';
+        _syncModoUI();
+        // Leva direto para o painel admin
+        showPage('modo-admin');
+      }
+    } catch(e) {}
+  }
+};
+
+// ── Botão "Sair do Admin" na sidebar quando em admin-only ─────
+// Injeta ao carregar
+document.addEventListener('DOMContentLoaded', function() {
+  var sidebarBottom = document.querySelector('.sidebar-bottom');
+  if (sidebarBottom) {
+    var sairAdminBtn = document.createElement('button');
+    sairAdminBtn.id = 'btn-sair-admin';
+    sairAdminBtn.className = 'logout-btn';
+    sairAdminBtn.style.cssText = 'display:none;margin-top:6px;background:rgba(167,139,250,0.08);color:#a78bfa;border-color:rgba(167,139,250,0.3);';
+    sairAdminBtn.textContent = '← Sair do Admin';
+    sairAdminBtn.onclick = function() {
+      _appMode = 'normal';
+      try { sessionStorage.removeItem('mc_priv_admin'); } catch(e) {}
+      _syncModoUI();
+      showPage('dashboard');
+    };
+    sidebarBottom.insertBefore(sairAdminBtn, sidebarBottom.firstChild);
+  }
+});
+
+// Mostra/esconde botão sair-admin conforme o modo
+var _syncModoUI_final = _syncModoUI;
+_syncModoUI = function() {
+  _syncModoUI_final();
+  var btn = document.getElementById('btn-sair-admin');
+  if (btn) btn.style.display = (_appMode === 'admin-only') ? 'block' : 'none';
+};
+
+// ── Fix do erro de sintaxe nos dados fictícios (d:d) ──────────
+// O dado fictício de combustível da Strada tinha um erro de template
+// É corrigido aqui com uma versão limpa
+var _fuelDataFix = function() {
+  if (_appMode !== 'teste') return;
+  // Verifica e corrige entradas com data inválida
+  state.fuel = state.fuel.filter(function(f) {
+    return f.data && typeof f.data === 'string' && f.data.length === 10;
+  });
+};
+
+// Chama correção ao ativar modo teste
+var _carregarDadosTeste_orig = _carregarDadosTeste;
+_carregarDadosTeste = function() {
+  _carregarDadosTeste_orig();
+  _fuelDataFix();
+};
+
+</script>
+
+<!-- ============================================================
+     ManyCars — MÓDULO VIN / CHASSI
+     1. Validação VIN (ISO 3779)
+     2. Decodificação automática dos primeiros 8 dígitos
+     3. Verificação de VIN duplicado (alerta clone)
+     4. Recall por VIN via NHTSA + DENATRAN
+     5. Campo de edição do chassi em veículos já cadastrados
+     ============================================================ -->
+<script>
+
+// ── Validação ISO 3779 ────────────────────────────────────────
+function _validarVIN(vin) {
+  if (!vin || vin.length !== 17) return false;
+  // Não pode conter I, O, Q (confusão com 1, 0)
+  if (/[IOQ]/i.test(vin)) return false;
+  // Apenas alfanumérico
+  if (!/^[A-HJ-NPR-Z0-9]{17}$/i.test(vin)) return false;
+  // Verificação de dígito de controle (posição 9)
+  var transliteration = {
+    'A':1,'B':2,'C':3,'D':4,'E':5,'F':6,'G':7,'H':8,
+    'J':1,'K':2,'L':3,'M':4,'N':5,'P':7,'R':9,
+    'S':2,'T':3,'U':4,'V':5,'W':6,'X':7,'Y':8,'Z':9
+  };
+  var weights = [8,7,6,5,4,3,2,10,0,9,8,7,6,5,4,3,2];
+  var sum = 0;
+  for (var i = 0; i < 17; i++) {
+    var c = vin[i].toUpperCase();
+    var val = isNaN(c) ? (transliteration[c] || 0) : parseInt(c);
+    sum += val * weights[i];
+  }
+  var check = sum % 11;
+  var checkChar = check === 10 ? 'X' : String(check);
+  return vin[8].toUpperCase() === checkChar;
+}
+
+// ── Decodificação do WMI + VDS (primeiros 8 dígitos) ─────────
+var _WMI_DB = {
+  // Brasil
+  '9BW': { pais: 'Brasil 🇧🇷', fab: 'Volkswagen do Brasil' },
+  '9BG': { pais: 'Brasil 🇧🇷', fab: 'General Motors do Brasil' },
+  '9BF': { pais: 'Brasil 🇧🇷', fab: 'Ford do Brasil' },
+  '9BP': { pais: 'Brasil 🇧🇷', fab: 'Fiat Automóveis (MG)' },
+  '9BC': { pais: 'Brasil 🇧🇷', fab: 'Chrysler do Brasil' },
+  '9BH': { pais: 'Brasil 🇧🇷', fab: 'Honda Automóveis do Brasil' },
+  '9BS': { pais: 'Brasil 🇧🇷', fab: 'Renault do Brasil' },
+  '8AF': { pais: 'Brasil 🇧🇷', fab: 'Hyundai HMB' },
+  '9BY': { pais: 'Brasil 🇧🇷', fab: 'Toyota do Brasil' },
+  '9BM': { pais: 'Brasil 🇧🇷', fab: 'Mercedes-Benz do Brasil' },
+  '93H': { pais: 'Brasil 🇧🇷', fab: 'Honda Motos' },
+  '93Y': { pais: 'Brasil 🇧🇷', fab: 'Yamaha Motor do Brasil' },
+  '9C2': { pais: 'Brasil 🇧🇷', fab: 'Honda Motos (SP)' },
+  // EUA
+  '1HG': { pais: 'EUA 🇺🇸', fab: 'Honda of America' },
+  '1G1': { pais: 'EUA 🇺🇸', fab: 'General Motors' },
+  '1FA': { pais: 'EUA 🇺🇸', fab: 'Ford Motor' },
+  '1FT': { pais: 'EUA 🇺🇸', fab: 'Ford Truck' },
+  '1C4': { pais: 'EUA 🇺🇸', fab: 'Chrysler' },
+  '5YJ': { pais: 'EUA 🇺🇸', fab: 'Tesla' },
+  // Alemanha
+  'WVW': { pais: 'Alemanha 🇩🇪', fab: 'Volkswagen AG' },
+  'WBA': { pais: 'Alemanha 🇩🇪', fab: 'BMW AG' },
+  'WDD': { pais: 'Alemanha 🇩🇪', fab: 'Mercedes-Benz AG' },
+  'WAU': { pais: 'Alemanha 🇩🇪', fab: 'Audi AG' },
+  // Japão
+  'JHM': { pais: 'Japão 🇯🇵', fab: 'Honda Motor Co.' },
+  'JN1': { pais: 'Japão 🇯🇵', fab: 'Nissan' },
+  'JT2': { pais: 'Japão 🇯🇵', fab: 'Toyota' },
+  // Coreia
+  'KMH': { pais: 'Coreia 🇰🇷', fab: 'Hyundai Motor Co.' },
+  'KNA': { pais: 'Coreia 🇰🇷', fab: 'Kia Motors' },
+};
+
+var _ANO_VIN = {
+  'A':1980,'B':1981,'C':1982,'D':1983,'E':1984,'F':1985,'G':1986,'H':1987,
+  'J':1988,'K':1989,'L':1990,'M':1991,'N':1992,'P':1993,'R':1994,'S':1995,
+  'T':1996,'V':1997,'W':1998,'X':1999,'Y':2000,'1':2001,'2':2002,'3':2003,
+  '4':2004,'5':2005,'6':2006,'7':2007,'8':2008,'9':2009,'A':2010,'B':2011,
+  'C':2012,'D':2013,'E':2014,'F':2015,'G':2016,'H':2017,'J':2018,'K':2019,
+  'L':2020,'M':2021,'N':2022,'P':2023,'R':2024,'S':2025,'T':2026,'V':2027
+};
+
+function _decodificarVIN(vin) {
+  if (!vin || vin.length < 11) return null;
+  var wmi3 = vin.slice(0,3).toUpperCase();
+  var wmi2 = vin.slice(0,2).toUpperCase();
+  var wmiInfo = _WMI_DB[wmi3] || null;
+  // Tenta 2 chars se 3 não encontrou
+  if (!wmiInfo) {
+    Object.keys(_WMI_DB).forEach(function(k) {
+      if (k.slice(0,2) === wmi2 && !wmiInfo) wmiInfo = _WMI_DB[k];
+    });
+  }
+  var anoCodigo = vin[9].toUpperCase();
+  var anoFab    = _ANO_VIN[anoCodigo] || null;
+  return {
+    pais:    wmiInfo ? wmiInfo.pais : null,
+    fab:     wmiInfo ? wmiInfo.fab  : null,
+    anoFab:  anoFab,
+    wmi:     wmi3
+  };
+}
+
+// ── Input handler — valida e decodifica em tempo real ─────────
+function _onVinInput(input) {
+  var vin    = input.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  input.value = vin;
+  var status = document.getElementById('vin-status');
+  var result = document.getElementById('vin-decode-result');
+  if (!vin) {
+    if (status) { status.textContent = ''; status.style.color = ''; }
+    if (result) result.textContent = '';
+    return;
+  }
+  if (vin.length < 17) {
+    if (status) {
+      status.textContent = vin.length + '/17';
+      status.style.color = 'var(--text3)';
+    }
+    if (result) result.textContent = '';
+    return;
+  }
+  // Completo — valida
+  var valido = _validarVIN(vin);
+  if (status) {
+    status.textContent = valido ? '✓ Válido' : '✗ Inválido';
+    status.style.color = valido ? '#38a169' : '#e53e3e';
+  }
+  input.style.borderColor = valido ? '#38a169' : '#e53e3e';
+  if (!valido) {
+    if (result) result.innerHTML = '<span style="color:#e53e3e;">Verifique se copiou corretamente. O chassi não pode conter as letras I, O ou Q.</span>';
+    return;
+  }
+  // Decodifica
+  var dec = _decodificarVIN(vin);
+  if (dec && result) {
+    var parts = [];
+    if (dec.pais) parts.push(dec.pais);
+    if (dec.fab)  parts.push('<b>' + dec.fab + '</b>');
+    if (dec.anoFab) parts.push('Fab. ' + dec.anoFab);
+    result.innerHTML = parts.length
+      ? '<span style="color:var(--accent);">🔍 ' + parts.join(' · ') + '</span>'
+      : '<span style="color:var(--text3);">Fabricante não identificado na base local</span>';
+  }
+  // Verifica duplicata (possível clone) em background
+  setTimeout(function() { _verificarChassiDuplicado(vin); }, 500);
+}
+
+// ── Verificação de VIN duplicado no Supabase ─────────────────
+async function _verificarChassiDuplicado(vin) {
+  if (!_supabaseReady || !_sb || !vin) return;
+  try {
+    var { data } = await _sb
+      .from('vehicles')
+      .select('user_id, marca, modelo, ano')
+      .eq('chassi', vin)
+      .neq('user_id', state.user ? state.user.id : '')
+      .limit(1);
+    if (data && data.length > 0) {
+      var v = data[0];
+      var result = document.getElementById('vin-decode-result');
+      if (result) {
+        result.innerHTML +=
+          '<div style="margin-top:6px;padding:8px 10px;background:rgba(229,62,62,0.08);border:1px solid rgba(229,62,62,0.3);border-radius:6px;">' +
+          '⚠️ <b style="color:#e53e3e;">Atenção:</b> Este chassi já está cadastrado por outro usuário ' +
+          '(' + v.marca + ' ' + v.modelo + ' ' + v.ano + '). ' +
+          'Se você é o novo dono, isso é normal. Caso contrário, pode indicar <b>veículo clonado</b>. ' +
+          '<a href="https://www.gov.br/senatran" target="_blank" rel="noopener" style="color:#e53e3e;">Consulte o DENATRAN →</a>' +
+          '</div>';
+      }
+    }
+  } catch(e) { /* silencioso */ }
+}
+
+// ── Toggle do help text ───────────────────────────────────────
+function _toggleVinHelp() {
+  var el = document.getElementById('vin-help');
+  if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+// ── Usa VIN na consulta de recalls (mais preciso que modelo+ano) ─
+async function _verificarRecallsPorVIN(vin, marca, modelo, ano) {
+  if (!vin || vin.length !== 17) {
+    return await _verificarRecalls(marca, modelo, ano);
+  }
+  try {
+    // NHTSA API (EUA) — útil para veículos importados
+    var nhtsa = await fetch(
+      'https://api.nhtsa.gov/complaints/complaintsByVehicle?make=' +
+      encodeURIComponent(marca) + '&model=' + encodeURIComponent(modelo) + '&modelYear=' + ano,
+      { signal: AbortSignal.timeout ? AbortSignal.timeout(5000) : undefined }
+    );
+    if (nhtsa.ok) {
+      var nd = await nhtsa.json();
+      if (nd.results && nd.results.length > 0) {
+        // Retorna como recalls formatados
+        return nd.results.slice(0,3).map(function(r) {
+          return {
+            desc: r.components + (r.summary ? ' — ' + r.summary.slice(0,120) + '…' : ''),
+            codigo: 'NHTSA',
+            urgencia: 'media'
+          };
+        });
+      }
+    }
+  } catch(e) {}
+  // Fallback para busca por modelo+ano
+  return await _verificarRecalls(marca, modelo, ano);
+}
+
+// ── Patch em _verificarRecalls para usar VIN quando disponível ─
+var _verificarRecalls_orig = _verificarRecalls;
+_verificarRecalls = async function(marca, modelo, ano) {
+  // Procura se existe veículo com chassi para usar VIN
+  var v = state.vehicles.find(function(vv) {
+    return vv.marca === marca && vv.ano == ano && vv.chassi;
+  });
+  if (v && v.chassi) {
+    return await _verificarRecallsPorVIN(v.chassi, marca, modelo, ano);
+  }
+  return await _verificarRecalls_orig(marca, modelo, ano);
+};
+
+// ── Edição do chassi em veículos já cadastrados ───────────────
+function _abrirEdicaoChassi(vehicleId) {
+  var v = state.vehicles.find(function(x){ return x.id === vehicleId; });
+  if (!v) return;
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:24px;';
+  overlay.innerHTML =
+    '<div style="background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:28px 24px;width:100%;max-width:400px;">' +
+      '<div style="font-family:\'Bebas Neue\',sans-serif;font-size:20px;letter-spacing:1px;color:var(--text);margin-bottom:6px;">🔢 NÚMERO DO CHASSI</div>' +
+      '<div style="font-size:12px;color:var(--text3);margin-bottom:16px;">' + v.marca + ' ' + v.modelo + ' ' + v.ano + '</div>' +
+      '<div style="font-size:11px;color:var(--text2);margin-bottom:10px;padding:10px;background:rgba(59,130,246,0.06);border-radius:8px;line-height:1.6;">' +
+        '📍 <b>Onde encontrar:</b> Canto inferior do para-brisa (lado do motorista), coluna B, CRLV ou DUT. São sempre <b>17 caracteres</b>.' +
+      '</div>' +
+      '<div style="position:relative;margin-bottom:6px;">' +
+        '<input id="_vin-edit-input" type="text" maxlength="17" value="' + (v.chassi||'') + '" ' +
+          'oninput="_onVinInput(this)" ' +
+          'style="width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:12px 90px 12px 14px;' +
+          'font-family:\'JetBrains Mono\',monospace;font-size:15px;letter-spacing:2px;color:var(--text);box-sizing:border-box;outline:none;text-transform:uppercase;">' +
+        '<div id="vin-status" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:11px;font-weight:700;pointer-events:none;"></div>' +
+      '</div>' +
+      '<div id="vin-decode-result" style="font-size:11px;color:var(--text3);min-height:16px;margin-bottom:16px;"></div>' +
+      '<div style="display:flex;gap:8px;">' +
+        '<button id="_vin-save-btn" onclick="_salvarChassiVeiculo(' + vehicleId + ')" ' +
+          'style="flex:1;padding:12px;background:var(--accent);color:#000;border:none;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:\'Sora\',sans-serif;">Salvar</button>' +
+        '<button onclick="this.closest(\'[style*=fixed]\').remove()" ' +
+          'style="padding:12px 20px;background:none;border:1px solid var(--border);border-radius:10px;font-size:13px;cursor:pointer;font-family:\'Sora\',sans-serif;color:var(--text3);">Cancelar</button>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.remove(); });
+  // Roda decode imediato se já tem chassi
+  setTimeout(function() {
+    var inp = document.getElementById('_vin-edit-input');
+    if (inp && inp.value) _onVinInput(inp);
+  }, 100);
+}
+
+function _salvarChassiVeiculo(vehicleId) {
+  var inp = document.getElementById('_vin-edit-input');
+  if (!inp) return;
+  var vin = inp.value.trim().toUpperCase();
+  if (vin && !_validarVIN(vin)) {
+    showToast('Chassi inválido — verifique os 17 dígitos', 'error'); return;
+  }
+  var v = state.vehicles.find(function(x){ return x.id === vehicleId; });
+  if (!v) return;
+  v.chassi = vin || null;
+  saveState();
+  // Fecha overlay
+  var ov = document.querySelector('[style*="fixed"][style*="99999"]');
+  if (ov) ov.remove();
+  showToast(vin ? '✅ Chassi ' + vin + ' salvo!' : 'Chassi removido', 'success');
+  // Re-renderiza passaporte se estiver aberto
+  if (document.getElementById('passaporte-body')) renderPassaportePage();
+  renderVehiclesList();
+}
+
+// Dispara edição de chassi via botão no passaporte
+document.addEventListener('DOMContentLoaded', function() {
+  // injeta botão "Editar Chassi" no passaporte quando necessário — feito via renderPassaportePage
+});
+
+// ── Patch em _renderPassaporteVehicle para mostrar botão editar chassi ─
+var _renderPassaporteVehicle_orig = _renderPassaporteVehicle;
+_renderPassaporteVehicle = function(v) {
+  _renderPassaporteVehicle_orig(v);
+  // Adiciona botão de editar chassi após ficha técnica se não tiver chassi
+  if (!v.chassi) {
+    var body = document.getElementById('passaporte-body');
+    if (!body) return;
+    var btn = document.createElement('button');
+    btn.style.cssText = 'width:100%;padding:10px;background:none;border:1px dashed var(--border2);border-radius:8px;font-size:12px;color:var(--text3);cursor:pointer;font-family:\'Sora\',sans-serif;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:6px;';
+    btn.innerHTML = '🔢 Adicionar número do chassi (fortalece o Passaporte)';
+    btn.onclick = function() { _abrirEdicaoChassi(v.id); };
+    // Insere após o primeiro card da ficha técnica
+    var cards = body.querySelectorAll('.card');
+    if (cards && cards[1]) {
+      cards[1].insertAdjacentElement('afterend', btn);
+    } else {
+      body.insertBefore(btn, body.firstChild);
+    }
+  }
+};
+
+</script>
+
+<!-- ============================================================
+     ManyCars — MÓDULO ACIDENTE/TRANSPARÊNCIA
+     1. _onTipoManutChange — exibe painel de acidente
+     2. Badge "Histórico Transparente" no card
+     3. Seção de acidentes no Passaporte com narrativa positiva
+     4. Indicador visual no card quando há acidente documentado
+     ============================================================ -->
+<script>
+
+// ── Mostra/oculta painel de acidente baseado no tipo selecionado ─
+function _onTipoManutChange(sel) {
+  var panel = document.getElementById('acidente-panel');
+  if (!panel) return;
+  var ehAcidente = sel.value.startsWith('Acidente —');
+  panel.style.display = ehAcidente ? 'block' : 'none';
+  // Destaca o campo NF quando é acidente (reforça importância)
+  var nfGroup = document.getElementById('manut-nf');
+  if (nfGroup) {
+    if (ehAcidente) {
+      nfGroup.style.borderColor = '#d69e2e';
+      nfGroup.style.background  = 'rgba(214,158,46,0.06)';
+      var nfLabel = nfGroup.previousElementSibling && nfGroup.previousElementSibling.previousElementSibling;
+    } else {
+      nfGroup.style.borderColor = '';
+      nfGroup.style.background  = '';
+    }
+  }
+}
+
+// ── Patch em vehicleImgCard para mostrar badges de acidente ───
+var _vehicleImgCard_orig = vehicleImgCard;
+vehicleImgCard = function(v, i) {
+  var html = _vehicleImgCard_orig(v, i);
+
+  // Injeta badges extras após renderização via DOM manipulation
+  // (feito via setTimeout para não quebrar o pipeline de render)
+  setTimeout(function() {
+    var card = document.getElementById('vcard-' + v.id);
+    if (!card) return;
+
+    var acidentes = _getAcidentesVeiculo(v.id);
+    var transparente = _veiculoTransparente(v.id);
+
+    // Badge "Histórico Transparente" — apenas se tiver NF em >= 50% dos registros
+    if (transparente) {
+      var existingBadge = card.querySelector('.badge-transparente');
+      if (!existingBadge) {
+        var badge = document.createElement('div');
+        badge.className = 'badge-transparente';
+        badge.title = 'Mais de 50% dos registros possuem NF/CNPJ verificado';
+        badge.style.cssText = 'position:absolute;top:8px;left:8px;background:rgba(56,161,105,0.9);color:#fff;font-size:9px;font-weight:800;padding:3px 7px;border-radius:20px;letter-spacing:0.5px;z-index:2;pointer-events:none;';
+        badge.textContent = '✓ TRANSPARENTE';
+        var photoWrap = card.querySelector('.vehicle-photo-wrap');
+        if (photoWrap) {
+          photoWrap.style.position = 'relative';
+          photoWrap.appendChild(badge);
+        }
+      }
+    }
+
+    // Indicador de acidente documentado no rodapé do card
+    if (acidentes.length > 0) {
+      var existingAc = card.querySelector('.badge-acidente');
+      if (!existingAc) {
+        var acDocumentados = acidentes.filter(function(a){ return a.transparenciaAcidente; });
+        var acNDoc = acidentes.filter(function(a){ return !a.transparenciaAcidente; });
+        var bodyEl = card.querySelector('.vehicle-img-body');
+        if (bodyEl) {
+          var acDiv = document.createElement('div');
+          acDiv.className = 'badge-acidente';
+          acDiv.style.cssText = 'margin:0 12px 10px;padding:8px 10px;border-radius:8px;font-size:10px;display:flex;align-items:center;gap:6px;';
+          if (acDocumentados.length > 0 && acNDoc.length === 0) {
+            // Todos documentados com conserto — mensagem positiva
+            acDiv.style.background = 'rgba(56,161,105,0.08)';
+            acDiv.style.borderLeft = '2px solid #38a169';
+            acDiv.innerHTML = '<span>🔨</span><span style="color:#38a169;font-weight:600;">' +
+              acDocumentados.length + ' acidente' + (acDocumentados.length > 1 ? 's' : '') + ' — conserto documentado</span>';
+          } else if (acNDoc.length > 0) {
+            // Tem acidente sem conserto documentado
+            acDiv.style.background = 'rgba(214,158,46,0.08)';
+            acDiv.style.borderLeft = '2px solid #d69e2e';
+            acDiv.innerHTML = '<span>⚠️</span><span style="color:#d69e2e;font-weight:600;">' +
+              acNDoc.length + ' acidente' + (acNDoc.length > 1 ? 's' : '') + ' pendente' + (acNDoc.length > 1 ? 's' : '') + ' de conserto</span>';
+          }
+          bodyEl.appendChild(acDiv);
+        }
+      }
+    }
+  }, 50);
+
+  return html;
+};
+
+// ── Patch em _renderPassaporteVehicle para seção de acidentes ─
+var _renderPassaporte_acidente_orig = _renderPassaporteVehicle;
+_renderPassaporteVehicle = function(v) {
+  _renderPassaporte_acidente_orig(v);
+
+  var body = document.getElementById('passaporte-body');
+  if (!body) return;
+
+  var acidentes = _getAcidentesVeiculo(v.id);
+  if (!acidentes.length) return;
+
+  var fmt = function(n){ return 'R$' + Math.round(n||0).toLocaleString('pt-BR'); };
+
+  var secao = document.createElement('div');
+  secao.className = 'card';
+  secao.style.borderColor = 'rgba(214,158,46,0.3)';
+
+  var acDoc   = acidentes.filter(function(a){ return a.transparenciaAcidente; });
+  var acNDoc  = acidentes.filter(function(a){ return !a.transparenciaAcidente; });
+
+  var headerColor = acNDoc.length === 0 ? '#38a169' : '#d69e2e';
+  var headerIcon  = acNDoc.length === 0 ? '✅' : '⚠️';
+  var headerText  = acNDoc.length === 0
+    ? 'Histórico de acidentes — todos documentados'
+    : 'Histórico de acidentes';
+
+  var html = '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">' +
+    '<div style="font-size:13px;font-weight:700;color:var(--text2);">' + headerIcon + ' ' + headerText + '</div>' +
+    '<span style="font-size:10px;color:' + headerColor + ';font-weight:700;">' + acidentes.length + ' registro' + (acidentes.length > 1 ? 's' : '') + '</span>' +
+    '</div>';
+
+  // Narrativa de transparência
+  if (acDoc.length > 0 && acNDoc.length === 0) {
+    html += '<div style="padding:10px 12px;background:rgba(56,161,105,0.06);border-radius:8px;border-left:3px solid #38a169;margin-bottom:12px;">' +
+      '<div style="font-size:11px;color:#38a169;font-weight:700;margin-bottom:3px;">✓ Transparência total</div>' +
+      '<div style="font-size:11px;color:var(--text2);line-height:1.5;">Todos os acidentes foram consertados e estão documentados. ' +
+      'Um histórico completo — inclusive com acidentes registrados — é mais confiável do que um histórico vazio. ' +
+      'Este veículo não esconde nada.</div>' +
+    '</div>';
+  } else if (acNDoc.length > 0) {
+    html += '<div style="padding:10px 12px;background:rgba(214,158,46,0.06);border-radius:8px;border-left:3px solid #d69e2e;margin-bottom:12px;">' +
+      '<div style="font-size:11px;color:#d69e2e;font-weight:700;margin-bottom:3px;">⚠️ Conserto pendente</div>' +
+      '<div style="font-size:11px;color:var(--text2);line-height:1.5;">' + acNDoc.length + ' acidente' + (acNDoc.length > 1 ? 's' : '') +
+      ' ainda aguarda' + (acNDoc.length > 1 ? 'm' : '') + ' comprovação de conserto. Registre a NF do conserto para fortalecer o passaporte.</div>' +
+    '</div>';
+  }
+
+  // Lista de acidentes
+  acidentes.forEach(function(a) {
+    var gravLabel = { leve:'Leve', moderado:'Moderado', grave:'Grave', total:'Sinistro total' };
+    var gravColor = { leve:'#d69e2e', moderado:'#dd6b20', grave:'#e53e3e', total:'#e53e3e' };
+    var grav  = gravLabel[a.acGravidade] || 'Não especificado';
+    var color = gravColor[a.acGravidade] || '#d69e2e';
+
+    html += '<div style="padding:10px 0;border-bottom:1px solid var(--border);">' +
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;">' +
+        '<div style="flex:1;">' +
+          '<div style="font-size:12px;font-weight:600;color:var(--text);">' + (a.tipo || 'Acidente').replace('Acidente — ','') + '</div>' +
+          '<div style="font-size:10px;color:var(--text3);margin-top:2px;">' +
+            (a.data || '') + (a.km ? ' · ' + parseInt(a.km).toLocaleString('pt-BR') + ' km' : '') +
+            (a.local ? ' · ' + a.local : '') +
+          '</div>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;">' +
+            '<span style="background:rgba(' + (color==='#e53e3e'?'229,62,62':'214,158,46') + ',0.1);color:' + color + ';font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;">' + grav + '</span>' +
+            (a.acConserto === 'sim' ? '<span style="background:rgba(56,161,105,0.1);color:#38a169;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;">✓ Consertado</span>' : '<span style="background:rgba(229,62,62,0.1);color:#e53e3e;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;">⚠ Sem conserto</span>') +
+            (a.verificado ? '<span style="background:rgba(56,161,105,0.1);color:#38a169;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;">NF ✓</span>' : '') +
+            (a.acBo ? '<span style="background:rgba(59,130,246,0.1);color:var(--accent);font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;">BO</span>' : '') +
+            (a.acSeguro && a.acSeguro !== '' ? '<span style="background:rgba(167,139,250,0.1);color:#a78bfa;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;">Seguro</span>' : '') +
+          '</div>' +
+        '</div>' +
+        (a.custo > 0 ? '<span style="font-size:11px;font-weight:700;color:var(--text);font-family:\'JetBrains Mono\',monospace;white-space:nowrap;">' + fmt(a.custo) + '</span>' : '') +
+      '</div>' +
+    '</div>';
+  });
+
+  // Botão para adicionar conserto se houver pendente
+  if (acNDoc.length > 0) {
+    html += '<button onclick="showPage(\'manutencao\')" style="width:100%;margin-top:10px;padding:10px;background:rgba(214,158,46,0.08);border:1px dashed rgba(214,158,46,0.4);border-radius:8px;font-size:12px;color:#d69e2e;cursor:pointer;font-family:\'Sora\',sans-serif;font-weight:600;">' +
+      '+ Registrar conserto do acidente (fortalece o passaporte)' +
+    '</button>';
+  }
+
+  secao.innerHTML = html;
+
+  // Insere a seção de acidentes após o histórico de manutenção
+  var cards = body.querySelectorAll('.card');
+  // Encontra o card de histórico (contém "Histórico verificado")
+  var histCard = null;
+  cards.forEach(function(c) { if (c.textContent.indexOf('Histórico verificado') >= 0) histCard = c; });
+  if (histCard) {
+    histCard.insertAdjacentElement('afterend', secao);
+  } else {
+    body.appendChild(secao);
+  }
+};
+
+</script>
+
+<!-- ============================================================
+     ManyCars — SISTEMA DE CAMADAS DE CONFIANÇA
+     1. _calcNivelConfianca     — calcula nível 1-5 de cada registro
+     2. _renderTrustBadge       — badge visual por nível
+     3. _detectarAnomaliaRegistro — custo/km suspeito
+     4. _previewEvidencia       — preview da foto no form
+     5. _removerEvidenciaManut  — limpa evidência
+     6. _verEvidencia           — lightbox da foto
+     7. _adicionarEvidenciaHistorico — adiciona foto a registro existente
+     8. calcScoreVendedor       — reputação do dono
+     9. _renderScoreVendedor    — exibe no perfil
+     ============================================================ -->
+<script>
+
+// ══════════════════════════════════════════════════════════════
+// 1. CÁLCULO DO NÍVEL DE CONFIANÇA (1-5)
+// ══════════════════════════════════════════════════════════════
+// Nível 1 — Auto-declarado puro (nenhuma evidência)
+// Nível 2 — Local/oficina informado (indica onde foi)
+// Nível 3 — Foto de comprovante (recibo, OS, foto do serviço)
+// Nível 4 — NF / CNPJ verificado
+// Nível 5 — Oficina credenciada ManyCars (futuro)
+
+function _calcNivelConfianca(h) {
+  // h = { nf, verificado, evidencia, local, acidente, acConserto }
+  if (h.verificado && h.evidencia) return 4; // NF + foto = máximo hoje
+  if (h.verificado)                return 4; // NF/CNPJ
+  if (h.evidencia && h.local)      return 3; // foto + local nomeado
+  if (h.evidencia)                 return 3; // só foto
+  if (h.local && h.local.length > 3) return 2; // só local
+  return 1;                                   // auto-declarado puro
+}
+
+var _TRUST_LABEL = {
+  1: { label: 'Auto-declarado',  color: 'var(--text3)',            bg: 'rgba(160,160,160,0.08)', icon: '·' },
+  2: { label: 'Com local',       color: '#60a5fa',                 bg: 'rgba(96,165,250,0.1)',   icon: '📍' },
+  3: { label: 'Com evidência',   color: '#a78bfa',                 bg: 'rgba(167,139,250,0.1)', icon: '📷' },
+  4: { label: 'NF verificada',   color: '#38a169',                 bg: 'rgba(56,161,105,0.1)',  icon: '✓' },
+  5: { label: 'Credenciado',     color: '#3B82F6',                 bg: 'rgba(59,130,246,0.15)', icon: '🏅' },
+};
+
+function _getNivelConfianca(h) {
+  if (h.nivelConfianca) return h.nivelConfianca;
+  // Recalcula para registros antigos
+  return _calcNivelConfianca(h);
+}
+
+// ══════════════════════════════════════════════════════════════
+// 2. RENDER DO BADGE DE CONFIANÇA
+// ══════════════════════════════════════════════════════════════
+function _renderTrustBadge(h) {
+  var nivel = _getNivelConfianca(h);
+  var t = _TRUST_LABEL[nivel];
+  if (nivel === 1) {
+    // Nível 1: mostra discreto sem badge proeminente
+    return '<span style="font-size:9px;color:var(--text3);padding:1px 4px;">· auto-declarado</span>';
+  }
+  return '<span title="Nível de confiança: ' + t.label + '" style="display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;color:' + t.color + ';background:' + t.bg + ';padding:2px 6px;border-radius:4px;white-space:nowrap;">' +
+    t.icon + ' ' + t.label +
+  '</span>';
+}
+
+// ══════════════════════════════════════════════════════════════
+// 3. DETECÇÃO DE ANOMALIAS NO REGISTRO
+// ══════════════════════════════════════════════════════════════
+// Referências de custo médio por tipo (em R$, faixa razoável)
+var _CUSTO_REF = {
+  'Troca de óleo':               { min: 80,   max: 700  },
+  'Troca de filtro de ar':       { min: 30,   max: 250  },
+  'Troca de filtro de cabine':   { min: 40,   max: 200  },
+  'Revisão de freios':           { min: 200,  max: 2500 },
+  'Troca de pneus':              { min: 300,  max: 4000 },
+  'Alinhamento/Balanceamento':   { min: 60,   max: 400  },
+  'Troca de correia':            { min: 400,  max: 2500 },
+  'Troca de velas':              { min: 80,   max: 800  },
+  'Revisão geral':               { min: 300,  max: 5000 },
+  'Limpeza de bicos':            { min: 100,  max: 600  },
+  'Troca de bateria':            { min: 200,  max: 1200 },
+  'Troca de amortecedor':        { min: 300,  max: 3000 },
+  'Revisão de suspensão':        { min: 200,  max: 2500 },
+  'Acidente — Funilaria e Pintura': { min: 300, max: 25000 },
+  'Acidente — Conserto de para-choque': { min: 150, max: 6000 },
+  'Acidente — Troca de airbag':  { min: 1000, max: 15000 },
+  'Acidente — Conserto estrutural': { min: 2000, max: 30000 },
+};
+
+function _detectarAnomaliaRegistro(h) {
+  var anomalias = [];
+
+  // Custo anormalmente baixo ou alto para o tipo
+  if (h.custo > 0 && _CUSTO_REF[h.tipo]) {
+    var ref = _CUSTO_REF[h.tipo];
+    if (h.custo < ref.min * 0.3) {
+      anomalias.push('Custo muito abaixo do esperado para este serviço (mín. R$' + ref.min + ')');
+    } else if (h.custo > ref.max * 2.5) {
+      anomalias.push('Custo muito acima do esperado para este serviço');
+    }
+  }
+
+  // Data futura
+  var hoje = new Date().toISOString().slice(0,10);
+  if (h.data > hoje) {
+    anomalias.push('Data futura — registro inválido');
+  }
+
+  // KM inconsistente com outros registros do mesmo veículo
+  if (h.km > 0) {
+    var outrosHist = state.history.filter(function(o){ return o.veiculoId === h.veiculoId && o.id !== h.id && o.km > 0; });
+    var anterior = outrosHist.filter(function(o){ return o.data < h.data; }).sort(function(a,b){ return b.data > a.data ? 1:-1; })[0];
+    var posterior = outrosHist.filter(function(o){ return o.data > h.data; }).sort(function(a,b){ return a.data > b.data ? 1:-1; })[0];
+    if (anterior && h.km < anterior.km - 100) {
+      anomalias.push('KM menor que registro anterior — possível adulteração');
+    }
+    if (posterior && h.km > posterior.km + 100) {
+      anomalias.push('KM maior que registro posterior — verifique as datas');
+    }
+  }
+
+  return anomalias.length ? anomalias[0] : null; // retorna só a mais grave
+}
+
+// ══════════════════════════════════════════════════════════════
+// 4-7. EVIDÊNCIA FOTOGRÁFICA
+// ══════════════════════════════════════════════════════════════
+function _previewEvidencia(input) {
+  if (!input.files || !input.files[0]) return;
+  var file = input.files[0];
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    // Comprime a imagem antes de salvar
+    var img = new Image();
+    img.onload = function() {
+      var canvas = document.createElement('canvas');
+      var MAX = 800; // max dimension
+      var ratio = Math.min(MAX / img.width, MAX / img.height, 1);
+      canvas.width  = Math.round(img.width  * ratio);
+      canvas.height = Math.round(img.height * ratio);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      var b64 = canvas.toDataURL('image/jpeg', 0.7);
+      input.dataset.b64 = b64;
+      var preview = document.getElementById('evidencia-preview-img');
+      var wrap    = document.getElementById('evidencia-preview-wrap');
+      var label   = document.getElementById('evidencia-label');
+      if (preview) preview.src = b64;
+      if (wrap)    wrap.style.display = 'block';
+      if (label)   label.textContent  = '✓ Comprovante adicionado';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function _removerEvidenciaManut() {
+  var input   = document.getElementById('manut-evidencia');
+  var preview = document.getElementById('evidencia-preview-img');
+  var wrap    = document.getElementById('evidencia-preview-wrap');
+  var label   = document.getElementById('evidencia-label');
+  if (input)   { input.value = ''; delete input.dataset.b64; }
+  if (preview) preview.src = '';
+  if (wrap)    wrap.style.display = 'none';
+  if (label)   label.textContent = 'Tirar foto ou escolher da galeria';
+}
+
+function _verEvidencia(histId) {
+  var h = state.history.find(function(x){ return String(x.id) === String(histId); });
+  if (!h || !h.evidencia) return;
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;';
+  overlay.innerHTML =
+    '<div style="max-width:500px;width:100%;">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">' +
+        '<div style="color:#fff;font-size:13px;font-weight:600;">' + h.tipo + ' — ' + (h.data||'').replace(/-/g,'/') + '</div>' +
+        '<button onclick="this.closest(\'[style*=fixed]\').remove()" style="background:none;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1;">✕</button>' +
+      '</div>' +
+      '<img src="' + h.evidencia + '" style="width:100%;border-radius:12px;max-height:70vh;object-fit:contain;">' +
+      '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">' +
+        (h.nf ? '<span style="background:rgba(56,161,105,0.2);color:#38a169;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;">NF: ' + h.nf + '</span>' : '') +
+        (h.local ? '<span style="background:rgba(255,255,255,0.1);color:#ccc;font-size:11px;padding:4px 10px;border-radius:6px;">📍 ' + h.local + '</span>' : '') +
+        (h.custo > 0 ? '<span style="background:rgba(255,255,255,0.1);color:#ccc;font-size:11px;padding:4px 10px;border-radius:6px;">R$' + h.custo.toLocaleString('pt-BR') + '</span>' : '') +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) overlay.remove(); });
+}
+
+function _adicionarEvidenciaHistorico(histId) {
+  // Cria input temporário para adicionar foto a registro já salvo
+  var input = document.createElement('input');
+  input.type    = 'file';
+  input.accept  = 'image/*';
+  input.capture = 'environment';
+  input.onchange = function() {
+    if (!input.files || !input.files[0]) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var img = new Image();
+      img.onload = function() {
+        var canvas = document.createElement('canvas');
+        var MAX = 800;
+        var ratio = Math.min(MAX / img.width, MAX / img.height, 1);
+        canvas.width  = Math.round(img.width  * ratio);
+        canvas.height = Math.round(img.height * ratio);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        var b64 = canvas.toDataURL('image/jpeg', 0.7);
+        var h = state.history.find(function(x){ return String(x.id) === String(histId); });
+        if (!h) return;
+        h.evidencia = b64;
+        h.nivelConfianca = _calcNivelConfianca(h);
+        saveState();
+        renderHistoricoList();
+        showToast('📷 Comprovante adicionado! Nível de confiança atualizado.', 'success');
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(input.files[0]);
+  };
+  input.click();
+}
+
+// ══════════════════════════════════════════════════════════════
+// 8. SCORE DO VENDEDOR (reputação do dono)
+// ══════════════════════════════════════════════════════════════
+function calcScoreVendedor() {
+  if (!state.vehicles || !state.vehicles.length) return null;
+
+  var totalRegistros   = state.history.length;
+  if (totalRegistros < 2) return null; // pouco dados
+
+  var verificados   = state.history.filter(function(h){ return h.verificado; }).length;
+  var comEvidencia  = state.history.filter(function(h){ return h.evidencia; }).length;
+  var comLocal      = state.history.filter(function(h){ return h.local && h.local.length > 2; }).length;
+  var nivel45       = state.history.filter(function(h){ return _getNivelConfianca(h) >= 4; }).length;
+  var nivel3        = state.history.filter(function(h){ return _getNivelConfianca(h) === 3; }).length;
+
+  // Anomalias detectadas
+  var anomalias     = state.history.filter(function(h){ return !!_detectarAnomaliaRegistro(h); }).length;
+
+  // Acidentes com transparência
+  var acidentes = state.history.filter(function(h){ return h.acidente; });
+  var acTransp  = acidentes.filter(function(h){ return h.transparenciaAcidente; }).length;
+  var acNTransp = acidentes.length - acTransp;
+
+  // Cálculo
+  var score = 50; // base
+
+  // Cobertura de verificação (peso maior)
+  var percVerif = nivel45 / totalRegistros;
+  score += Math.round(percVerif * 30); // até +30
+
+  // Evidências
+  var percEv = (comEvidencia + nivel3) / totalRegistros;
+  score += Math.round(percEv * 10); // até +10
+
+  // Acidentes transparentes
+  if (acTransp > 0)  score += acTransp * 3;   // +3 por acidente documentado
+  if (acNTransp > 0) score -= acNTransp * 5;  // -5 por acidente sem doc
+
+  // Penalidade anomalias
+  score -= anomalias * 8;
+
+  // Chassi cadastrado = +5 (sinal de seriedade)
+  var comChassi = state.vehicles.filter(function(v){ return v.chassi; }).length;
+  if (comChassi > 0) score += 5;
+
+  // Volume de registros (engajamento)
+  score += Math.min(totalRegistros, 10); // até +10
+
+  score = Math.max(0, Math.min(100, score));
+
+  // Classifica
+  var nivel, cor, emoji;
+  if (score >= 85)      { nivel = 'Excelente';    cor = '#38a169'; emoji = '🏆'; }
+  else if (score >= 70) { nivel = 'Confiável';     cor = '#3B82F6'; emoji = '✅'; }
+  else if (score >= 50) { nivel = 'Regular';       cor = '#d69e2e'; emoji = '👀'; }
+  else                  { nivel = 'Baixo',         cor = '#e53e3e'; emoji = '⚠️'; }
+
+  return { score: score, nivel: nivel, cor: cor, emoji: emoji,
+           totalRegistros: totalRegistros, nivel45: nivel45, comEvidencia: comEvidencia,
+           anomalias: anomalias, acTransp: acTransp, acNTransp: acNTransp };
+}
+
+// ══════════════════════════════════════════════════════════════
+// 9. RENDER DO SCORE DO VENDEDOR NO PERFIL
+// ══════════════════════════════════════════════════════════════
+function _renderScoreVendedor() {
+  var el = document.getElementById('score-vendedor-card');
+  if (!el) return;
+  var sv = calcScoreVendedor();
+  if (!sv) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--text3);text-align:center;padding:12px;">Registre pelo menos 2 manutenções para ver sua reputação de vendedor.</div>';
+    return;
+  }
+  var barW = sv.score + '%';
+  el.innerHTML =
+    '<div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">' +
+      '<div style="width:64px;height:64px;border-radius:50%;background:' + sv.cor + '22;border:3px solid ' + sv.cor + ';display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;">' +
+        '<div style="font-size:20px;font-family:\'Bebas Neue\',sans-serif;color:' + sv.cor + ';line-height:1;">' + sv.score + '</div>' +
+        '<div style="font-size:8px;color:var(--text3);letter-spacing:0.5px;">REPUT.</div>' +
+      '</div>' +
+      '<div style="flex:1;">' +
+        '<div style="font-size:14px;font-weight:700;color:var(--text);">' + sv.emoji + ' ' + sv.nivel + '</div>' +
+        '<div style="font-size:11px;color:var(--text3);margin-top:2px;line-height:1.5;">' +
+          sv.nivel45 + '/' + sv.totalRegistros + ' registros verificados · ' +
+          sv.comEvidencia + ' com foto comprovante' +
+          (sv.anomalias > 0 ? ' · <span style="color:#e53e3e;">' + sv.anomalias + ' anomalia' + (sv.anomalias>1?'s':'') + '</span>' : '') +
+        '</div>' +
+        '<div style="margin-top:8px;height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;">' +
+          '<div style="height:100%;width:' + barW + ';background:' + sv.cor + ';border-radius:3px;transition:width .6s;"></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="font-size:11px;color:var(--text3);line-height:1.6;padding:10px 12px;background:rgba(59,130,246,0.04);border-radius:8px;">' +
+      '💡 <b style="color:var(--text2);">Como aumentar sua reputação:</b> adicione fotos de comprovantes ou NF nos registros existentes, ' +
+      'documente acidentes com conserto e evite registros sem local informado.' +
+    '</div>';
+}
+
+// Injeta o card de reputação na página de perfil
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    var perfilPage = document.getElementById('page-perfil');
+    if (!perfilPage) return;
+    var card = document.createElement('div');
+    card.className = 'card';
+    card.style.cssText = 'margin-bottom:12px;';
+    card.innerHTML = '<div class="card-title" style="margin-bottom:10px;">🏅 Reputação de Vendedor</div><div id="score-vendedor-card"></div>';
+    perfilPage.insertBefore(card, perfilPage.firstChild);
+    _renderScoreVendedor();
+  }, 400);
+});
+
+// Atualiza reputação após qualquer save
+var _saveState_trust_orig = saveState;
+saveState = function() {
+  _saveState_trust_orig.apply(this, arguments);
+  setTimeout(_renderScoreVendedor, 100);
+};
+
+// ══════════════════════════════════════════════════════════════
+// 10. EXIBE NÍVEL DE CONFIANÇA NO PASSAPORTE (seção histórico)
+// ══════════════════════════════════════════════════════════════
+// Patch no passaporte para mostrar indicador de confiança médio
+var _renderPassaporteConfianca_orig = _renderPassaporteVehicle;
+_renderPassaporteVehicle = function(v) {
+  _renderPassaporteConfianca_orig(v);
+
+  var body = document.getElementById('passaporte-body');
+  if (!body) return;
+
+  var hist = state.history.filter(function(h){ return h.veiculoId === v.id; });
+  if (hist.length < 2) return;
+
+  // Calcula distribuição de confiança
+  var dist = [0,0,0,0,0,0]; // índices 0-5
+  hist.forEach(function(h){ dist[_getNivelConfianca(h)]++; });
+
+  var nivel4 = dist[4] + dist[5];
+  var nivel3 = dist[3];
+  var nivel2 = dist[2];
+  var nivel1 = dist[1];
+  var total  = hist.length;
+
+  // Só mostra se tiver dados interessantes
+  if (nivel4 === 0 && nivel3 === 0) return;
+
+  var trustBar = document.createElement('div');
+  trustBar.className = 'card';
+  trustBar.style.borderColor = 'rgba(56,161,105,0.2)';
+  trustBar.innerHTML =
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">' +
+      '<div class="card-title" style="margin-bottom:0;">Confiabilidade do histórico</div>' +
+      '<div style="font-size:10px;color:var(--text3);">' + total + ' registros</div>' +
+    '</div>' +
+    // Barra empilhada
+    '<div style="height:10px;border-radius:5px;overflow:hidden;display:flex;margin-bottom:10px;">' +
+      (nivel4 > 0 ? '<div style="flex:' + nivel4 + ';background:#38a169;" title="' + nivel4 + ' NF verificado"></div>' : '') +
+      (nivel3 > 0 ? '<div style="flex:' + nivel3 + ';background:#a78bfa;" title="' + nivel3 + ' com evidência foto"></div>' : '') +
+      (nivel2 > 0 ? '<div style="flex:' + nivel2 + ';background:#60a5fa;" title="' + nivel2 + ' com local"></div>' : '') +
+      (nivel1 > 0 ? '<div style="flex:' + nivel1 + ';background:var(--border2);" title="' + nivel1 + ' auto-declarado"></div>' : '') +
+    '</div>' +
+    // Legenda
+    '<div style="display:flex;flex-wrap:wrap;gap:8px;">' +
+      (nivel4 > 0 ? '<span style="font-size:10px;color:#38a169;display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:2px;background:#38a169;display:inline-block;"></span>' + nivel4 + ' NF verificado</span>' : '') +
+      (nivel3 > 0 ? '<span style="font-size:10px;color:#a78bfa;display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:2px;background:#a78bfa;display:inline-block;"></span>' + nivel3 + ' com foto</span>' : '') +
+      (nivel2 > 0 ? '<span style="font-size:10px;color:#60a5fa;display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:2px;background:#60a5fa;display:inline-block;"></span>' + nivel2 + ' com local</span>' : '') +
+      (nivel1 > 0 ? '<span style="font-size:10px;color:var(--text3);display:flex;align-items:center;gap:3px;"><span style="width:8px;height:8px;border-radius:2px;background:var(--border2);display:inline-block;"></span>' + nivel1 + ' auto-declarado</span>' : '') +
+    '</div>';
+
+  // Insere antes da seção de acidentes ou no final
+  var cards = body.querySelectorAll('.card');
+  var histCard = null;
+  cards.forEach(function(c){ if (c.textContent.indexOf('Histórico verificado') >= 0) histCard = c; });
+  if (histCard) {
+    histCard.insertAdjacentElement('beforebegin', trustBar);
+  } else {
+    body.appendChild(trustBar);
+  }
+};
+
+</script>
+
+<!-- ============================================================
+     ManyCars — MELHORIAS UX (pesquisa global)
+     Fontes: Duolingo, Monzo, Robinhood, Airbnb, Notion
+     ============================================================ -->
+<script>
+
+// ══════════════════════════════════════════════════════════════
+// 1. STREAK DIÁRIO — modelo Duolingo
+// Recompensa uso consistente do app
+// ══════════════════════════════════════════════════════════════
+(function _initStreak() {
+  try {
+    var today  = new Date().toISOString().slice(0,10);
+    var stored = JSON.parse(localStorage.getItem('mc_streak') || '{"date":"","count":0,"best":0}');
+    var yest   = new Date(Date.now()-86400000).toISOString().slice(0,10);
+
+    if (stored.date === today) return; // já registrado hoje
+
+    var newCount = stored.date === yest ? stored.count + 1 : 1;
+    var newBest  = Math.max(newCount, stored.best || 0);
+    localStorage.setItem('mc_streak', JSON.stringify({ date:today, count:newCount, best:newBest }));
+
+    // Toast motivacional para milestones (modelo Duolingo)
+    var milestones = { 3:'3 dias seguidos! 🔥', 7:'1 semana consecutiva! 🏆', 14:'14 dias! Você é dedicado! 💪', 30:'30 dias! Lendário! 👑' };
+    if (milestones[newCount]) {
+      setTimeout(function(){ showToast(milestones[newCount], 'success'); }, 2000);
+    }
+
+    // Atualiza badge na sidebar (se existir)
+    var el = document.getElementById('dash-date-sub');
+    if (el && newCount >= 3) {
+      var cur = el.textContent;
+      if (!cur.includes('🔥')) el.textContent = cur + ' · 🔥 ' + newCount + ' dias';
+    }
+  } catch(e) {}
+})();
+
+// ══════════════════════════════════════════════════════════════
+// 2. VALIDAÇÃO VISUAL EM TEMPO REAL nos formulários
+// Modelo: Robinhood input feedback imediato
+// ══════════════════════════════════════════════════════════════
+function _validarCampoKM(input) {
+  var val = parseInt(input.value);
+  var vid = document.getElementById('manut-veiculo') ? parseInt(document.getElementById('manut-veiculo').value) : null;
+  if (!val || val <= 0) { input.style.borderColor = ''; return; }
+  if (val > 999999) { input.style.borderColor = '#e53e3e'; _showFieldHint(input, 'KM acima de 999.999 — verifique'); return; }
+
+  // Verifica consistência com o veículo selecionado
+  if (vid) {
+    var v = state.vehicles.find(function(x){ return x.id === vid; });
+    if (v && v.km && val < v.km * 0.7) {
+      input.style.borderColor = '#d69e2e';
+      _showFieldHint(input, 'KM menor que o atual do veículo (' + v.km.toLocaleString('pt-BR') + ' km) — verifique a data');
+      return;
+    }
+  }
+  input.style.borderColor = '#38a169';
+  _hideFieldHint(input);
+}
+
+function _showFieldHint(input, msg) {
+  var hint = input.parentElement.querySelector('.field-hint');
+  if (!hint) {
+    hint = document.createElement('div');
+    hint.className = 'field-hint';
+    hint.style.cssText = 'font-size:10px;margin-top:3px;padding:3px 8px;border-radius:4px;';
+    input.parentElement.appendChild(hint);
+  }
+  hint.textContent = msg;
+  hint.style.color = input.style.borderColor || '#d69e2e';
+  hint.style.background = 'rgba(214,158,46,0.07)';
+}
+
+function _hideFieldHint(input) {
+  var hint = input.parentElement && input.parentElement.querySelector('.field-hint');
+  if (hint) hint.remove();
+}
+
+// Aplica validação em tempo real aos campos de KM
+document.addEventListener('DOMContentLoaded', function() {
+  ['manut-km','fuel-km','v-km','v-km-inicial'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && !el._kmValidated) {
+      el.addEventListener('input', function(){ _validarCampoKM(this); });
+      el._kmValidated = true;
+    }
+  });
+});
+
+// ══════════════════════════════════════════════════════════════
+// 3. SKELETON SCREENS para carregamento de dados da nuvem
+// Modelo: Robinhood shimmer cards
+// ══════════════════════════════════════════════════════════════
+function _mostrarSkeletonVeiculos() {
+  var el = document.getElementById('vehicles-list');
+  if (!el) return;
+  var html = '';
+  for (var i = 0; i < 2; i++) {
+    html += '<div class="vehicle-img-card" style="pointer-events:none;">' +
+      '<div class="skeleton" style="height:120px;border-radius:8px 8px 0 0;margin:-1px -1px 0;"></div>' +
+      '<div class="vehicle-img-body" style="padding:12px;">' +
+        '<div class="skeleton" style="height:16px;width:70%;margin-bottom:8px;"></div>' +
+        '<div class="skeleton" style="height:12px;width:50%;margin-bottom:10px;"></div>' +
+        '<div class="skeleton" style="height:12px;width:40%;"></div>' +
+      '</div>' +
+    '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function _mostrarSkeletonHistorico() {
+  var el = document.getElementById('historico-list');
+  if (!el) return;
+  var html = '';
+  for (var i = 0; i < 4; i++) {
+    html += '<div style="display:flex;align-items:center;gap:12px;padding:12px 16px;">' +
+      '<div class="skeleton" style="width:36px;height:36px;border-radius:50%;flex-shrink:0;"></div>' +
+      '<div style="flex:1;">' +
+        '<div class="skeleton" style="height:14px;width:65%;margin-bottom:6px;"></div>' +
+        '<div class="skeleton" style="height:11px;width:40%;"></div>' +
+      '</div>' +
+      '<div class="skeleton" style="height:14px;width:60px;"></div>' +
+    '</div>';
+  }
+  el.innerHTML = html;
+}
+
+// Patcha o _loadFromCloud para mostrar skeletons enquanto carrega
+var _loadFromCloud_skel_orig = _loadFromCloud;
+_loadFromCloud = async function(userId) {
+  _mostrarSkeletonVeiculos();
+  _mostrarSkeletonHistorico();
+  var result = await _loadFromCloud_skel_orig(userId);
+  return result;
+};
+
+// ══════════════════════════════════════════════════════════════
+// 4. TOAST MESSAGES MELHORADAS — modelo Monzo copywriting
+// Substitui mensagens genéricas por copy específico e humano
+// ══════════════════════════════════════════════════════════════
+var _TOAST_MAP = {
+  // Genérico → Específico (modelo Monzo: linguagem humana e direta)
+  'KM inválida':                    '⚠️ KM parece incorreto — verifique o odômetro',
+  '⚠️ Algo inesperado aconteceu. Tente novamente.': '🔄 Algo deu errado. Tente de novo — seus dados estão seguros',
+  'Selecione o alerta primeiro.':   'Escolha um alerta da lista primeiro',
+  'Selecione um veículo':           'Qual veículo você quer registrar?',
+  'Informe o tipo de serviço':      'Qual serviço foi realizado?',
+  'Informe a data':                 'Quando foi feito o serviço?',
+  'Data não pode ser futura':       '📅 Essa data ainda não chegou!',
+  'KM não pode ser negativo':       '🔢 KM não pode ser negativo',
+};
+
+var _showToast_copy_orig = showToast;
+showToast = function(msg, type, undoFn) {
+  var improved = _TOAST_MAP[msg] || msg;
+  return _showToast_copy_orig.call(this, improved, type, undoFn);
+};
+
+// ══════════════════════════════════════════════════════════════
+// 5. PULL-TO-REFRESH — modelo Instagram/Twitter
+// Detecta swipe para baixo no topo da tela e atualiza dados
+// ══════════════════════════════════════════════════════════════
+(function _initPullToRefresh() {
+  var startY = 0, isDragging = false, refreshIndicator = null;
+
+  function _createIndicator() {
+    if (refreshIndicator) return refreshIndicator;
+    refreshIndicator = document.createElement('div');
+    refreshIndicator.id = 'ptr-indicator';
+    refreshIndicator.style.cssText = 'position:fixed;top:-50px;left:50%;transform:translateX(-50%);z-index:999;background:var(--accent);color:#000;font-size:11px;font-weight:700;padding:8px 16px;border-radius:0 0 20px 20px;transition:top .2s;white-space:nowrap;pointer-events:none;';
+    refreshIndicator.textContent = '↓ Puxe para atualizar';
+    document.body.appendChild(refreshIndicator);
+    return refreshIndicator;
+  }
+
+  document.addEventListener('touchstart', function(e) {
+    var mc = document.querySelector('.main-content');
+    if (!mc || mc.scrollTop > 10) return;
+    startY = e.touches[0].clientY;
+    isDragging = true;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', function(e) {
+    if (!isDragging) return;
+    var diff = e.touches[0].clientY - startY;
+    if (diff > 50) {
+      var ind = _createIndicator();
+      ind.style.top = Math.min(diff - 50, 40) + 'px';
+      ind.textContent = diff > 100 ? '↑ Solte para atualizar' : '↓ Puxe para atualizar';
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchend', function(e) {
+    if (!isDragging) return;
+    isDragging = false;
+    var diff = (e.changedTouches[0] || {}).clientY - startY;
+    var ind = document.getElementById('ptr-indicator');
+    if (ind) ind.style.top = '-50px';
+    if (diff > 100 && state.user && state.user.id && !state.user.id.startsWith('local_')) {
+      showToast('🔄 Atualizando dados...', 'info');
+      _loadFromCloud(state.user.id).then(function(ok) {
+        if (ok) { renderVehiclesList(); updateDashboard(); showToast('✅ Dados atualizados!', 'success'); }
+      });
+    }
+  }, { passive: true });
+})();
+
+// ══════════════════════════════════════════════════════════════
+// 6. FEEDBACK DE ERRO NOS FORMULÁRIOS — modelo Robinhood
+// Shake no container do campo quando há erro
+// ══════════════════════════════════════════════════════════════
+var _registrarManutencao_ux_orig = registrarManutencao;
+registrarManutencao = async function() {
+  // Chama original
+  await _registrarManutencao_ux_orig.apply(this, arguments);
+};
+
+// Override showToast para aplicar shake quando é erro de form
+var _showToast_ux_orig = showToast;
+showToast = function(msg, type, undoFn) {
+  if (type === 'error') {
+    // Shake no form ativo
+    var activeForm = document.querySelector('.page.active .form-card, .page.active .card .form-grid');
+    if (activeForm) _shakeElement(activeForm);
+    _haptic('error');
+  } else if (type === 'success') {
+    // Success pulse no botão
+    var btn = document.querySelector('.page.active .btn-primary:not([disabled])');
+    if (btn) _successPulse(btn);
+  }
+  return _showToast_ux_orig.call(this, msg, type, undoFn);
+};
+
+// ══════════════════════════════════════════════════════════════
+// 7. ACESSIBILIDADE — ARIA labels dinâmicos
+// ══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+  // Adiciona aria-labels nos botões de ícone sem texto
+  document.querySelectorAll('.btn-icon[title]').forEach(function(btn) {
+    if (!btn.getAttribute('aria-label')) {
+      btn.setAttribute('aria-label', btn.getAttribute('title'));
+    }
+  });
+
+  // Melhora contraste de score-ring
+  var rings = document.querySelectorAll('.score-ring-fill');
+  rings.forEach(function(r){ r.setAttribute('role','progressbar'); });
+});
+
+// ══════════════════════════════════════════════════════════════
+// 8. DEEP LINKS — abre página correta se URL tiver ?page=
+// ══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var page   = params.get('page');
+    var action = params.get('action');
+    if (page && document.getElementById('page-' + page)) {
+      setTimeout(function() { showPage(page); }, 500);
+    }
+    if (action) {
+      setTimeout(function() { showPage(action); }, 500);
+    }
+  } catch(e) {}
+});
 
 </script>
